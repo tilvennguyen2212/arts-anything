@@ -10,6 +10,9 @@ import { increaseCounter } from 'app/model/main.controller'
 import configs from 'app/configs'
 import { createPDB } from 'shared/pdb'
 
+import 'app/static/styles/light.less'
+import 'app/static/styles/dark.less'
+
 const {
   manifest: { appId },
 } = configs
@@ -42,7 +45,9 @@ const View = () => {
         <Typography.Text>Counter: {counter}</Typography.Text>
       </Col>
       <Col>
-        <Button onClick={increase}>Increase</Button>
+        <Button onClick={increase} type="primary">
+          Increase
+        </Button>
       </Col>
     </Row>
   )

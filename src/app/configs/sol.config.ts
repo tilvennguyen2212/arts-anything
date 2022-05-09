@@ -1,12 +1,10 @@
-import { Net } from 'shared/runtime'
+import { Net, rpc } from 'shared/runtime'
 
 /**
  * Contructor
  */
 type Conf = {
   node: string
-  spltAddress: string
-  splataAddress: string
 }
 
 const conf: Record<Net, Conf> = {
@@ -14,27 +12,21 @@ const conf: Record<Net, Conf> = {
    * Development configurations
    */
   devnet: {
-    node: 'https://api.devnet.solana.com',
-    spltAddress: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
-    splataAddress: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
+    node: rpc,
   },
 
   /**
    * Staging configurations
    */
   testnet: {
-    node: 'https://api.testnet.solana.com',
-    spltAddress: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
-    splataAddress: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
+    node: rpc,
   },
 
   /**
    * Production configurations
    */
   mainnet: {
-    node: 'https://api.mainnet-beta.solana.com',
-    spltAddress: 'TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA',
-    splataAddress: 'ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL',
+    node: rpc,
   },
 }
 

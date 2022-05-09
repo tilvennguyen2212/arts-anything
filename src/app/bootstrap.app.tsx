@@ -12,7 +12,7 @@ const {
 
 export const Page = () => {
   return (
-    <UIProvider appId={appId} antd>
+    <UIProvider appId={appId} antd={{ prefixCls: appId }}>
       <WalletProvider>
         <Provider store={model}>
           <View />
