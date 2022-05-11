@@ -1,54 +1,32 @@
-import { useCallback, useEffect, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useWallet } from '@senhub/providers'
+import { Route, Switch } from 'react-router-dom'
 
-import { Row, Col, Typography, Button, Space } from 'antd'
-import IonIcon from 'shared/antd/ionicon'
+import { Row, Col } from 'antd'
+import Home from './home'
+import Collections from './collections'
+import Collection from './collection'
 
-import { AppDispatch, AppState } from 'app/model'
-import { increaseCounter } from 'app/model/main.controller'
-import configs from 'app/configs'
-import { createPDB } from 'shared/pdb'
+import { useRoute } from 'app/hooks/useRoute'
 
 import 'app/static/styles/light.less'
 import 'app/static/styles/dark.less'
 
-const {
-  manifest: { appId },
-} = configs
-
 const View = () => {
-  const {
-    wallet: { address },
-  } = useWallet()
-  const dispatch = useDispatch<AppDispatch>()
-  const { counter } = useSelector((state: AppState) => state.main)
-
-  const pdb = useMemo(() => createPDB(address, appId), [address])
-  const increase = useCallback(() => dispatch(increaseCounter()), [dispatch])
-  useEffect(() => {
-    if (pdb) pdb.setItem('counter', counter)
-  }, [pdb, counter])
+  const { extend } = useRoute()
 
   return (
-    <Row gutter={[24, 24]} align="middle">
+    <Row gutter={[24, 24]}>
       <Col span={24}>
-        <Space align="center">
-          <IonIcon name="newspaper-outline" />
-          <Typography.Title level={4}>App View</Typography.Title>
-        </Space>
+        <Switch>
+          <Route exact path={extend('/')} component={Home} />
+          <Route exact path={extend('/:platform')} component={Collections} />
+          <Route
+            exact
+            path={extend('/:platform/:symbol')}
+            component={Collection}
+          />
+        </Switch>
       </Col>
-      <Col span={24}>
-        <Typography.Text>Address: {address}</Typography.Text>
-      </Col>
-      <Col>
-        <Typography.Text>Counter: {counter}</Typography.Text>
-      </Col>
-      <Col>
-        <Button onClick={increase} type="primary">
-          Increase
-        </Button>
-      </Col>
+      <Col span={24} />
     </Row>
   )
 }

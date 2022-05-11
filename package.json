@@ -10,6 +10,7 @@
     "@senswap/sen-js": "^1.3.5",
     "@solana/spl-token-registry": "^0.2.3771",
     "antd": "^4.20.2",
+    "axios": "^0.27.2",
     "bn.js": "^5.2.0",
     "bs58": "^4.0.1",
     "iconsax-react": "^0.0.7",

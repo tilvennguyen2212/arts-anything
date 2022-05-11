@@ -5,6 +5,7 @@ import { Net, rpc } from 'shared/runtime'
  */
 type Conf = {
   node: string
+  metaplexAddress: string
 }
 
 const conf: Record<Net, Conf> = {
@@ -13,6 +14,7 @@ const conf: Record<Net, Conf> = {
    */
   devnet: {
     node: rpc,
+    metaplexAddress: 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
   },
 
   /**
@@ -20,6 +22,7 @@ const conf: Record<Net, Conf> = {
    */
   testnet: {
     node: rpc,
+    metaplexAddress: 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
   },
 
   /**
@@ -27,6 +30,7 @@ const conf: Record<Net, Conf> = {
    */
   mainnet: {
     node: rpc,
+    metaplexAddress: 'metaqbxxUerdq28cj1RbAWkYQm3ybzjb6a8bt518x1s',
   },
 }
 
