@@ -1,4 +1,6 @@
+import { account } from '@senswap/sen-js'
 import axios from 'axios'
+
 import { Net } from 'shared/runtime'
 import Offset from './offset'
 
@@ -19,6 +21,13 @@ export type MagicEdenCollection = {
   website: string
 }
 
+export type MagicEdenRarity = Record<
+  'moonrank',
+  {
+    rank: number
+  }
+>
+
 export type MagicEdenListingNFT = {
   pdaAddress: string
   auctionHouse: string
@@ -27,9 +36,44 @@ export type MagicEdenListingNFT = {
   seller: string
   tokenSize: number
   price: number
-  rarity: any
+  rarity: Partial<MagicEdenRarity>
   extra: {
     img: string
+  }
+}
+
+export type MagicEdenCreator = {
+  address: string
+  share: number
+}
+
+export type MagicEdenAttribute = {
+  trait_type: string
+  value: string
+}
+
+export type MagicEdenFile = {
+  uri: string
+  type: 'image/png' | 'video/mp4'
+}
+
+export type MagicEdenNFTMetadata = {
+  mintAddress: string
+  owner: string
+  supply: number
+  collection: string
+  name: string
+  updateAuthority: string
+  primarySaleHappened: number
+  sellerFeeBasisPoints: number
+  image: string
+  animationUrl: string
+  externalUrl: string
+  attributes: MagicEdenAttribute[]
+  properties: {
+    files: MagicEdenFile[]
+    category: string
+    creators: MagicEdenCreator[]
   }
 }
 
@@ -75,6 +119,14 @@ class MagicEdenSDK extends Offset {
     const data = await this.getListingNFTs(symbol, offset, limit)
     this.set(symbol, offset + data.length)
     return data
+  }
+
+  getNFTMetadata = async (mintAddress: string) => {
+    if (!account.isAddress(mintAddress)) throw new Error('Invalid mint address')
+    const url = `${this.endpoint}/tokens/${mintAddress}`
+    const { data } = await axios.get(url)
+    if (!data) throw new Error('Invalid mint address')
+    return data as MagicEdenNFTMetadata
   }
 }
 

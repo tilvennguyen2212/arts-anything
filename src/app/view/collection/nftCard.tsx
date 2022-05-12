@@ -1,11 +1,14 @@
-import { useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useCallback, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { Button, Card, Col, Row, Typography } from 'antd'
+import { Button, Card, Col, Row, Skeleton, Typography } from 'antd'
 import IonIcon from 'shared/antd/ionicon'
 
-import { AppState } from 'app/model'
+import { AppDispatch, AppState } from 'app/model'
 import { NFTPlatform } from 'app/sdk'
+import { account } from '@senswap/sen-js'
+import { getNFTMetadata } from 'app/model/metadata.controller'
+import Rarity from 'app/components/rarity'
 
 export type NFTCardProps = {
   platform: NFTPlatform
@@ -18,36 +21,53 @@ const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
     listing: {
       [symbol]: { [mintAddress]: nft },
     },
+    metadata: { [mintAddress]: metadata },
   } = useSelector((state: AppState) => state)
+  const dispatch = useDispatch<AppDispatch>()
 
   const {
-    tokenAddress,
-    seller,
     price,
+    rarity,
     extra: { img },
   } = nft
+  const { name } = metadata || {}
 
   const onBuy = useCallback(() => {
     return console.log(platform, symbol)
   }, [platform, symbol])
 
+  useEffect(() => {
+    if (account.isAddress(mintAddress))
+      dispatch(getNFTMetadata({ mintAddress }))
+  }, [dispatch, mintAddress])
+
   return (
     <Card
-      cover={<img alt={symbol} src={img} />}
+      cover={<img alt={name} src={img} />}
       bodyStyle={{ padding: 16 }}
       bordered={false}
       hoverable
     >
       <Row gutter={[16, 16]}>
         <Col span={24}>
-          <Typography.Title level={5} ellipsis>
-            {tokenAddress}
-          </Typography.Title>
+          {name ? (
+            <Typography.Title level={5} ellipsis>
+              {name}
+            </Typography.Title>
+          ) : (
+            <Skeleton
+              paragraph={{ rows: 1 }}
+              title={false}
+              round
+              active
+              loading
+            />
+          )}
         </Col>
         <Col span={24}>
-          <Typography.Paragraph ellipsis={{ rows: 2 }}>
-            {seller}
-          </Typography.Paragraph>
+          {rarity?.moonrank && (
+            <Rarity name="moonrank" rank={rarity?.moonrank.rank} />
+          )}
         </Col>
         <Col span={24}>
           <Row gutter={[8, 8]} align="middle" wrap={false}>

@@ -4,6 +4,7 @@ import { devTools, bigintSerializationMiddleware } from 'shared/devTools'
 import main from 'app/model/main.controller'
 import magicEden from 'app/model/magicEden.controller'
 import listing from 'app/model/listing.controller'
+import metadata from 'app/model/metadata.controller'
 
 /**
  * Isolated store
@@ -16,6 +17,7 @@ const model = configureStore({
     main,
     magicEden,
     listing,
+    metadata,
   },
 })
 

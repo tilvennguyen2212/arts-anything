@@ -22,15 +22,19 @@ const magicEdenSDK = new MagicEdenSDK(net)
  * Actions
  */
 
-export const nextListingNFTs = createAsyncThunk(
-  `${NAME}/nextListingNFTs`,
-  async ({ symbol, limit = 12 }: { symbol: string; limit?: number }) => {
-    const data = await magicEdenSDK.nextListingNFTs(symbol, limit)
-    const nfts: ListingNFTs = {}
-    for (const nft of data) nfts[nft.tokenMint] = nft
-    return { [symbol]: nfts }
-  },
-)
+export const nextListingNFTs = createAsyncThunk<
+  Partial<NFTState>,
+  { symbol: string; limit?: number },
+  { state: any }
+>(`${NAME}/nextListingNFTs`, async ({ symbol, limit = 6 }, { getState }) => {
+  const {
+    listing: { [symbol]: prevNFTs },
+  } = getState()
+  const data = await magicEdenSDK.nextListingNFTs(symbol, limit)
+  const nfts: ListingNFTs = {}
+  for (const nft of data) nfts[nft.tokenMint] = nft
+  return { [symbol]: { ...(prevNFTs || {}), ...nfts } }
+})
 
 /**
  * Usual procedure
