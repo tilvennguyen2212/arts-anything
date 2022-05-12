@@ -3,6 +3,7 @@ import { devTools, bigintSerializationMiddleware } from 'shared/devTools'
 
 import main from 'app/model/main.controller'
 import magicEden from 'app/model/magicEden.controller'
+import listing from 'app/model/listing.controller'
 
 /**
  * Isolated store
@@ -14,6 +15,7 @@ const model = configureStore({
   reducer: {
     main,
     magicEden,
+    listing,
   },
 })
 

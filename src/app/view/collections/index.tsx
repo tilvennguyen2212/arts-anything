@@ -18,11 +18,7 @@ const Collections = () => {
       <Col span={24}>
         <Row gutter={[12, 12]} wrap={false} align="middle">
           <Col flex="auto">
-            <Button
-              type="primary"
-              icon={<IonIcon name="home-outline" />}
-              onClick={onHome}
-            >
+            <Button icon={<IonIcon name="home-outline" />} onClick={onHome}>
               Home
             </Button>
           </Col>

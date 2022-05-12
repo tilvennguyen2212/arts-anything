@@ -6,21 +6,19 @@ import CollectionCard from './collectionCard'
 
 import { AppDispatch, AppState } from 'app/model'
 import { NFTPlatform } from 'app/sdk'
-import { getCollections } from 'app/model/magicEden.controller'
+import { nextCollections } from 'app/model/magicEden.controller'
 
 export type CollectionListProps = { platform: NFTPlatform; more?: boolean }
 
 const CollectionList = ({ platform, more = true }: CollectionListProps) => {
   const [loading, setLoading] = useState(false)
-  const {
-    [platform]: { collections, offset },
-  } = useSelector((state: AppState) => state)
+  const { [platform]: collections } = useSelector((state: AppState) => state)
   const dispatch = useDispatch<AppDispatch>()
 
   const onMore = useCallback(async () => {
     setLoading(true)
     try {
-      await dispatch(getCollections())
+      await dispatch(nextCollections())
     } catch (er: any) {
       return window.notify({ type: 'warning', description: er.message })
     } finally {
@@ -29,8 +27,8 @@ const CollectionList = ({ platform, more = true }: CollectionListProps) => {
   }, [dispatch])
 
   useEffect(() => {
-    if (!offset) onMore()
-  }, [offset, onMore])
+    if (Object.keys(collections).length < 12) onMore()
+  }, [collections, onMore])
 
   return (
     <Row gutter={[24, 24]}>
@@ -43,7 +41,7 @@ const CollectionList = ({ platform, more = true }: CollectionListProps) => {
         <Col span={24}>
           <Row gutter={[24, 24]} justify="center">
             <Col>
-              <Button onClick={onMore} type="primary" loading={loading}>
+              <Button onClick={onMore} loading={loading}>
                 More
               </Button>
             </Col>

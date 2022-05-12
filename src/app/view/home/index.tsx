@@ -19,7 +19,6 @@ const Home = () => {
     <Row gutter={[24, 24]}>
       <Col span={24}>
         <Button
-          type="primary"
           onClick={() => onDetails('magicEden')}
           icon={<IonIcon name="images-outline" />}
         >

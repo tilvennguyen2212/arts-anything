@@ -1,3 +1,4 @@
+import { useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Button, Card, Col, Row, Space, Typography } from 'antd'
@@ -5,7 +6,6 @@ import IonIcon from 'shared/antd/ionicon'
 
 import { AppState } from 'app/model'
 import { NFTPlatform } from 'app/sdk'
-import { useCallback } from 'react'
 import { useRoute } from 'app/hooks/useRoute'
 
 export type CollectionCardProps = { platform: NFTPlatform; symbol: string }
@@ -13,9 +13,7 @@ export type CollectionCardProps = { platform: NFTPlatform; symbol: string }
 const CollectionCard = ({ platform, symbol }: CollectionCardProps) => {
   const {
     [platform]: {
-      collections: {
-        [symbol]: { name, description, image, website, twitter, discord },
-      },
+      [symbol]: { name, description, image, website, twitter, discord },
     },
   } = useSelector((state: AppState) => state)
   const { to } = useRoute()
