@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { Button, Col, Row } from 'antd'
 import IonIcon from 'shared/antd/ionicon'
+import MoreButton from 'app/components/moreButton'
 import NFTCard from './nftCard'
 
 import { useCollection } from 'app/hooks/useCollection'
@@ -63,9 +64,7 @@ const Collection = () => {
       <Col span={24}>
         <Row gutter={[24, 24]} justify="center">
           <Col>
-            <Button onClick={onMore} loading={loading}>
-              More
-            </Button>
+            <MoreButton onMore={onMore} loading={loading} />
           </Col>
         </Row>
       </Col>

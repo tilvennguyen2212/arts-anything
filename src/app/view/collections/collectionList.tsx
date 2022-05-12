@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Button, Col, Row } from 'antd'
+import { Col, Row } from 'antd'
+import MoreButton from 'app/components/moreButton'
 import CollectionCard from './collectionCard'
 
 import { AppDispatch, AppState } from 'app/model'
@@ -41,9 +42,7 @@ const CollectionList = ({ platform, more = true }: CollectionListProps) => {
         <Col span={24}>
           <Row gutter={[24, 24]} justify="center">
             <Col>
-              <Button onClick={onMore} loading={loading}>
-                More
-              </Button>
+              <MoreButton onMore={onMore} loading={loading} />
             </Col>
           </Row>
         </Col>
