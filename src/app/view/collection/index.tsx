@@ -21,12 +21,14 @@ const Collection = () => {
     [platform]: { [symbol]: collection },
     listing: { [symbol]: listingNFTs },
   } = useSelector((state: AppState) => state)
-  const { to } = useRoute()
-  // const history = useHistory()
+  const { to, back } = useRoute()
+  const { action } = useHistory()
 
   const onBack = useCallback(() => {
-    return to(`/${platform}`)
-  }, [to, platform])
+    if (action !== 'PUSH') return to(`/${platform}`)
+    return back()
+  }, [to, back, platform, action])
+
   const onMore = useCallback(async () => {
     setLoading(true)
     try {
@@ -41,6 +43,7 @@ const Collection = () => {
   useEffect(() => {
     if (!collection && symbol) dispatch(getCollection(symbol))
   }, [dispatch, collection, symbol])
+
   useEffect(() => {
     if (!listingNFTs) onMore()
   }, [onMore, listingNFTs])

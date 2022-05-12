@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-import MagicEdenSDK, { MagicEdenListingNFT } from 'app/sdk/magicEdenSDK'
-import { net } from 'shared/runtime'
+import { MagicEdenListingNFT } from 'app/sdk/magicEdenSDK'
+import { magicEdenSDK } from './magicEden.controller'
 
 /**
  * Interface & Utility
@@ -16,7 +16,6 @@ export type NFTState = Record<string, ListingNFTs>
 
 const NAME = 'listing'
 const initialState: NFTState = {}
-const magicEdenSDK = new MagicEdenSDK(net)
 
 /**
  * Actions

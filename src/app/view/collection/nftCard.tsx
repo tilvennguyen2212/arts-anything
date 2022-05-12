@@ -1,14 +1,16 @@
 import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { account } from '@senswap/sen-js'
 
 import { Button, Card, Col, Row, Skeleton, Typography } from 'antd'
 import IonIcon from 'shared/antd/ionicon'
+import Rarity from 'app/components/rarity'
 
 import { AppDispatch, AppState } from 'app/model'
 import { NFTPlatform } from 'app/sdk'
-import { account } from '@senswap/sen-js'
 import { getNFTMetadata } from 'app/model/metadata.controller'
-import Rarity from 'app/components/rarity'
+import { magicEdenSDK } from 'app/model/magicEden.controller'
+import { useWallet } from '@senhub/providers'
 
 export type NFTCardProps = {
   platform: NFTPlatform
@@ -23,18 +25,37 @@ const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
     },
     metadata: { [mintAddress]: metadata },
   } = useSelector((state: AppState) => state)
+  const {
+    wallet: { address: walletAddress },
+  } = useWallet()
   const dispatch = useDispatch<AppDispatch>()
 
   const {
+    seller,
     price,
+    tokenMint,
+    auctionHouse,
     rarity,
     extra: { img },
   } = nft
   const { name, image } = metadata || {}
 
-  const onBuy = useCallback(() => {
-    return console.log(platform, symbol)
-  }, [platform, symbol])
+  const onBuy = useCallback(async () => {
+    const { splt } = window.sentre
+    const accountAddress = await splt.deriveAssociatedAddress(
+      walletAddress,
+      tokenMint,
+    )
+    const data = await magicEdenSDK.buyNow({
+      buyerAddress: walletAddress,
+      sellerAddress: seller,
+      auctionHouseAddress: auctionHouse,
+      mintAddress: tokenMint,
+      accountAddress,
+      price,
+    })
+    return console.log(data)
+  }, [walletAddress, seller, price, tokenMint, auctionHouse])
 
   useEffect(() => {
     if (account.isAddress(mintAddress))

@@ -4,6 +4,8 @@ import axios from 'axios'
 import { Net } from 'shared/runtime'
 import Offset from './offset'
 
+const API_KEY = ''
+
 export const ENDPOINTS: Record<Net, string> = {
   devnet: 'https://api-devnet.magiceden.dev/v2',
   testnet: 'https://api-testnet.magiceden.dev/v2',
@@ -82,7 +84,7 @@ export type MagicEdenBuyNow = {
   sellerAddress: string
   auctionHouseAddress: string
   mintAddress: string
-  accountAddress: string
+  accountAddress?: string
   price: number
   buyerReferralAddress?: string
   sellerReferralAddress?: string
@@ -152,12 +154,12 @@ class MagicEdenSDK extends Offset {
   buyNow = async ({
     buyerAddress,
     sellerAddress,
-    auctionHouseAddress,
+    auctionHouseAddress = '',
     mintAddress,
     accountAddress,
     price,
-    buyerReferralAddress,
-    sellerReferralAddress,
+    buyerReferralAddress = '',
+    sellerReferralAddress = '',
     buyerExpiry = 0,
     sellerExpiry = 0,
   }: MagicEdenBuyNow) => {
@@ -165,13 +167,14 @@ class MagicEdenSDK extends Offset {
       throw new Error('Invalid buyer address')
     if (!account.isAddress(sellerAddress))
       throw new Error('Invalid seller address')
-    if (!account.isAddress(auctionHouseAddress))
-      throw new Error('Invalid auction house address')
     if (!account.isAddress(mintAddress)) throw new Error('Invalid mint address')
     if (!account.isAddress(accountAddress))
       throw new Error('Invalid account address')
     const url = `${this.endpoint}/instructions/buy_now`
     const { data } = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${API_KEY}`,
+      },
       params: {
         buyer: buyerAddress,
         seller: sellerAddress,

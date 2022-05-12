@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
-import MagicEdenSDK, { MagicEdenNFTMetadata } from 'app/sdk/magicEdenSDK'
-import { net } from 'shared/runtime'
+import { MagicEdenNFTMetadata } from 'app/sdk/magicEdenSDK'
+import { magicEdenSDK } from './magicEden.controller'
 
 /**
  * Interface & Utility
@@ -15,7 +15,6 @@ export type MetadataState = Record<string, MagicEdenNFTMetadata>
 
 const NAME = 'metadata'
 const initialState: MetadataState = {}
-const magicEdenSDK = new MagicEdenSDK(net)
 
 /**
  * Actions
