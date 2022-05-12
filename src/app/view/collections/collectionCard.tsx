@@ -28,9 +28,10 @@ const CollectionCard = ({ platform, symbol }: CollectionCardProps) => {
       cover={<img alt={symbol} src={image} />}
       bodyStyle={{ padding: 16 }}
       bordered={false}
+      onClick={onDetails}
       hoverable
     >
-      <Row gutter={[16, 16]}>
+      <Row gutter={[16, 16]} justify="end">
         <Col span={24}>
           <Typography.Title level={5} ellipsis>
             {name}
@@ -41,7 +42,7 @@ const CollectionCard = ({ platform, symbol }: CollectionCardProps) => {
             {description}
           </Typography.Paragraph>
         </Col>
-        <Col flex="auto">
+        <Col>
           <Space size={0}>
             <Button
               type="text"
@@ -62,13 +63,6 @@ const CollectionCard = ({ platform, symbol }: CollectionCardProps) => {
               disabled={!discord}
             />
           </Space>
-        </Col>
-        <Col>
-          <Button
-            type="primary"
-            icon={<IonIcon name="arrow-forward-outline" />}
-            onClick={onDetails}
-          />
         </Col>
       </Row>
     </Card>
