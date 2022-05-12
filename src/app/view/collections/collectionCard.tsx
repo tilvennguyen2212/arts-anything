@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { MouseEvent, useCallback } from 'react'
 import { useSelector } from 'react-redux'
 
 import { Button, Card, Col, Row, Space, Typography } from 'antd'
@@ -18,10 +18,14 @@ const CollectionCard = ({ platform, symbol }: CollectionCardProps) => {
   } = useSelector((state: AppState) => state)
   const { to } = useRoute()
 
-  const onSocialMedia = (url: string) => window.open(url, '_blank')
-  const onDetails = useCallback(() => {
-    return to(`/${platform}/${symbol}`)
-  }, [to, platform, symbol])
+  const onSocialMedia = (e: MouseEvent<HTMLElement>, url: string) => {
+    e.stopPropagation()
+    return window.open(url, '_blank')
+  }
+  const onDetails = useCallback(
+    () => to(`/${platform}/${symbol}`),
+    [to, platform, symbol],
+  )
 
   return (
     <Card
@@ -47,19 +51,19 @@ const CollectionCard = ({ platform, symbol }: CollectionCardProps) => {
             <Button
               type="text"
               icon={<IonIcon name="earth-outline" />}
-              onClick={() => onSocialMedia(website)}
+              onClick={(e) => onSocialMedia(e, website)}
               disabled={!website}
             />
             <Button
               type="text"
               icon={<IonIcon name="logo-twitter" />}
-              onClick={() => onSocialMedia(twitter)}
+              onClick={(e) => onSocialMedia(e, twitter)}
               disabled={!twitter}
             />
             <Button
               type="text"
               icon={<IonIcon name="logo-discord" />}
-              onClick={() => onSocialMedia(discord)}
+              onClick={(e) => onSocialMedia(e, discord)}
               disabled={!discord}
             />
           </Space>
