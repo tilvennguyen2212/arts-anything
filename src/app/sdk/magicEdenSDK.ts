@@ -54,7 +54,7 @@ export type MagicEdenAttribute = {
 
 export type MagicEdenFile = {
   uri: string
-  type: 'image/png' | 'video/mp4'
+  type: 'image/jpeg' | 'image/png' | 'image/gif' | 'video/mp4'
 }
 
 export type MagicEdenNFTMetadata = {
@@ -74,6 +74,26 @@ export type MagicEdenNFTMetadata = {
     files: MagicEdenFile[]
     category: string
     creators: MagicEdenCreator[]
+  }
+}
+
+export type MagicEdenBuyNow = {
+  buyerAddress: string
+  sellerAddress: string
+  auctionHouseAddress: string
+  mintAddress: string
+  accountAddress: string
+  price: number
+  buyerReferralAddress?: string
+  sellerReferralAddress?: string
+  buyerExpiry?: number
+  sellerExpiry?: number
+}
+
+export type MagicEdenInstruction = {
+  tx: {
+    type: 'Buffer'
+    data: number[]
   }
 }
 
@@ -127,6 +147,45 @@ class MagicEdenSDK extends Offset {
     const { data } = await axios.get(url)
     if (!data) throw new Error('Invalid mint address')
     return data as MagicEdenNFTMetadata
+  }
+
+  buyNow = async ({
+    buyerAddress,
+    sellerAddress,
+    auctionHouseAddress,
+    mintAddress,
+    accountAddress,
+    price,
+    buyerReferralAddress,
+    sellerReferralAddress,
+    buyerExpiry = 0,
+    sellerExpiry = 0,
+  }: MagicEdenBuyNow) => {
+    if (!account.isAddress(buyerAddress))
+      throw new Error('Invalid buyer address')
+    if (!account.isAddress(sellerAddress))
+      throw new Error('Invalid seller address')
+    if (!account.isAddress(auctionHouseAddress))
+      throw new Error('Invalid auction house address')
+    if (!account.isAddress(mintAddress)) throw new Error('Invalid mint address')
+    if (!account.isAddress(accountAddress))
+      throw new Error('Invalid account address')
+    const url = `${this.endpoint}/instructions/buy_now`
+    const { data } = await axios.get(url, {
+      params: {
+        buyer: buyerAddress,
+        seller: sellerAddress,
+        auctionHouseAddress,
+        tokenMint: mintAddress,
+        tokenATA: accountAddress,
+        price,
+        buyerReferral: buyerReferralAddress,
+        sellerReferral: sellerReferralAddress,
+        buyerExpiry,
+        sellerExpiry,
+      },
+    })
+    return data as MagicEdenInstruction
   }
 }
 

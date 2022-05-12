@@ -30,7 +30,7 @@ const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
     rarity,
     extra: { img },
   } = nft
-  const { name } = metadata || {}
+  const { name, image } = metadata || {}
 
   const onBuy = useCallback(() => {
     return console.log(platform, symbol)
@@ -43,7 +43,7 @@ const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
 
   return (
     <Card
-      cover={<img alt={name} src={img} />}
+      cover={<img alt={name} src={img || image} />}
       bodyStyle={{ padding: 16 }}
       bordered={false}
       hoverable

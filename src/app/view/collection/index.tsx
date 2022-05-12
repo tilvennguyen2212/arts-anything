@@ -11,6 +11,7 @@ import { useRoute } from 'app/hooks/useRoute'
 import { AppDispatch, AppState } from 'app/model'
 import { getCollection } from 'app/model/magicEden.controller'
 import { nextListingNFTs } from 'app/model/listing.controller'
+import { useHistory } from 'react-router-dom'
 
 const Collection = () => {
   const [loading, setLoading] = useState(false)
@@ -21,8 +22,11 @@ const Collection = () => {
     listing: { [symbol]: listingNFTs },
   } = useSelector((state: AppState) => state)
   const { to } = useRoute()
+  // const history = useHistory()
 
-  const onBack = useCallback(() => to(`/${platform}`), [to, platform])
+  const onBack = useCallback(() => {
+    return to(`/${platform}`)
+  }, [to, platform])
   const onMore = useCallback(async () => {
     setLoading(true)
     try {

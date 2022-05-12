@@ -10,6 +10,7 @@ export type AppRoute = {
   root: string
   to: (subroute: string) => void
   extend: (subroute: string) => string
+  back: () => void
 }
 
 export const useRoute = (): AppRoute => {
@@ -21,6 +22,7 @@ export const useRoute = (): AppRoute => {
     (subroute: string) => history.push(extend(subroute)),
     [history, extend],
   )
+  const back = useCallback(() => history.goBack(), [history])
 
-  return { root, extend, to }
+  return { root, extend, to, back }
 }
