@@ -4,6 +4,7 @@ import { MagicEdenRarity } from 'app/sdk/magicEdenSDK'
 
 export const RANKS: Record<keyof MagicEdenRarity, string> = {
   moonrank: 'https://moonrank.app/static/moonrank_icon.png',
+  howrare: 'https://howrare.com/img/logo.png',
 }
 
 export type RarityProps = {
@@ -14,7 +15,10 @@ export type RarityProps = {
 const Rarity = ({ name, rank }: RarityProps) => {
   return (
     <Tooltip title={name}>
-      <Card bodyStyle={{ padding: 8, cursor: 'pointer' }} style={{ width: 96 }}>
+      <Card
+        bodyStyle={{ padding: 8, cursor: 'pointer' }}
+        style={{ minWidth: 80, maxWidth: 96 }}
+      >
         <Space>
           <Avatar shape="circle" size="small" src={RANKS[name]} />
           <Space>

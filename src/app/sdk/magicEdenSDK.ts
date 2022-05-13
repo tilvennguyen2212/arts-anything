@@ -24,7 +24,7 @@ export type MagicEdenCollection = {
 }
 
 export type MagicEdenRarity = Record<
-  'moonrank',
+  'moonrank' | 'howrare',
   {
     rank: number
   }

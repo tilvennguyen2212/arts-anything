@@ -2,7 +2,7 @@ import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { account } from '@senswap/sen-js'
 
-import { Button, Card, Col, Row, Skeleton, Typography } from 'antd'
+import { Button, Card, Col, Row, Skeleton, Space, Typography } from 'antd'
 import IonIcon from 'shared/antd/ionicon'
 import Rarity from 'app/components/rarity'
 
@@ -86,9 +86,14 @@ const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
           )}
         </Col>
         <Col span={24}>
-          {rarity?.moonrank && (
-            <Rarity name="moonrank" rank={rarity?.moonrank.rank} />
-          )}
+          <Space>
+            {rarity?.moonrank && (
+              <Rarity name="moonrank" rank={rarity?.moonrank.rank} />
+            )}
+            {rarity?.howrare && (
+              <Rarity name="howrare" rank={rarity?.howrare.rank} />
+            )}
+          </Space>
         </Col>
         <Col span={24}>
           <Row gutter={[8, 8]} align="middle" wrap={false}>
