@@ -25,7 +25,7 @@ export const nextListingNFTs = createAsyncThunk<
   Partial<NFTState>,
   { symbol: string; limit?: number },
   { state: any }
->(`${NAME}/nextListingNFTs`, async ({ symbol, limit = 6 }, { getState }) => {
+>(`${NAME}/nextListingNFTs`, async ({ symbol, limit = 12 }, { getState }) => {
   const {
     listing: { [symbol]: prevNFTs },
   } = getState()
