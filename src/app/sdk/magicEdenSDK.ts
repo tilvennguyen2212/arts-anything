@@ -1,3 +1,4 @@
+import { PublicKey } from '@solana/web3.js'
 import { account } from '@senswap/sen-js'
 import axios from 'axios'
 
@@ -5,12 +6,6 @@ import { Net } from 'shared/runtime'
 import Offset from './offset'
 
 const API_KEY = ''
-
-export const ENDPOINTS: Record<Net, string> = {
-  devnet: 'https://api-devnet.magiceden.dev/v2',
-  testnet: 'https://api-testnet.magiceden.dev/v2',
-  mainnet: 'https://api-mainnet.magiceden.dev/v2',
-}
 
 export type MagicEdenCollection = {
   categories: string[]
@@ -106,8 +101,18 @@ class MagicEdenSDK extends Offset {
   constructor(network: Net) {
     super()
     this.network = network
-    this.endpoint = ENDPOINTS[this.network]
+    this.endpoint = MagicEdenSDK.ENDPOINTS[this.network]
   }
+
+  static ENDPOINTS: Record<Net, string> = {
+    devnet: 'https://api-devnet.magiceden.dev/v2',
+    testnet: 'https://api-testnet.magiceden.dev/v2',
+    mainnet: 'https://api-mainnet.magiceden.dev/v2',
+  }
+
+  static programId = new PublicKey(
+    'M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K',
+  )
 
   getCollection = async (symbol: string) => {
     if (!symbol) throw new Error('Invalid symbol')
@@ -188,6 +193,8 @@ class MagicEdenSDK extends Offset {
         sellerExpiry,
       },
     })
+    // In process
+    // https://gist.github.com/tuphan-dn/ec00b4f54341120959e2b5deb65c0f36
     return data as MagicEdenInstruction
   }
 }
