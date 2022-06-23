@@ -1,3 +1,5 @@
+import { useMemo } from 'react'
+
 import { Card, Col, Row } from 'antd'
 
 import { useRootSelector, RootState } from 'os/store'
@@ -22,13 +24,19 @@ const PANELS = [
 ]
 
 const BottomBanner = () => {
-  const {
-    ui: { width },
-  } = useRootSelector((state: RootState) => state)
+  const width = useRootSelector((state: RootState) => state.ui.width)
 
-  const bannerHeightRatio = width < 768 ? HEIGHT_RATIO : HEIGHT_RATIO * 2
-  const bannerWidth =
-    width < 768 ? width - PAGE_PADDING : width - PAGE_PADDING - ELEMENT_PADDING
+  const bannerHeightRatio = useMemo(
+    () => (width < 768 ? HEIGHT_RATIO : HEIGHT_RATIO * 2),
+    [width],
+  )
+  const bannerWidth = useMemo(
+    () =>
+      width < 768
+        ? width - PAGE_PADDING
+        : width - PAGE_PADDING - ELEMENT_PADDING,
+    [width],
+  )
 
   return (
     <Row gutter={[24, 16]}>

@@ -1,46 +1,57 @@
 import { Transaction } from '@solana/web3.js'
 import * as nacl from 'tweetnacl'
-import { account, Provider, Signature, SignedMessage } from '@senswap/sen-js'
+import { account, Provider, SignedMessage } from '@senswap/sen-js'
 import WalletAdapter from '@project-serum/sol-wallet-adapter'
 
 import BaseWallet from './baseWallet'
 import configs from 'os/configs'
+import { collectFee, collectFees } from './decorators'
 
+const {
+  sol: { node },
+} = configs
 const PROVIDER_URL = 'https://solflare.com/provider'
+const PROVIDER: WalletAdapter & Provider = new WalletAdapter(PROVIDER_URL, node)
 
 class SolflareWebWallet extends BaseWallet {
-  private provider: WalletAdapter & Provider
-
   constructor() {
     super('SolflareWeb')
-
-    const {
-      sol: { node },
-    } = configs
-    this.provider = new WalletAdapter(PROVIDER_URL, node)
   }
 
-  getProvider = async () => {
-    if (!this.provider.connected) await this.provider.connect()
-    return this.provider
+  async getProvider() {
+    if (!PROVIDER.connected) await PROVIDER.connect()
+    return PROVIDER
   }
 
-  getAddress = async () => {
+  async getAddress() {
     const provider = await this.getProvider()
     if (!provider.publicKey) throw new Error('Cannot connect to Solflare')
     return provider.publicKey.toBase58()
   }
 
-  rawSignTransaction = async (transaction: Transaction) => {
+  @collectFee
+  async signTransaction(transaction: Transaction): Promise<Transaction> {
     const provider = await this.getProvider()
     const address = await this.getAddress()
     const publicKey = account.fromAddress(address)
-    transaction.feePayer = publicKey
-    const { signature } = await provider.signTransaction(transaction)
-    return { publicKey, signature } as Signature
+    if (!transaction.feePayer) transaction.feePayer = publicKey
+    return await provider.signTransaction(transaction)
   }
 
-  signMessage = async (message: string) => {
+  @collectFees
+  async signAllTransactions(
+    transactions: Transaction[],
+  ): Promise<Transaction[]> {
+    const provider = await this.getProvider()
+    const address = await this.getAddress()
+    const publicKey = account.fromAddress(address)
+    transactions.forEach((transaction) => {
+      if (!transaction.feePayer) transaction.feePayer = publicKey
+    })
+    return await provider.signAllTransactions(transactions)
+  }
+
+  async signMessage(message: string) {
     if (!message) throw new Error('Message must be a non-empty string')
     const provider = await this.getProvider()
     const address = await this.getAddress()
@@ -51,11 +62,7 @@ class SolflareWebWallet extends BaseWallet {
     return data as SignedMessage
   }
 
-  verifySignature = async (
-    signature: string,
-    message: string,
-    address?: string,
-  ) => {
+  async verifySignature(signature: string, message: string, address?: string) {
     address = address || (await this.getAddress())
     const publicKey = account.fromAddress(address)
     const bufSig = Buffer.from(signature, 'hex')

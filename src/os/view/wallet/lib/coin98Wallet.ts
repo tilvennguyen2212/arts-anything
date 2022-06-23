@@ -1,22 +1,22 @@
 import { Transaction } from '@solana/web3.js'
-import { account, Signature, SignedMessage } from '@senswap/sen-js'
+import { account, SignedMessage } from '@senswap/sen-js'
 import { decode } from 'bs58'
 
 import BaseWallet from './baseWallet'
-
+import { collectFee, collectFees } from './decorators'
 
 class Coin98Wallet extends BaseWallet {
   constructor() {
     super('Coin98')
   }
 
-  getProvider = async () => {
+  async getProvider() {
     const { sol } = window?.coin98 || {}
     if (!sol) throw new Error('Wallet is not connected')
     return sol
   }
 
-  getAddress = async () => {
+  async getAddress(): Promise<string> {
     const provider = await this.getProvider()
     const [address] = (await provider.request({ method: 'sol_accounts' })) || []
     if (!account.isAddress(address))
@@ -24,20 +24,43 @@ class Coin98Wallet extends BaseWallet {
     return address
   }
 
-  rawSignTransaction = async (transaction: Transaction) => {
+  @collectFee
+  async signTransaction(transaction: Transaction): Promise<Transaction> {
     const provider = await this.getProvider()
     const address = await this.getAddress()
     const publicKey = account.fromAddress(address)
-    transaction.feePayer = publicKey
+    if (!transaction.feePayer) transaction.feePayer = publicKey
     const { signature: sig } = await provider.request({
       method: 'sol_sign',
       params: [transaction],
     })
     const signature = decode(sig)
-    return { publicKey, signature } as Signature
+    transaction.addSignature(publicKey, signature)
+    return transaction
   }
 
-  signMessage = async (message: string) => {
+  @collectFees
+  async signAllTransactions(
+    transactions: Transaction[],
+  ): Promise<Transaction[]> {
+    const provider = await this.getProvider()
+    const address = await this.getAddress()
+    const publicKey = account.fromAddress(address)
+    transactions.forEach((transaction) => {
+      if (!transaction.feePayer) transaction.feePayer = publicKey
+    })
+    const { signatures } = await provider.request({
+      method: 'sol_signAllTransactions',
+      params: [transactions],
+    })
+    signatures.forEach((sig: string, i: number) => {
+      const signature = decode(sig)
+      transactions[i].addSignature(publicKey, signature)
+    })
+    return transactions
+  }
+
+  async signMessage(message: string) {
     if (!message) throw new Error('Message must be a non-empty string')
     const provider = await this.getProvider()
     const data = await provider.request({
@@ -47,11 +70,7 @@ class Coin98Wallet extends BaseWallet {
     return data as SignedMessage
   }
 
-  verifySignature = async (
-    signature: string,
-    message: string,
-    address?: string,
-  ) => {
+  async verifySignature(signature: string, message: string, address?: string) {
     address = address || (await this.getAddress())
     const valid = await account.verifySignature(address, signature, message)
     return valid as boolean

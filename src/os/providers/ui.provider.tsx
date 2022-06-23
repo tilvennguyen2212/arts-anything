@@ -50,7 +50,7 @@ const UIContextProvider = ({
   antd?: boolean | ConfigProviderProps
 }) => {
   const dispatch = useRootDispatch<RootDispatch>()
-  const { ui } = useRootSelector((state: RootState) => state)
+  const ui = useRootSelector((state: RootState) => state.ui)
   const setBackground = useCallback(
     async (...args: Parameters<typeof _setBackground>) =>
       await dispatch(_setBackground(...args)).unwrap(),
@@ -66,10 +66,7 @@ const UIContextProvider = ({
 
   return (
     <Context.Provider value={provider}>
-      <section
-        id={appId}
-        style={{ height: '100%', backgroundColor: 'transparent', ...style }}
-      >
+      <section id={appId} style={{ backgroundColor: 'transparent', ...style }}>
         {configProvider ? (
           <ConfigProvider {...configProvider}>{children}</ConfigProvider>
         ) : (

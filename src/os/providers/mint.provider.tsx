@@ -35,7 +35,8 @@ export type MintProvider = {
  */
 const MintContextProvider = ({ children }: { children: ReactNode }) => {
   const dispatch = useRootDispatch<RootDispatch>()
-  const { mints, pools } = useRootSelector((state: RootState) => state)
+  const mints = useRootSelector((state: RootState) => state.mints)
+  const pools = useRootSelector((state: RootState) => state.pools)
   const getMint = useCallback(
     async (...args: Parameters<typeof _getMint>) =>
       await dispatch(_getMint(...args)).unwrap(),
@@ -47,7 +48,7 @@ const MintContextProvider = ({ children }: { children: ReactNode }) => {
         throw new Error('Invalid mint address')
       // If the token is in token provider, return its decimals
       const tokenInfo = await tokenProvider.findByAddress(mintAddress)
-      if (tokenInfo?.decimals) return tokenInfo.decimals
+      if (tokenInfo?.decimals !== undefined) return tokenInfo.decimals
       // If the token is lp, return 9 as default
       const index = Object.values(pools).findIndex(
         ({ mint_lpt }) => mint_lpt === mintAddress,

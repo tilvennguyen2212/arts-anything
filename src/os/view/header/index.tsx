@@ -2,11 +2,11 @@ import { useHistory, useLocation } from 'react-router-dom'
 import { account } from '@senswap/sen-js'
 
 import { Row, Col, Button, Space } from 'antd'
-import IonIcon from 'shared/antd/ionicon'
+import IonIcon from '@sentre/antd-ionicon'
 import Wallet from 'os/view/wallet'
 import Brand from 'os/components/brand'
-import ActionCenter from '../actionCenter'
-import ContextMenu from './contextMenu'
+import ActionCenter from 'os/view/actionCenter'
+import Navigation from './navigation'
 import Search from './search'
 
 import {
@@ -18,6 +18,8 @@ import {
 import { setWalkthrough, WalkThroughType } from 'os/store/walkthrough.reducer'
 import { net } from 'shared/runtime'
 import { setVisible } from 'os/store/search.reducer'
+import { useGoToStore } from 'os/hooks/useGotoStore'
+import { useCallback } from 'react'
 
 export type NavButtonProps = {
   id: string
@@ -27,7 +29,7 @@ export type NavButtonProps = {
 }
 
 export const NavButton = ({ id, iconName, title, onClick }: NavButtonProps) => {
-  const { width } = useRootSelector((state: RootState) => state.ui)
+  const width = useRootSelector((state: RootState) => state.ui.width)
   return (
     <Button
       type="text"
@@ -41,23 +43,26 @@ export const NavButton = ({ id, iconName, title, onClick }: NavButtonProps) => {
 }
 
 const Header = () => {
-  const {
-    wallet: { address: walletAddress },
-    ui: { width, theme },
-    walkthrough: { run, step },
-  } = useRootSelector((state: RootState) => state)
+  const walletAddress = useRootSelector(
+    (state: RootState) => state.wallet.address,
+  )
+  const width = useRootSelector((state: RootState) => state.ui.width)
+  const theme = useRootSelector((state: RootState) => state.ui.theme)
+  const run = useRootSelector((state: RootState) => state.walkthrough.run)
+  const step = useRootSelector((state: RootState) => state.walkthrough.step)
   const dispatch = useRootDispatch<RootDispatch>()
   const history = useHistory()
   const { pathname } = useLocation()
 
   const onSearch = () => dispatch(setVisible(true))
-  const onStore = async () => {
+  const onGoToStore = useGoToStore()
+  const onStore = useCallback(async () => {
     if (run && step === 0)
       await dispatch(
         setWalkthrough({ type: WalkThroughType.NewComer, step: 1 }),
       )
-    return history.push('/store')
-  }
+    return onGoToStore()
+  }, [dispatch, run, step, onGoToStore])
 
   return (
     <Row gutter={[12, 12]} align="middle" wrap={false}>
@@ -71,7 +76,7 @@ const Header = () => {
         />
       </Col>
       <Col flex="auto">
-        <ContextMenu />
+        <Navigation />
       </Col>
       <Col>
         <Space align="center">

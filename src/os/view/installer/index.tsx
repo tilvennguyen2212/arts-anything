@@ -2,27 +2,35 @@ import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
 import { Col, Modal, Row, Typography } from 'antd'
-import IonIcon from 'shared/antd/ionicon'
+import IonIcon from '@sentre/antd-ionicon'
 import CustomAppIcon from './customAppIcon'
 
-import { RootState, useRootDispatch, useRootSelector } from 'os/store'
+import {
+  RootDispatch,
+  RootState,
+  useRootDispatch,
+  useRootSelector,
+} from 'os/store'
 import { setVisibleInstaller } from 'os/store/ui.reducer'
 import SearchEngine from 'os/view/header/search/searchEngine'
-import { installApp } from 'os/store/page.reducer'
 import { randChoose } from 'shared/util'
+import { useInstallAppCallback } from 'os/hooks/useInstallApp'
 
 const SUGGESTION_LIMIT = 6
 
 const Installer = () => {
   const [recommendedApps, setRecommendeddApps] = useState<string[]>([])
-  const {
-    page: { appIds, register },
-    search: { value },
-    ui: { visibleInstaller },
-  } = useRootSelector((state: RootState) => state)
-  const dispatch = useRootDispatch()
+  const appIds = useRootSelector((state: RootState) => state.page.appIds)
+  const register = useRootSelector((state: RootState) => state.page.register)
+  const value = useRootSelector((state: RootState) => state.search.value)
+  const visible = useRootSelector(
+    (state: RootState) => state.ui.visibleInstaller,
+  )
+  const dispatch = useRootDispatch<RootDispatch>()
   const history = useHistory()
   const { pathname, search } = useLocation()
+  const onInstall = useInstallAppCallback()
+
   const params = new URLSearchParams(search)
   const autoInstall = params.get('autoInstall') === 'true' ? true : false
 
@@ -30,6 +38,10 @@ const Installer = () => {
   const exactAppId = useMemo(() => {
     return allAppIds.find((id) => id === value)
   }, [allAppIds, value])
+  const installed = useMemo(
+    () => Boolean(exactAppId && appIds.includes(exactAppId)),
+    [appIds, exactAppId],
+  )
 
   const closeInstaller = useCallback(async () => {
     await dispatch(setVisibleInstaller(false))
@@ -37,7 +49,7 @@ const Installer = () => {
   }, [dispatch, history])
 
   const onSearch = useCallback(async () => {
-    if (!visibleInstaller) return setRecommendeddApps([]) // For performance
+    if (!visible) return setRecommendeddApps([]) // For performance
     const engine = new SearchEngine(register)
     const appIds = engine.search(value)
     // Suggest additional apps
@@ -46,22 +58,15 @@ const Installer = () => {
       if (!appIds.includes(randAppId)) appIds.push(randAppId)
     }
     return setRecommendeddApps(appIds)
-  }, [allAppIds, register, value, visibleInstaller])
+  }, [allAppIds, register, value, visible])
 
   useEffect(() => {
     onSearch()
   }, [onSearch])
 
   useEffect(() => {
-    if (
-      autoInstall &&
-      exactAppId &&
-      register[exactAppId] &&
-      !appIds.includes(exactAppId)
-    ) {
-      dispatch(installApp(exactAppId))
-    }
-  }, [dispatch, autoInstall, exactAppId, appIds, register])
+    if (autoInstall && exactAppId && !installed) onInstall(exactAppId)
+  }, [onInstall, autoInstall, exactAppId, installed])
 
   if (autoInstall || !pathname.startsWith('/app')) return <Fragment />
   return (
@@ -70,7 +75,7 @@ const Installer = () => {
       closeIcon={<IonIcon name="close-outline" />}
       footer={null}
       onCancel={closeInstaller}
-      visible={visibleInstaller}
+      visible={visible}
       destroyOnClose
     >
       <Row gutter={[18, 18]}>

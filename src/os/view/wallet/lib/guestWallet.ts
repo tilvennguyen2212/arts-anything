@@ -21,7 +21,7 @@ class GuestWallet extends BaseWallet {
     )
   }
 
-  getProvider = async (): Promise<ExpanedProvider> => {
+  async getProvider(): Promise<ExpanedProvider> {
     const provider = {
       address: GUEST_ADDRESS,
       disconnect: () => {},
@@ -29,26 +29,29 @@ class GuestWallet extends BaseWallet {
     return provider
   }
 
-  getAddress = async () => {
+  async getAddress(): Promise<string> {
     const { address } = await this.getProvider()
     return address
   }
 
-  rawSignTransaction = async (transaction: Transaction) => {
+  async signTransaction(transaction: Transaction): Promise<Transaction> {
     await this._callback()
     return this._error()
   }
 
-  signMessage = async (message: string) => {
+  async signAllTransaction(
+    transactions: Transaction[],
+  ): Promise<Transaction[]> {
     await this._callback()
     return this._error()
   }
 
-  verifySignature = async (
-    signature: string,
-    message: string,
-    address?: string,
-  ) => {
+  async signMessage(message: string) {
+    await this._callback()
+    return this._error()
+  }
+
+  async verifySignature(signature: string, message: string, address?: string) {
     await this._callback()
     return this._error()
   }
