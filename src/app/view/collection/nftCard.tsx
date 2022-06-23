@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { account } from '@senswap/sen-js'
 
 import { Button, Card, Col, Row, Skeleton, Space, Typography } from 'antd'
-import IonIcon from 'shared/antd/ionicon'
+import IonIcon from '@sentre/antd-ionicon'
 import Rarity from 'app/components/rarity'
 
 import { AppDispatch, AppState } from 'app/model'

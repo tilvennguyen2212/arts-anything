@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { Avatar, Button, Col, Row, Typography } from 'antd'
-import IonIcon from 'shared/antd/ionicon'
+import IonIcon from '@sentre/antd-ionicon'
 import CollectionList from './collectionList'
 
 import { useRoute } from 'app/hooks/useRoute'
