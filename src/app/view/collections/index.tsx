@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 
-import { Avatar, Button, Col, Row, Typography } from 'antd'
+import { Avatar, Button, Col, Row, Space, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import CollectionList from './collectionList'
 
@@ -23,12 +23,18 @@ const Collections = () => {
             </Button>
           </Col>
           <Col>
-            <Typography.Title type="secondary" level={3}>
-              {name}
-            </Typography.Title>
-          </Col>
-          <Col>
-            <Avatar src={logo} />
+            <Space>
+              <Typography.Title type="secondary" level={3}>
+                {name}
+              </Typography.Title>
+              <Avatar src={logo} />
+              <Typography.Title type="secondary" level={3}>
+                /
+              </Typography.Title>
+              <Typography.Title type="secondary" level={3}>
+                Collections
+              </Typography.Title>
+            </Space>
           </Col>
         </Row>
       </Col>

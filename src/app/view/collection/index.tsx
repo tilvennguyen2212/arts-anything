@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 
 import { Button, Col, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
@@ -11,7 +12,6 @@ import { useRoute } from 'app/hooks/useRoute'
 import { AppDispatch, AppState } from 'app/model'
 import { getCollection } from 'app/model/magicEden.controller'
 import { nextListingNFTs } from 'app/model/listing.controller'
-import { useHistory } from 'react-router-dom'
 
 const Collection = () => {
   const [loading, setLoading] = useState(false)

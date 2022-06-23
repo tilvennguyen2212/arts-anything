@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Net } from 'shared/runtime'
 import Offset from './offset'
 
-const API_KEY = ''
+const API_KEY = '0a98aba7-8649-4754-8964-e2ff519538d6'
 
 export type MagicEdenCollection = {
   categories: string[]
@@ -193,6 +193,7 @@ class MagicEdenSDK extends Offset {
         sellerExpiry,
       },
     })
+    console.log(data)
     // In process
     // https://gist.github.com/tuphan-dn/ec00b4f54341120959e2b5deb65c0f36
     return data as MagicEdenInstruction
