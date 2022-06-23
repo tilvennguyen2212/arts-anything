@@ -5,7 +5,7 @@ import axios from 'axios'
 import { Net } from 'shared/runtime'
 import Offset from './offset'
 
-const API_KEY = '0a98aba7-8649-4754-8964-e2ff519538d6'
+const API_KEY = ''
 
 export type MagicEdenCollection = {
   categories: string[]
