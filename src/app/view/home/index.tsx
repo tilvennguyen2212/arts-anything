@@ -1,32 +1,57 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 
-import { Button, Col, Row } from 'antd'
+import { Button, Col, Row, Space } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
-import CollectionList from 'app/view/collections/collectionList'
 
 import { useRoute } from 'app/hooks/useRoute'
 import { NFTPlatform } from 'app/sdk'
+import { useWallet } from '@senhub/providers'
+import { sendAndConfirm, swapToSOL } from 'app/sdk/jupAgSDK'
 
 const Home = () => {
+  const [loading, setLoading] = useState(false)
   const { to } = useRoute()
+  const {
+    wallet: { address: walletAddress },
+  } = useWallet()
 
   const onDetails = useCallback(
     (platform: NFTPlatform) => to(`/${platform}`),
     [to],
   )
 
+  const onJupAg = useCallback(async () => {
+    try {
+      setLoading(true)
+      const txs = await swapToSOL(0.001, walletAddress)
+      const signedTxs = await window.sentre.wallet.signAllTransactions(txs)
+      const txIds = await sendAndConfirm(signedTxs)
+      return console.log(txIds)
+    } catch (er: any) {
+      return window.notify({ type: 'error', description: er.message })
+    } finally {
+      return setLoading(false)
+    }
+  }, [walletAddress])
+
   return (
     <Row gutter={[24, 24]}>
       <Col span={24}>
-        <Button
-          onClick={() => onDetails('magicEden')}
-          icon={<IonIcon name="images-outline" />}
-        >
-          Magic Eden
-        </Button>
-      </Col>
-      <Col span={24}>
-        <CollectionList platform="magicEden" more={false} />
+        <Space>
+          <Button
+            onClick={() => onDetails('magicEden')}
+            icon={<IonIcon name="images-outline" />}
+          >
+            Magic Eden
+          </Button>
+          <Button
+            onClick={onJupAg}
+            icon={<IonIcon name="send-outline" />}
+            loading={loading}
+          >
+            Jup Ag
+          </Button>
+        </Space>
       </Col>
     </Row>
   )
