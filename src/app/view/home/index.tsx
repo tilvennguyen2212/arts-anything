@@ -23,7 +23,8 @@ const Home = () => {
   const onJupAg = useCallback(async () => {
     try {
       setLoading(true)
-      const txs = await swapToSOL(0.001, walletAddress)
+      const amount = 0.001
+      const txs = await swapToSOL({ amount, walletAddress })
       const signedTxs = await window.sentre.wallet.signAllTransactions(txs)
       const txIds = await sendAndConfirm(signedTxs)
       return console.log(txIds)

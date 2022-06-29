@@ -1,4 +1,5 @@
 import {
+  Cluster,
   Connection,
   PublicKey,
   LAMPORTS_PER_SOL,
@@ -6,20 +7,26 @@ import {
 } from '@solana/web3.js'
 import { Jupiter } from '@jup-ag/core'
 
-import { net } from 'shared/runtime'
 import configs from 'app/configs'
 
 const {
   sol: { node },
 } = configs
 const connection = new Connection(node)
-const cluster = net === 'mainnet' ? 'mainnet-beta' : net
 
 const USDC_ADDRESS = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
 // const UXD_ADDRESS = '7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT'
 const SOL_ADDRESS = 'So11111111111111111111111111111111111111112'
 
-export const swapToSOL = async (amount: number, walletAddress: string) => {
+export const swapToSOL = async ({
+  amount,
+  walletAddress,
+  cluster = 'mainnet-beta',
+}: {
+  amount: number
+  walletAddress: string
+  cluster?: Cluster
+}) => {
   const sol = amount * 1.01
   const { data } = await (
     await fetch('https://price.jup.ag/v1/price?id=SOL&vsToken=USDC')

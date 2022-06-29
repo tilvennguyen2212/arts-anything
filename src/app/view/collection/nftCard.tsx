@@ -1,4 +1,4 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { account } from '@senswap/sen-js'
 
@@ -11,6 +11,7 @@ import { NFTPlatform } from 'app/sdk'
 import { getNFTMetadata } from 'app/model/metadata.controller'
 import { magicEdenSDK } from 'app/model/magicEden.controller'
 import { useWallet } from '@senhub/providers'
+import { sendAndConfirm } from 'app/sdk/jupAgSDK'
 
 export type NFTCardProps = {
   platform: NFTPlatform
@@ -19,6 +20,7 @@ export type NFTCardProps = {
 }
 
 const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
+  const [loading, setLoading] = useState(false)
   const {
     listing: {
       [symbol]: { [mintAddress]: nft },
@@ -41,20 +43,29 @@ const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
   const { name, image } = metadata || {}
 
   const onBuy = useCallback(async () => {
-    const { splt } = window.sentre
-    const accountAddress = await splt.deriveAssociatedAddress(
-      walletAddress,
-      tokenMint,
-    )
-    const data = await magicEdenSDK.buyNow({
-      buyerAddress: walletAddress,
-      sellerAddress: seller,
-      auctionHouseAddress: auctionHouse,
-      mintAddress: tokenMint,
-      accountAddress,
-      price,
-    })
-    return console.log(data)
+    try {
+      setLoading(true)
+      const { splt, wallet } = window.sentre
+      const accountAddress = await splt.deriveAssociatedAddress(
+        walletAddress,
+        tokenMint,
+      )
+      const { signedTx } = await magicEdenSDK.buyNow({
+        buyerAddress: walletAddress,
+        sellerAddress: seller,
+        auctionHouseAddress: auctionHouse,
+        mintAddress: tokenMint,
+        accountAddress,
+        price,
+      })
+      // const tx = await wallet.signTransaction(signedTx)
+      // const [txId] = await sendAndConfirm([tx])
+      // return console.log(txId)
+    } catch (er: any) {
+      return window.notify({ type: 'error', description: er.message })
+    } finally {
+      return setLoading(false)
+    }
   }, [walletAddress, seller, price, tokenMint, auctionHouse])
 
   useEffect(() => {
@@ -105,6 +116,7 @@ const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
                 type="primary"
                 icon={<IonIcon name="card-outline" />}
                 onClick={onBuy}
+                loading={loading}
               >
                 Buy
               </Button>

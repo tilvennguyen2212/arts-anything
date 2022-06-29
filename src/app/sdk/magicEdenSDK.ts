@@ -1,11 +1,9 @@
-import { PublicKey } from '@solana/web3.js'
+import { Transaction } from '@solana/web3.js'
 import { account } from '@senswap/sen-js'
 import axios from 'axios'
 
 import { Net } from 'shared/runtime'
 import Offset from './offset'
-
-const API_KEY = ''
 
 export type MagicEdenCollection = {
   categories: string[]
@@ -87,13 +85,6 @@ export type MagicEdenBuyNow = {
   sellerExpiry?: number
 }
 
-export type MagicEdenInstruction = {
-  tx: {
-    type: 'Buffer'
-    data: number[]
-  }
-}
-
 class MagicEdenSDK extends Offset {
   public network: Net
   public endpoint: string
@@ -104,27 +95,42 @@ class MagicEdenSDK extends Offset {
     this.endpoint = MagicEdenSDK.ENDPOINTS[this.network]
   }
 
+  static CORS = 'https://cors.sentre.io/magic-eden/'
   static ENDPOINTS: Record<Net, string> = {
     devnet: 'https://api-devnet.magiceden.dev/v2',
     testnet: 'https://api-testnet.magiceden.dev/v2',
     mainnet: 'https://api-mainnet.magiceden.dev/v2',
   }
 
-  static programId = new PublicKey(
-    'M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K',
-  )
+  private getURL = ({
+    path,
+    params,
+    auth = false,
+  }: {
+    path: string
+    params?: Record<string, any>
+    auth?: boolean
+  }) => {
+    if (params) for (const key in params) params[key] = params[key].toString()
+    const origin = this.endpoint + path
+    const searchParams = params ? new URLSearchParams(params).toString() : ''
+    const encodedURI = encodeURIComponent(`${origin}?${searchParams}`)
+    return MagicEdenSDK.CORS + encodedURI + `?auth=${auth}`
+  }
 
   getCollection = async (symbol: string) => {
     if (!symbol) throw new Error('Invalid symbol')
-    const url = `${this.endpoint}/collections/${symbol}`
+    const url = this.getURL({ path: `/collections/${symbol}` })
     const { data } = await axios.get(url)
     if (!data) throw new Error('Invalid symbol')
     return data as MagicEdenCollection
   }
 
   getCollections = async (offset = 0, limit = 200) => {
-    const url = `${this.endpoint}/collections`
-    const { data } = await axios.get(url, { params: { offset, limit } })
+    const params = { offset, limit }
+    const url = this.getURL({ path: '/collections', params })
+    console.log(url)
+    const { data } = await axios.get(url)
     return (data || []) as MagicEdenCollection[]
   }
 
@@ -136,8 +142,9 @@ class MagicEdenSDK extends Offset {
   }
 
   getListingNFTs = async (symbol: string, offset = 0, limit = 20) => {
-    const url = `${this.endpoint}/collections/${symbol}/listings`
-    const { data } = await axios.get(url, { params: { offset, limit } })
+    const params = { offset, limit }
+    const url = this.getURL({ path: `/collections/${symbol}/listings`, params })
+    const { data } = await axios.get(url)
     return (data || []) as MagicEdenListingNFT[]
   }
 
@@ -150,12 +157,15 @@ class MagicEdenSDK extends Offset {
 
   getNFTMetadata = async (mintAddress: string) => {
     if (!account.isAddress(mintAddress)) throw new Error('Invalid mint address')
-    const url = `${this.endpoint}/tokens/${mintAddress}`
+    const url = this.getURL({ path: `/tokens/${mintAddress}` })
     const { data } = await axios.get(url)
     if (!data) throw new Error('Invalid mint address')
     return data as MagicEdenNFTMetadata
   }
 
+  // In process
+  // M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K
+  // https://gist.github.com/tuphan-dn/ec00b4f54341120959e2b5deb65c0f36
   buyNow = async ({
     buyerAddress,
     sellerAddress,
@@ -175,27 +185,32 @@ class MagicEdenSDK extends Offset {
     if (!account.isAddress(mintAddress)) throw new Error('Invalid mint address')
     if (!account.isAddress(accountAddress))
       throw new Error('Invalid account address')
-    const url = `${this.endpoint}/instructions/buy_now`
-    const { data } = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${API_KEY}`,
-      },
-      params: {
-        buyer: buyerAddress,
-        seller: sellerAddress,
-        auctionHouseAddress,
-        tokenMint: mintAddress,
-        tokenATA: accountAddress,
-        price,
-        buyerReferral: buyerReferralAddress,
-        sellerReferral: sellerReferralAddress,
-        buyerExpiry,
-        sellerExpiry,
-      },
+
+    const params = {
+      buyer: buyerAddress,
+      seller: sellerAddress,
+      auctionHouseAddress,
+      tokenMint: mintAddress,
+      tokenATA: accountAddress,
+      price,
+      buyerReferral: buyerReferralAddress,
+      sellerReferral: sellerReferralAddress,
+      buyerExpiry,
+      sellerExpiry,
+    }
+    const url = this.getURL({
+      path: '/instructions/buy_now',
+      params,
+      auth: true,
     })
-    // In process
-    // https://gist.github.com/tuphan-dn/ec00b4f54341120959e2b5deb65c0f36
-    return data as MagicEdenInstruction
+    const { data } = await axios.get(url)
+    console.log(Buffer.from(data.tx))
+    console.log(Buffer.from(data.txSigned))
+    console.log(Transaction.from(Buffer.from(data.tx)))
+    return {
+      // tx: Transaction.from(Buffer.from(data.tx)),
+      signedTx: Transaction.from(Buffer.from(data.txSigned)),
+    }
   }
 }
 
