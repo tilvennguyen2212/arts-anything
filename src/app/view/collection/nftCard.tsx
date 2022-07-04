@@ -50,7 +50,7 @@ const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
         walletAddress,
         tokenMint,
       )
-      const { signedTx } = await magicEdenSDK.buyNow({
+      const tx = await magicEdenSDK.buyNow({
         buyerAddress: walletAddress,
         sellerAddress: seller,
         auctionHouseAddress: auctionHouse,
@@ -58,9 +58,9 @@ const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
         accountAddress,
         price,
       })
-      // const tx = await wallet.signTransaction(signedTx)
-      // const [txId] = await sendAndConfirm([tx])
-      // return console.log(txId)
+      const signedTx = await wallet.signTransaction(tx)
+      const [txId] = await sendAndConfirm([signedTx])
+      return console.log(txId)
     } catch (er: any) {
       return window.notify({ type: 'error', description: er.message })
     } finally {

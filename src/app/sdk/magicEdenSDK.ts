@@ -114,6 +114,7 @@ class MagicEdenSDK extends Offset {
     if (params) for (const key in params) params[key] = params[key].toString()
     const origin = this.endpoint + path
     const searchParams = params ? new URLSearchParams(params).toString() : ''
+    console.log(`${origin}?${searchParams}`)
     const encodedURI = encodeURIComponent(`${origin}?${searchParams}`)
     return MagicEdenSDK.CORS + encodedURI + `?auth=${auth}`
   }
@@ -129,7 +130,6 @@ class MagicEdenSDK extends Offset {
   getCollections = async (offset = 0, limit = 200) => {
     const params = { offset, limit }
     const url = this.getURL({ path: '/collections', params })
-    console.log(url)
     const { data } = await axios.get(url)
     return (data || []) as MagicEdenCollection[]
   }
@@ -204,13 +204,7 @@ class MagicEdenSDK extends Offset {
       auth: true,
     })
     const { data } = await axios.get(url)
-    console.log(Buffer.from(data.tx))
-    console.log(Buffer.from(data.txSigned))
-    console.log(Transaction.from(Buffer.from(data.tx)))
-    return {
-      // tx: Transaction.from(Buffer.from(data.tx)),
-      signedTx: Transaction.from(Buffer.from(data.txSigned)),
-    }
+    return Transaction.from(Buffer.from(data.txSigned))
   }
 }
 
