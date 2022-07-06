@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
 import { MagicEdenNFTMetadata } from 'sdk/magicEdenSDK'
-import { magicEdenSDK } from './magicEden.controller'
+import { magicEdenSDK } from './collections.controller'
 
 /**
  * Interface & Utility

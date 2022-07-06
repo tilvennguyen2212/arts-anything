@@ -1,8 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { devTools, bigintSerializationMiddleware } from 'model/devTools'
 
-import main from 'model/main.controller'
-import magicEden from 'model/magicEden.controller'
+import collections from 'model/collections.controller'
 import listing from 'model/listing.controller'
 import metadata from 'model/metadata.controller'
 
@@ -14,8 +13,7 @@ const model = configureStore({
     getDefaultMiddleware(bigintSerializationMiddleware),
   devTools: devTools(process.env.REACT_APP_ID as string),
   reducer: {
-    main,
-    magicEden,
+    collections,
     listing,
     metadata,
   },

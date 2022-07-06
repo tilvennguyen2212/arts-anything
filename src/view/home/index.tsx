@@ -7,7 +7,6 @@ import { useRoute } from 'hooks/useRoute'
 import { NFTPlatform } from 'sdk'
 import { useWallet } from '@sentre/senhub'
 import { sendAndConfirm, swapToSOL } from 'sdk/jupAgSDK'
-import NftPlugin from 'view/nftPlugin'
 
 const Home = () => {
   const [loading, setLoading] = useState(false)
@@ -53,7 +52,6 @@ const Home = () => {
           >
             Jup Ag
           </Button>
-          <NftPlugin />
         </Space>
       </Col>
     </Row>

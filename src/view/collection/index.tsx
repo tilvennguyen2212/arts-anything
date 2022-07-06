@@ -10,28 +10,28 @@ import NFTCard from './nftCard'
 import { useCollection } from 'hooks/useCollection'
 import { useRoute } from 'hooks/useRoute'
 import { AppDispatch, AppState } from 'model'
-import { getCollection } from 'model/magicEden.controller'
+import { getCollection } from 'model/collections.controller'
 import { nextListingNFTs } from 'model/listing.controller'
 
 const Collection = () => {
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
-  const { platform, symbol } = useCollection()
+  const { symbol } = useCollection()
   const {
-    [platform]: { [symbol]: collection },
+    collections: { [symbol]: collection },
     listing: { [symbol]: listingNFTs },
   } = useSelector((state: AppState) => state)
   const { to, back } = useRoute()
   const { action } = useHistory()
 
   const onBack = useCallback(() => {
-    if (action !== 'PUSH') return to(`/${platform}`)
+    if (action !== 'PUSH') return to('/')
     return back()
-  }, [to, back, platform, action])
+  }, [to, back, action])
 
   const onMore = useCallback(async () => {
-    setLoading(true)
     try {
+      setLoading(true)
       await dispatch(nextListingNFTs({ symbol }))
     } catch (er: any) {
       return window.notify({ type: 'warning', description: er.message })
@@ -51,19 +51,19 @@ const Collection = () => {
   return (
     <Row gutter={[24, 24]}>
       <Col span={24}>
-        <Button icon={<IonIcon name="arrow-back-outline" />} onClick={onBack}>
+        <Button
+          size="large"
+          icon={<IonIcon name="arrow-back-outline" />}
+          onClick={onBack}
+        >
           Back
         </Button>
       </Col>
       <Col span={24}>
         <Row gutter={[24, 24]}>
           {Object.values(listingNFTs || {}).map(({ tokenMint }, i) => (
-            <Col key={i} xs={12} sm={8} lg={6} xl={4} xxl={3}>
-              <NFTCard
-                platform={platform}
-                symbol={symbol}
-                mintAddress={tokenMint}
-              />
+            <Col key={i} xs={12} sm={8} lg={6}>
+              <NFTCard symbol={symbol} mintAddress={tokenMint} />
             </Col>
           ))}
         </Row>

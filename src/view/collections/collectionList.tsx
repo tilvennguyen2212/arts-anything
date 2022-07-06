@@ -6,14 +6,13 @@ import MoreButton from 'components/moreButton'
 import CollectionCard from './collectionCard'
 
 import { AppDispatch, AppState } from 'model'
-import { NFTPlatform } from 'sdk'
-import { nextCollections } from 'model/magicEden.controller'
+import { nextCollections } from 'model/collections.controller'
 
-export type CollectionListProps = { platform: NFTPlatform; more?: boolean }
+export type CollectionListProps = { more?: boolean }
 
-const CollectionList = ({ platform, more = true }: CollectionListProps) => {
+const CollectionList = ({ more = true }: CollectionListProps) => {
   const [loading, setLoading] = useState(false)
-  const { [platform]: collections } = useSelector((state: AppState) => state)
+  const { collections } = useSelector((state: AppState) => state)
   const dispatch = useDispatch<AppDispatch>()
 
   const onMore = useCallback(async () => {
@@ -34,8 +33,8 @@ const CollectionList = ({ platform, more = true }: CollectionListProps) => {
   return (
     <Row gutter={[24, 24]}>
       {Object.keys(collections).map((symbol, i) => (
-        <Col key={i} xs={12} sm={8} lg={6} xl={4} xxl={3}>
-          <CollectionCard platform={platform} symbol={symbol} />
+        <Col key={i} xs={12} sm={8} lg={6}>
+          <CollectionCard symbol={symbol} />
         </Col>
       ))}
       {more && (

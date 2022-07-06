@@ -1,3 +1,3 @@
-# My App
+# Any Arts
 
-A sample project for Sentre developers
+Buy NFTs buy any SPL tokens.
