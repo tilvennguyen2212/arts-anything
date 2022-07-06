@@ -1,7 +1,6 @@
 import { Route, Switch } from 'react-router-dom'
 
 import { Row, Col } from 'antd'
-import Home from './home'
 import Collections from './collections'
 import Collection from './collection'
 
@@ -17,13 +16,8 @@ const View = () => {
     <Row gutter={[24, 24]}>
       <Col span={24}>
         <Switch>
-          <Route exact path={extend('/')} component={Home} />
-          <Route exact path={extend('/:platform')} component={Collections} />
-          <Route
-            exact
-            path={extend('/:platform/:symbol')}
-            component={Collection}
-          />
+          <Route exact path={extend('/')} component={Collections} />
+          <Route exact path={extend('/:symbol')} component={Collection} />
         </Switch>
       </Col>
       <Col span={24} />

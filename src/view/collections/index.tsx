@@ -1,45 +1,46 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
+import { useWallet } from '@sentre/senhub'
 
-import { Avatar, Button, Col, Row, Space, Typography } from 'antd'
+import { Button, Col, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import CollectionList from './collectionList'
 
-import { useRoute } from 'hooks/useRoute'
-import { usePlatform } from 'hooks/usePlatform'
+import { sendAndConfirm, swapToSOL } from 'sdk/jupAgSDK'
 
 const Collections = () => {
-  const { platform, name, logo } = usePlatform()
-  const { to } = useRoute()
+  const [loading, setLoading] = useState(false)
+  const {
+    wallet: { address: walletAddress },
+  } = useWallet()
 
-  const onHome = useCallback(() => to('/'), [to])
+  const onJupAg = useCallback(async () => {
+    try {
+      setLoading(true)
+      const amount = 0.001
+      const txs = await swapToSOL({ amount, walletAddress })
+      const signedTxs = await window.sentre.wallet.signAllTransactions(txs)
+      const txIds = await sendAndConfirm(signedTxs)
+      return console.log(txIds)
+    } catch (er: any) {
+      return window.notify({ type: 'error', description: er.message })
+    } finally {
+      return setLoading(false)
+    }
+  }, [walletAddress])
 
   return (
     <Row gutter={[24, 24]}>
       <Col span={24}>
-        <Row gutter={[12, 12]} wrap={false} align="middle">
-          <Col flex="auto">
-            <Button icon={<IonIcon name="home-outline" />} onClick={onHome}>
-              Home
-            </Button>
-          </Col>
-          <Col>
-            <Space>
-              <Typography.Title type="secondary" level={3}>
-                {name}
-              </Typography.Title>
-              <Avatar src={logo} />
-              <Typography.Title type="secondary" level={3}>
-                /
-              </Typography.Title>
-              <Typography.Title type="secondary" level={3}>
-                Collections
-              </Typography.Title>
-            </Space>
-          </Col>
-        </Row>
+        <Button
+          onClick={onJupAg}
+          icon={<IonIcon name="send-outline" />}
+          loading={loading}
+        >
+          Jup Ag
+        </Button>
       </Col>
       <Col span={24}>
-        <CollectionList platform={platform} />
+        <CollectionList />
       </Col>
     </Row>
   )

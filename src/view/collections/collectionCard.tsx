@@ -5,14 +5,13 @@ import { Button, Card, Col, Row, Space, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 
 import { AppState } from 'model'
-import { NFTPlatform } from 'sdk'
 import { useRoute } from 'hooks/useRoute'
 
-export type CollectionCardProps = { platform: NFTPlatform; symbol: string }
+export type CollectionCardProps = { symbol: string }
 
-const CollectionCard = ({ platform, symbol }: CollectionCardProps) => {
+const CollectionCard = ({ symbol }: CollectionCardProps) => {
   const {
-    [platform]: {
+    collections: {
       [symbol]: { name, description, image, website, twitter, discord },
     },
   } = useSelector((state: AppState) => state)
@@ -22,10 +21,7 @@ const CollectionCard = ({ platform, symbol }: CollectionCardProps) => {
     e.stopPropagation()
     return window.open(url, '_blank')
   }
-  const onDetails = useCallback(
-    () => to(`/${platform}/${symbol}`),
-    [to, platform, symbol],
-  )
+  const onDetails = useCallback(() => to(`/${symbol}`), [to, symbol])
 
   return (
     <Card

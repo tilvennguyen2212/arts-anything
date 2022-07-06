@@ -8,20 +8,18 @@ import IonIcon from '@sentre/antd-ionicon'
 import Rarity from 'components/rarity'
 
 import { AppDispatch, AppState } from 'model'
-import { NFTPlatform } from 'sdk'
 import { sendAndConfirm } from 'sdk/jupAgSDK'
 import { getNFTMetadata } from 'model/metadata.controller'
-import { magicEdenSDK } from 'model/magicEden.controller'
+import { magicEdenSDK } from 'model/collections.controller'
 
 const referralAddress: string = 'autMW8SgBkVYeBgqYiTuJZnkvDZMVU2MHJh9Jh7CSQ2'
 
 export type NFTCardProps = {
-  platform: NFTPlatform
   symbol: string
   mintAddress: string
 }
 
-const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
+const NFTCard = ({ symbol, mintAddress }: NFTCardProps) => {
   const [loading, setLoading] = useState(false)
   const {
     listing: {

@@ -13,7 +13,7 @@ export type MagicEdenState = Record<string, MagicEdenCollection>
  * Store constructor
  */
 
-const NAME = 'magicEden'
+const NAME = 'collections'
 const initialState: MagicEdenState = {}
 export const magicEdenSDK = new MagicEdenSDK(net)
 
