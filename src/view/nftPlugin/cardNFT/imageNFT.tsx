@@ -1,6 +1,6 @@
-import { Image } from 'antd'
+import { Avatar } from 'antd'
 
-import IMAGE_DEFAULT from 'static/images/nft.jpeg'
+import IMAGE_DEFAULT from 'static/images/nft-default.svg'
 
 type ImageNFTProps = {
   src?: string
@@ -8,16 +8,7 @@ type ImageNFTProps = {
 }
 
 const ImageNFT = ({ src, size = undefined }: ImageNFTProps) => {
-  return (
-    <Image
-      className={`square-image`}
-      src={src || IMAGE_DEFAULT}
-      preview={false}
-      style={{ borderRadius: 4 }}
-      height={size}
-      width={size}
-    />
-  )
+  return <Avatar shape="square" src={src || IMAGE_DEFAULT} size={size} />
 }
 
 export default ImageNFT
