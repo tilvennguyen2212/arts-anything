@@ -15,6 +15,7 @@ const MoreButton = ({
   return (
     <Button
       type="text"
+      size="large"
       onClick={onMore}
       loading={loading}
       disabled={disabled}

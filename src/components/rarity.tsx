@@ -3,7 +3,7 @@ import { Avatar, Card, Space, Tooltip, Typography } from 'antd'
 import { MagicEdenRarity } from 'sdk/magicEdenSDK'
 
 export const RANKS: Record<keyof MagicEdenRarity, string> = {
-  moonrank: 'https://moonrank.static/moonrank_icon.png',
+  moonrank: 'https://moonrank.app/static/favicon.ico',
   howrare: 'https://howrare.com/img/logo.png',
 }
 
