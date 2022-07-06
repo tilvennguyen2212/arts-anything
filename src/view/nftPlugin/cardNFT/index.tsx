@@ -1,5 +1,5 @@
 import IonIcon from '@sentre/antd-ionicon'
-import { Button, Col, Image, Row, Space, Typography } from 'antd'
+import { Avatar, Button, Col, Row, Space, Typography } from 'antd'
 import ImageNFT from './imageNFT'
 import SolLogo from 'static/images/sol-logo.svg'
 
@@ -20,9 +20,16 @@ const CardNFT = () => {
             <Button type="text" icon={<IonIcon name="logo-twitter" />} />
             <Button type="text" icon={<IonIcon name="logo-discord" />} />
           </Space>
-          <Space>
-            <Typography.Text className="t-16">182.9</Typography.Text>
-            <Image src={SolLogo} height={18} width={20} />
+          <Space size={8}>
+            <Typography.Text style={{ fontSize: 20 }} strong>
+              182.9
+            </Typography.Text>
+            <Avatar
+              shape="square"
+              src={SolLogo}
+              size={24}
+              style={{ padding: 5 }}
+            />
           </Space>
         </Space>
       </Col>

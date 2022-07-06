@@ -7,6 +7,7 @@ import Title from './title'
 import MagicEdenTitle from './magicEdenTitle'
 import CardNFT from './cardNFT'
 import TokenToBuy from './tokenToBuy'
+import InfoNFT from './infoNFT'
 
 const NftPlugin = () => {
   const [visible, setVisible] = useState(false)
@@ -32,6 +33,9 @@ const NftPlugin = () => {
           </Col>
           <Col span={24}>
             <CardNFT />
+          </Col>
+          <Col span={24}>
+            <InfoNFT />
           </Col>
           <Col span={24}>
             <TokenToBuy />

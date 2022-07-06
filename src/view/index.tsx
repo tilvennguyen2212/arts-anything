@@ -10,6 +10,7 @@ import { ACCEPTED_TOKENS } from 'sdk/magicEdenSDK'
 
 import 'static/styles/light.less'
 import 'static/styles/dark.less'
+import NftPlugin from './nftPlugin'
 
 const View = () => {
   const { extend } = useRoute()
@@ -17,6 +18,9 @@ const View = () => {
   return (
     <Row gutter={[24, 24]} justify="center">
       <Col span={24} />
+      <Col span={24}>
+        <NftPlugin />
+      </Col>
       <Col span={24} style={{ maxWidth: 1200 }}>
         <Row gutter={[24, 24]} justify="center">
           <Col>
