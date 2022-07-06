@@ -19,7 +19,7 @@ const View = () => {
       <Col span={24} style={{ maxWidth: 1200 }}>
         <Row gutter={[24, 24]} justify="center">
           <Col style={{ marginTop: 64, marginBottom: 64 }}>
-            <Typography.Text style={{ fontSize: 56, fontWeight: 900 }}>
+            <Typography.Text style={{ fontSize: 64, fontWeight: 900 }}>
               Buy NFTs by{' '}
               <TextLoop>
                 {Object.values(ACCEPTED_TOKENS).map(
