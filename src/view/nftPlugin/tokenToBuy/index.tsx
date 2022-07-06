@@ -1,5 +1,4 @@
 import { Button, Col, Row, Typography } from 'antd'
-import React from 'react'
 
 const TokenToBuy = () => {
   return (
