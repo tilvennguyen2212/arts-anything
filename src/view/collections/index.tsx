@@ -1,10 +1,11 @@
 import { useCallback, useState } from 'react'
 import { useWallet } from '@sentre/senhub'
 
-import { Button, Col, Row } from 'antd'
+import { Button, Col, Row, Segmented } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import CollectionList from './collectionList'
 
+import { ACCEPTED_TOKENS } from 'sdk/magicEdenSDK'
 import { sendAndConfirm, swapToSOL } from 'sdk/jupAgSDK'
 
 const Collections = () => {
@@ -17,7 +18,11 @@ const Collections = () => {
     try {
       setLoading(true)
       const amount = 0.001
-      const txs = await swapToSOL({ amount, walletAddress })
+      const txs = await swapToSOL({
+        amount,
+        walletAddress,
+        payment: ACCEPTED_TOKENS.usdc,
+      })
       const signedTxs = await window.sentre.wallet.signAllTransactions(txs)
       const txIds = await sendAndConfirm(signedTxs)
       return console.log(txIds)
@@ -31,13 +36,27 @@ const Collections = () => {
   return (
     <Row gutter={[24, 24]}>
       <Col span={24}>
-        <Button
-          onClick={onJupAg}
-          icon={<IonIcon name="send-outline" />}
-          loading={loading}
-        >
-          Jup Ag
-        </Button>
+        <Row gutter={[16, 16]}>
+          <Col flex="auto">
+            <Segmented
+              size="large"
+              options={[
+                { label: '💎 Recent', value: 'recent' },
+                { label: '🔥 Hot', value: 'hot', disabled: true },
+                { label: '⏳ Comming', value: 'comming', disabled: true },
+              ]}
+            />
+          </Col>
+          <Col>
+            <Button
+              onClick={onJupAg}
+              icon={<IonIcon name="send-outline" />}
+              loading={loading}
+            >
+              Jup Ag
+            </Button>
+          </Col>
+        </Row>
       </Col>
       <Col span={24}>
         <CollectionList />

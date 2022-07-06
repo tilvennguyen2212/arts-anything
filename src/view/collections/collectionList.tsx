@@ -33,7 +33,7 @@ const CollectionList = ({ more = true }: CollectionListProps) => {
   return (
     <Row gutter={[24, 24]}>
       {Object.keys(collections).map((symbol, i) => (
-        <Col key={i} xs={12} sm={8} lg={6} xl={4} xxl={3}>
+        <Col key={i} xs={12} sm={8} lg={6}>
           <CollectionCard symbol={symbol} />
         </Col>
       ))}

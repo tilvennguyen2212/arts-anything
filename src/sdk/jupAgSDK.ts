@@ -8,34 +8,26 @@ import {
 import { Jupiter } from '@jup-ag/core'
 
 import configs from 'configs'
+import { AcceptedPaymentMetadata } from './constants'
 
 const {
   sol: { node },
 } = configs
 const connection = new Connection(node)
 
-export const INPUTS = {
-  usdc: {
-    address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
-    symbols: 'USDC',
-  },
-  uxd: {
-    address: '7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT',
-    symbols: 'UXD',
-  },
-}
-
 export const swapToSOL = async ({
   amount,
+  payment,
   walletAddress,
   cluster = 'mainnet-beta',
 }: {
   amount: number
+  payment: AcceptedPaymentMetadata
   walletAddress: string
   cluster?: Cluster
 }) => {
   const sol = amount * 1.01
-  const { address, symbols } = INPUTS.usdc
+  const { address, symbols } = payment
   const { data } = await (
     await fetch(`https://price.jup.ag/v1/price?id=SOL&vsToken=${symbols}`)
   ).json()

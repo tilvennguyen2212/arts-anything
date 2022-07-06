@@ -51,14 +51,18 @@ const Collection = () => {
   return (
     <Row gutter={[24, 24]}>
       <Col span={24}>
-        <Button icon={<IonIcon name="arrow-back-outline" />} onClick={onBack}>
+        <Button
+          size="large"
+          icon={<IonIcon name="arrow-back-outline" />}
+          onClick={onBack}
+        >
           Back
         </Button>
       </Col>
       <Col span={24}>
         <Row gutter={[24, 24]}>
           {Object.values(listingNFTs || {}).map(({ tokenMint }, i) => (
-            <Col key={i} xs={12} sm={8} lg={6} xl={4} xxl={3}>
+            <Col key={i} xs={12} sm={8} lg={6}>
               <NFTCard symbol={symbol} mintAddress={tokenMint} />
             </Col>
           ))}
