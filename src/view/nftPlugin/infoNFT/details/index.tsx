@@ -1,10 +1,10 @@
 import { ReactNode, useState } from 'react'
+import CopyToClipboard from 'react-copy-to-clipboard'
 
 import { Avatar, Col, Row, Space, Tooltip, Typography } from 'antd'
 import SolLogo from 'static/images/sol-logo.svg'
 import SolScanLogo from 'static/images/solscan-logo.svg'
 import { util } from '@sentre/senhub'
-import CopyToClipboard from 'react-copy-to-clipboard'
 
 type ItemDetailProps = {
   title?: string
