@@ -1,13 +1,14 @@
 import { useState } from 'react'
-import CopyToClipboard from 'react-copy-to-clipboard'
-import { util } from '@sentre/senhub'
+import copy from 'copy-to-clipboard'
 
+import { util } from '@sentre/senhub'
 import { Space, Typography, Tooltip } from 'antd'
 
 const Address = ({ address }: { address: string }) => {
   const [copied, setCopied] = useState(false)
 
   const onCopy = async () => {
+    copy(address)
     setCopied(true)
     await util.asyncWait(1500)
     setCopied(false)
@@ -18,11 +19,9 @@ const Address = ({ address }: { address: string }) => {
       <Typography.Text style={{ fontSize: 16 }}>
         Dong (
         <Tooltip title="Copied" visible={copied}>
-          <CopyToClipboard text={address} onCopy={onCopy}>
-            <Typography.Text style={{ cursor: 'pointer' }}>
-              {util.shortenAddress(address)}
-            </Typography.Text>
-          </CopyToClipboard>
+          <Typography.Text onClick={onCopy} style={{ cursor: 'pointer' }}>
+            {util.shortenAddress(address)}
+          </Typography.Text>
         </Tooltip>
         )
       </Typography.Text>
