@@ -14,7 +14,7 @@ const CardNFT = () => {
       </Col>
       <Col flex="auto">
         <Space direction="vertical" size={0}>
-          <Typography.Text className="t-16">Okay Bear #5108</Typography.Text>
+          <Typography.Title level={5}>Okay Bear #5108</Typography.Title>
           <Space size={0}>
             <Button type="text" icon={<IonIcon name="earth-outline" />} />
             <Button type="text" icon={<IonIcon name="logo-twitter" />} />
