@@ -1,34 +1,48 @@
-import IonIcon from '@sentre/antd-ionicon'
+import { useSelector } from 'react-redux'
+
 import { Avatar, Button, Col, Row, Space, Typography } from 'antd'
+import IonIcon from '@sentre/antd-ionicon'
 import ImageNFT from './imageNFT'
 import SolLogo from 'static/images/sol-logo.svg'
 
-const CardNFT = () => {
+import { AppState } from 'model'
+import { NFTCardProps } from 'view/collection/nftCard'
+
+const CardNFT = ({ symbol, mintAddress }: NFTCardProps) => {
+  const {
+    listing: {
+      [symbol]: { [mintAddress]: nft },
+    },
+    metadata: { [mintAddress]: metadata },
+  } = useSelector((state: AppState) => state)
+  const {
+    price,
+    extra: { img },
+  } = nft
+  const { name, image } = metadata || {}
+
   return (
     <Row gutter={[16, 16]} wrap={false}>
       <Col>
-        <ImageNFT
-          src="https://bafybeidihp4ez5lw4sqqxu4kwcvhjc2qhm2szz7kkayyee425oamdfzrkm.ipfs.dweb.link/9975.png?ext=png"
-          size={87}
-        />
+        <ImageNFT src={img || image} size={87} />
       </Col>
       <Col flex="auto">
         <Space direction="vertical" size={0}>
-          <Typography.Title level={5}>Okay Bear #5108</Typography.Title>
+          <Typography.Title level={5}>{name}</Typography.Title>
           <Space size={0}>
             <Button type="text" icon={<IonIcon name="earth-outline" />} />
             <Button type="text" icon={<IonIcon name="logo-twitter" />} />
             <Button type="text" icon={<IonIcon name="logo-discord" />} />
           </Space>
-          <Space size={8}>
+          <Space size={4} align="center">
             <Typography.Text style={{ fontSize: 20 }} strong>
-              182.9
+              {price}
             </Typography.Text>
             <Avatar
               shape="square"
               src={SolLogo}
               size={24}
-              style={{ padding: 5 }}
+              style={{ padding: 3 }}
             />
           </Space>
         </Space>

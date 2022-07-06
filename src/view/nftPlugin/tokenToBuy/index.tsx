@@ -1,8 +1,16 @@
-import { Button, Col, Row, Typography } from 'antd'
 import { useState } from 'react'
 
+import { Button, Col, Row, Typography } from 'antd'
+
+import { ACCEPTED_TOKENS } from 'sdk/constants'
+
+const tokenSelectedStyle = {
+  color: '#0752ab',
+  borderColor: '#0752ab',
+  background: 'transparent',
+}
+
 const TokenToBuy = () => {
-  const [listTokens] = useState<string[]>(['SOL', 'SNTR', 'USDC', 'OKRS'])
   const [tokenSelected, setTokenSelected] = useState('')
 
   return (
@@ -12,29 +20,19 @@ const TokenToBuy = () => {
       </Col>
       <Col span={24}>
         <Row gutter={[8, 8]}>
-          {listTokens.map((token) => (
-            <Col key={token}>
+          {Object.values(ACCEPTED_TOKENS).map(({ symbols }) => (
+            <Col key={symbols}>
               <Button
-                className={`${
-                  token === tokenSelected ? 'token-selected' : null
-                }`}
-                onClick={() => setTokenSelected(token)}
+                onClick={() => setTokenSelected(symbols)}
+                style={
+                  symbols === tokenSelected ? tokenSelectedStyle : undefined
+                }
               >
-                {token}
+                {symbols}
               </Button>
             </Col>
           ))}
         </Row>
-      </Col>
-      <Col span={24}>
-        <Button type="primary" block>
-          Buy Now
-        </Button>
-      </Col>
-      <Col span={24}>
-        <Button type="text" block>
-          Search NFT
-        </Button>
       </Col>
     </Row>
   )
