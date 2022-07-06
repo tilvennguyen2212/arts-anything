@@ -1,5 +1,5 @@
 import { ReactNode, useState } from 'react'
-import CopyToClipboard from 'react-copy-to-clipboard'
+import copy from 'copy-to-clipboard'
 import { util } from '@sentre/senhub'
 
 import { Avatar, Col, Row, Space, Tooltip, Typography } from 'antd'
@@ -27,6 +27,7 @@ const SolScanAddress = ({ address }: { address: string }) => {
   const [copied, setCopied] = useState(false)
 
   const onCopy = async () => {
+    copy(address)
     setCopied(true)
     await util.asyncWait(1500)
     setCopied(false)
@@ -43,9 +44,9 @@ const SolScanAddress = ({ address }: { address: string }) => {
         <Avatar shape="square" src={SolLogo} size={20} style={{ padding: 3 }} />
       </Typography.Text>
       <Tooltip title="Copied" visible={copied}>
-        <CopyToClipboard text={address} onCopy={onCopy}>
-          <Typography.Text>{util.shortenAddress(address)}</Typography.Text>
-        </CopyToClipboard>
+        <Typography.Text onClick={onCopy}>
+          {util.shortenAddress(address)}
+        </Typography.Text>
       </Tooltip>
     </Space>
   )
