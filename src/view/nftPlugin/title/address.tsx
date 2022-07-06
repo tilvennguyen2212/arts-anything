@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import CopyToClipboard from 'react-copy-to-clipboard'
+import { util } from '@sentre/senhub'
 
 import { Space, Typography, Tooltip } from 'antd'
-import { util } from '@sentre/senhub'
 
 const Address = ({ address }: { address: string }) => {
   const [copied, setCopied] = useState(false)
