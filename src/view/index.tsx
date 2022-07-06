@@ -10,7 +10,6 @@ import { ACCEPTED_TOKENS } from 'sdk/magicEdenSDK'
 
 import 'static/styles/light.less'
 import 'static/styles/dark.less'
-import NftPlugin from './nftPlugin'
 
 const View = () => {
   const { extend } = useRoute()
