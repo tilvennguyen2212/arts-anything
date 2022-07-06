@@ -6,7 +6,7 @@ import Collections from './collections'
 import Collection from './collection'
 
 import { useRoute } from 'hooks/useRoute'
-import { ACCEPTED_TOKENS } from 'sdk/magicEdenSDK'
+import { ACCEPTED_TOKENS } from 'sdk/constants'
 
 import 'static/styles/light.less'
 import 'static/styles/dark.less'
