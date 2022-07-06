@@ -40,7 +40,7 @@ const SolScanAddress = ({ address }: { address: string }) => {
         <Avatar src={SolScanLogo} size={16} />
       </Typography.Text>
       <Typography.Text>
-        <Avatar shape="square" src={SolLogo} size={24} style={{ padding: 3 }} />
+        <Avatar shape="square" src={SolLogo} size={20} style={{ padding: 3 }} />
       </Typography.Text>
       <Tooltip title="Copied" visible={copied}>
         <CopyToClipboard text={address} onCopy={onCopy}>
