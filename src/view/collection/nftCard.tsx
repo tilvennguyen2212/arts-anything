@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 import { account } from '@senswap/sen-js'
 import { useWallet, util } from '@sentre/senhub'
 
-import { Button, Card, Col, Row, Skeleton, Space, Typography } from 'antd'
-import IonIcon from '@sentre/antd-ionicon'
+import { Card, Col, Row, Skeleton, Space, Typography } from 'antd'
 import Rarity from 'components/rarity'
+import NFTPlugin from 'view/nftPlugin'
 
 import { AppDispatch, AppState } from 'model'
 import { sendAndConfirm } from 'sdk/jupAgSDK'
@@ -118,14 +118,12 @@ const NFTCard = ({ symbol, mintAddress }: NFTCardProps) => {
               <Typography.Title level={5}>{price} SOL</Typography.Title>
             </Col>
             <Col>
-              <Button
-                type="primary"
-                icon={<IonIcon name="card-outline" />}
-                onClick={onBuy}
+              <NFTPlugin
+                symbol={symbol}
+                mintAddress={mintAddress}
                 loading={loading}
-              >
-                Buy
-              </Button>
+                onBuy={onBuy}
+              />
             </Col>
           </Row>
         </Col>
