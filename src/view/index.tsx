@@ -29,6 +29,7 @@ const View = () => {
                       href={url}
                       target="_blank"
                       rel="noreferrer"
+                      className="gradient-text"
                     >
                       {symbols}
                     </a>
