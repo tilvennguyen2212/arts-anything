@@ -14,9 +14,16 @@ const {
 } = configs
 const connection = new Connection(node)
 
-const USDC_ADDRESS = 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v'
-// const UXD_ADDRESS = '7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT'
-const SOL_ADDRESS = 'So11111111111111111111111111111111111111112'
+export const INPUTS = {
+  usdc: {
+    address: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
+    symbols: 'USDC',
+  },
+  uxd: {
+    address: '7kbnvuGBxxj8AG9qp8Scn56muWGaRaFqxg1FsRp3PaFT',
+    symbols: 'UXD',
+  },
+}
 
 export const swapToSOL = async ({
   amount,
@@ -28,8 +35,9 @@ export const swapToSOL = async ({
   cluster?: Cluster
 }) => {
   const sol = amount * 1.01
+  const { address, symbols } = INPUTS.usdc
   const { data } = await (
-    await fetch('https://price.jup.ag/v1/price?id=SOL&vsToken=USDC')
+    await fetch(`https://price.jup.ag/v1/price?id=SOL&vsToken=${symbols}`)
   ).json()
   const inputAmount = sol * data.price * 10 ** 6
   const jupiter = await Jupiter.load({
@@ -40,14 +48,17 @@ export const swapToSOL = async ({
   const {
     routesInfos: [routeInfo],
   } = await jupiter.computeRoutes({
-    inputMint: new PublicKey(USDC_ADDRESS),
-    outputMint: new PublicKey(SOL_ADDRESS),
+    inputMint: new PublicKey(address),
+    outputMint: new PublicKey('So11111111111111111111111111111111111111112'),
     inputAmount,
     slippage: 1,
     forceFetch: true,
   })
-  console.log('inputAmount', inputAmount / 10 ** 6)
-  console.log('outputAmount', routeInfo.outAmount / LAMPORTS_PER_SOL)
+  console.log('Input Amount', inputAmount / 10 ** 6)
+  console.log(
+    'Minimum Output Amount',
+    routeInfo.outAmountWithSlippage / LAMPORTS_PER_SOL,
+  )
   console.log(routeInfo)
   const {
     transactions: { setupTransaction, swapTransaction, cleanupTransaction },

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { account } from '@senswap/sen-js'
+import { useWallet, util } from '@sentre/senhub'
 
 import { Button, Card, Col, Row, Skeleton, Space, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
@@ -8,10 +9,11 @@ import Rarity from 'components/rarity'
 
 import { AppDispatch, AppState } from 'model'
 import { NFTPlatform } from 'sdk'
+import { sendAndConfirm } from 'sdk/jupAgSDK'
 import { getNFTMetadata } from 'model/metadata.controller'
 import { magicEdenSDK } from 'model/magicEden.controller'
-import { useWallet } from '@sentre/senhub'
-import { sendAndConfirm } from 'sdk/jupAgSDK'
+
+const referralAddress: string = 'autMW8SgBkVYeBgqYiTuJZnkvDZMVU2MHJh9Jh7CSQ2'
 
 export type NFTCardProps = {
   platform: NFTPlatform
@@ -45,22 +47,28 @@ const NFTCard = ({ platform, symbol, mintAddress }: NFTCardProps) => {
   const onBuy = useCallback(async () => {
     try {
       setLoading(true)
-      const { splt, wallet } = window.sentre
-      const accountAddress = await splt.deriveAssociatedAddress(
-        walletAddress,
-        tokenMint,
+      const { wallet } = window.sentre
+      const { setupTransaction, buyNowTransaction } = await magicEdenSDK.buyNow(
+        {
+          buyerAddress: walletAddress,
+          sellerAddress: seller,
+          auctionHouseAddress: auctionHouse,
+          mintAddress: tokenMint,
+          price,
+          buyerReferralAddress: referralAddress,
+          sellerReferralAddress: referralAddress,
+          buyerExpiry: 0,
+          sellerExpiry: -1,
+        },
       )
-      const tx = await magicEdenSDK.buyNow({
-        buyerAddress: walletAddress,
-        sellerAddress: seller,
-        auctionHouseAddress: auctionHouse,
-        mintAddress: tokenMint,
-        accountAddress,
-        price,
+      const txs = [setupTransaction, buyNowTransaction]
+      const signedTxs = await wallet.signAllTransactions(txs)
+      const txIds = await sendAndConfirm(signedTxs)
+      return window.notify({
+        type: 'success',
+        description: 'Successfully buy the NFT. Click to view details.',
+        onClick: () => window.open(util.explorer(txIds[1]), '_blank'),
       })
-      const signedTx = await wallet.signTransaction(tx)
-      const [txId] = await sendAndConfirm([signedTx])
-      return console.log(txId)
     } catch (er: any) {
       return window.notify({ type: 'error', description: er.message })
     } finally {
