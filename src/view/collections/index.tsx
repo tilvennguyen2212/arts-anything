@@ -1,8 +1,20 @@
 import { Col, Row, Segmented } from 'antd'
-import CollectionList from './collectionList'
+import { useState } from 'react'
+import RecentList from './recentList'
 import Search from './search'
 
+import { Category } from 'model/category.controller'
+import HotList from './hotList'
+
+const CurrentList = ({ type = 'recent' }: { type?: Category }) => {
+  if (type === 'recent') return <RecentList />
+  if (type === 'hot') return <HotList />
+  return <RecentList />
+}
+
 const Collections = () => {
+  const [type, setType] = useState<Category>('recent')
+
   return (
     <Row gutter={[24, 24]}>
       <Col span={24}>
@@ -12,9 +24,11 @@ const Collections = () => {
               size="large"
               options={[
                 { label: '💎 Recent', value: 'recent' },
-                { label: '🔥 Hot', value: 'hot', disabled: true },
+                { label: '🔥 Hot', value: 'hot' },
                 { label: '⏳ Comming', value: 'comming', disabled: true },
               ]}
+              value={type}
+              onChange={(e) => setType(e as Category)}
             />
           </Col>
           <Col>
@@ -23,7 +37,7 @@ const Collections = () => {
         </Row>
       </Col>
       <Col span={24}>
-        <CollectionList />
+        <CurrentList type={type} />
       </Col>
     </Row>
   )

@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { devTools, bigintSerializationMiddleware } from 'model/devTools'
 
 import collections from 'model/collections.controller'
+import category from 'model/category.controller'
 import listing from 'model/listing.controller'
 import metadata from 'model/metadata.controller'
 
@@ -14,6 +15,7 @@ const model = configureStore({
   devTools: devTools(process.env.REACT_APP_ID as string),
   reducer: {
     collections,
+    category,
     listing,
     metadata,
   },

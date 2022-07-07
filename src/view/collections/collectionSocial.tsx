@@ -1,19 +1,16 @@
 import { MouseEvent } from 'react'
-import { useSelector } from 'react-redux'
 
 import { Button, Space } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 
-import { AppState } from 'model'
+import { useCollection } from 'hooks/useCollection'
 
 export type CollectionSocialProps = { symbol: string }
 
 const CollectionSocial = ({ symbol }: CollectionSocialProps) => {
   const {
-    collections: {
-      [symbol]: { website, twitter, discord },
-    },
-  } = useSelector((state: AppState) => state)
+    collection: { website, twitter, discord },
+  } = useCollection(symbol)
 
   const onSocialMedia = (e: MouseEvent<HTMLElement>, url: string) => {
     e.stopPropagation()
