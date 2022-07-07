@@ -1,14 +1,8 @@
-import {
-  Cluster,
-  Connection,
-  PublicKey,
-  LAMPORTS_PER_SOL,
-  Transaction,
-} from '@solana/web3.js'
+import { Cluster, Connection, PublicKey, Transaction } from '@solana/web3.js'
 import { Jupiter } from '@jup-ag/core'
 
 import configs from 'configs'
-import { AcceptedPaymentMetadata } from './constants'
+import { AcceptedPaymentMetadata } from './otcSDK'
 
 const {
   sol: { node },
@@ -27,9 +21,9 @@ export const swapToSOL = async ({
   cluster?: Cluster
 }) => {
   const sol = amount * 1.01
-  const { address, symbols } = payment
+  const { address, symbol } = payment
   const { data } = await (
-    await fetch(`https://price.jup.ag/v1/price?id=SOL&vsToken=${symbols}`)
+    await fetch(`https://price.jup.ag/v1/price?id=SOL&vsToken=${symbol}`)
   ).json()
   const inputAmount = sol * data.price * 10 ** 6
   const jupiter = await Jupiter.load({
@@ -46,12 +40,6 @@ export const swapToSOL = async ({
     slippage: 1,
     forceFetch: true,
   })
-  console.log('Input Amount', inputAmount / 10 ** 6)
-  console.log(
-    'Minimum Output Amount',
-    routeInfo.outAmountWithSlippage / LAMPORTS_PER_SOL,
-  )
-  console.log(routeInfo)
   const {
     transactions: { setupTransaction, swapTransaction, cleanupTransaction },
   } = await jupiter.exchange({ routeInfo })

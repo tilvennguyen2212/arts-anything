@@ -15,7 +15,7 @@ export type MagicEdenState = Record<string, MagicEdenCollection>
 
 const NAME = 'collections'
 const initialState: MagicEdenState = {}
-export const magicEdenSDK = new MagicEdenSDK(net)
+export const magicEdenSDK = new MagicEdenSDK({ network: net })
 
 /**
  * Actions

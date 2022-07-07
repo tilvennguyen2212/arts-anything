@@ -1,18 +1,16 @@
-import { useState } from 'react'
-
 import { Button, Col, Row, Typography } from 'antd'
 
-import { ACCEPTED_TOKENS } from 'sdk/constants'
+import { CACHED_WHITELIST } from 'sdk/otcSDK'
 
-const tokenSelectedStyle = {
-  color: '#0752ab',
-  borderColor: '#0752ab',
-  background: 'transparent',
+export type TokenToBuyProps = {
+  value?: string
+  onChange?: (value: string) => void
 }
 
-const TokenToBuy = () => {
-  const [tokenSelected, setTokenSelected] = useState('')
-
+const TokenToBuy = ({
+  value = 'sol',
+  onChange = () => {},
+}: TokenToBuyProps) => {
   return (
     <Row gutter={[16, 16]}>
       <Col span={24}>
@@ -20,15 +18,13 @@ const TokenToBuy = () => {
       </Col>
       <Col span={24}>
         <Row gutter={[8, 8]}>
-          {Object.values(ACCEPTED_TOKENS).map(({ symbols }) => (
-            <Col key={symbols}>
+          {['sol', ...Object.keys(CACHED_WHITELIST)].map((symbol) => (
+            <Col key={symbol}>
               <Button
-                onClick={() => setTokenSelected(symbols)}
-                style={
-                  symbols === tokenSelected ? tokenSelectedStyle : undefined
-                }
+                onClick={() => onChange(symbol)}
+                className={symbol === value ? 'token-selected' : undefined}
               >
-                {symbols}
+                {symbol.toUpperCase()}
               </Button>
             </Col>
           ))}

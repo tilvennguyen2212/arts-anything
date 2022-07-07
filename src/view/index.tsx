@@ -6,7 +6,7 @@ import Collections from './collections'
 import Collection from './collection'
 
 import { useRoute } from 'hooks/useRoute'
-import { ACCEPTED_TOKENS } from 'sdk/constants'
+import { CACHED_WHITELIST } from 'sdk/otcSDK'
 
 import 'static/styles/light.less'
 import 'static/styles/dark.less'
@@ -22,8 +22,8 @@ const View = () => {
             <Typography.Text style={{ fontSize: 64, fontWeight: 900 }}>
               Buy NFTs by{' '}
               <TextLoop>
-                {Object.values(ACCEPTED_TOKENS).map(
-                  ({ address, url, symbols }) => (
+                {Object.values(CACHED_WHITELIST).map(
+                  ({ address, url, symbol }) => (
                     <a
                       key={address}
                       href={url}
@@ -31,7 +31,7 @@ const View = () => {
                       rel="noreferrer"
                       className="gradient-text"
                     >
-                      {symbols}
+                      {symbol}
                     </a>
                   ),
                 )}

@@ -1,11 +1,4 @@
-import {
-  Transaction,
-  TransactionInstruction,
-  PublicKey,
-  SystemProgram,
-  SYSVAR_RENT_PUBKEY,
-  Connection,
-} from '@solana/web3.js'
+import { Transaction, PublicKey, Connection } from '@solana/web3.js'
 import { utils } from '@project-serum/anchor'
 import { Net } from '@sentre/senhub'
 import { account } from '@senswap/sen-js'
@@ -22,15 +15,22 @@ class MagicEdenSDK extends Offset {
   public network: Net
   public endpoint: string
   public connection: Connection
+  public service: string
 
-  constructor(network: Net) {
+  constructor({
+    network,
+    service = 'https://cors.sentre.io/magic-eden',
+  }: {
+    network: Net
+    service?: string
+  }) {
     super()
     this.network = network
+    this.service = service
     this.endpoint = MagicEdenSDK.ENDPOINTS[this.network]
     this.connection = new Connection(MagicEdenSDK.RPCS[this.network])
   }
 
-  static CORS = 'https://cors.sentre.io/magic-eden/'
   static ENDPOINTS: Record<Net, string> = {
     devnet: 'https://api-devnet.magiceden.dev/v2',
     testnet: 'https://api-testnet.magiceden.dev/v2',
@@ -41,58 +41,23 @@ class MagicEdenSDK extends Offset {
     testnet: 'https://api.testnet.solana.com',
     mainnet: 'https://ssc-dao.genesysgo.net/',
   }
-
-  private initializeAccount = async (
-    walletAddress: string,
-    mintAddress: string,
-  ) => {
-    const {
-      token: { TOKEN_PROGRAM_ID, ASSOCIATED_PROGRAM_ID, associatedAddress },
-    } = utils
-    const walletPublicKey = new PublicKey(walletAddress)
-    const mintPublicKey = new PublicKey(mintAddress)
-    const accountPublicKey = await associatedAddress({
-      mint: mintPublicKey,
-      owner: walletPublicKey,
-    })
-    const tx = new Transaction()
-    const ix = new TransactionInstruction({
-      keys: [
-        { pubkey: walletPublicKey, isSigner: true, isWritable: true },
-        { pubkey: accountPublicKey, isSigner: false, isWritable: true },
-        { pubkey: walletPublicKey, isSigner: false, isWritable: false },
-        { pubkey: mintPublicKey, isSigner: false, isWritable: false },
-        { pubkey: SystemProgram.programId, isSigner: false, isWritable: false },
-        { pubkey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false },
-        { pubkey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false },
-      ],
-      programId: ASSOCIATED_PROGRAM_ID,
-      data: Buffer.from([]),
-    })
-    tx.add(ix)
-    tx.feePayer = walletPublicKey
-    const { blockhash } = await this.connection.getLatestBlockhash('confirmed')
-    tx.recentBlockhash = blockhash
-    return tx
-  }
+  static DEFAULT_REFERRAL: string =
+    'autMW8SgBkVYeBgqYiTuJZnkvDZMVU2MHJh9Jh7CSQ2'
 
   private getURL = ({
     path,
     params,
     auth = false,
-    verbose = false,
   }: {
     path: string
     params?: Record<string, any>
     auth?: boolean
-    verbose?: boolean
   }) => {
     if (params) for (const key in params) params[key] = params[key].toString()
     const origin = this.endpoint + path
     const searchParams = params ? new URLSearchParams(params).toString() : ''
-    if (verbose) console.log(`${origin}?${searchParams}`)
     const encodedURI = encodeURIComponent(`${origin}?${searchParams}`)
-    return MagicEdenSDK.CORS + encodedURI + `?auth=${auth}`
+    return `${this.service}/${encodedURI}?auth=${auth}`
   }
 
   getCollection = async (symbol: string) => {
@@ -148,8 +113,8 @@ class MagicEdenSDK extends Offset {
     auctionHouseAddress = '',
     mintAddress,
     price,
-    buyerReferralAddress = '',
-    sellerReferralAddress = '',
+    buyerReferralAddress = MagicEdenSDK.DEFAULT_REFERRAL,
+    sellerReferralAddress = MagicEdenSDK.DEFAULT_REFERRAL,
     buyerExpiry = 0,
     sellerExpiry = -1,
   }: {
@@ -191,18 +156,11 @@ class MagicEdenSDK extends Offset {
       path: '/instructions/buy_now',
       params,
       auth: true,
-      verbose: true,
     })
     const { data } = await axios.get(url)
-    const setupTransaction = await this.initializeAccount(
-      buyerAddress,
-      mintAddress,
-    )
-    const buyNowTransaction = Transaction.from(Buffer.from(data.txSigned))
-    return { setupTransaction, buyNowTransaction }
+    return Transaction.from(Buffer.from(data.txSigned))
   }
 }
 
 export * from './types'
-export * from './constants'
 export default MagicEdenSDK

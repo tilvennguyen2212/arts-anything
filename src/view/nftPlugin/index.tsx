@@ -1,25 +1,77 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useCallback, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useWallet, util } from '@sentre/senhub'
 
 import { Button, Col, Modal, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
-
+import MagicEdenTitle from './magicEdenTitle'
 import CardNFT from './cardNFT'
 import TokenToBuy from './tokenToBuy'
 
-import { NFTCardProps } from 'view/collection/nftCard'
+import { AppState } from 'model'
+import { magicEdenSDK } from 'model/collections.controller'
+import { sendAndConfirm } from 'sdk/jupAgSDK'
+import OTCSDK from 'sdk/otcSDK'
 
-export type NFTPluginProps = {
-  loading: boolean
-  onBuy: () => void
-}
+const otcSDK = new OTCSDK()
 
-const NFTPlugin = ({
-  symbol,
-  mintAddress,
-  onBuy,
-  loading,
-}: NFTCardProps & NFTPluginProps) => {
+export type NFTPluginProps = { symbol: string; mintAddress: string }
+
+const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
+  const [loading, setLoading] = useState(false)
   const [visible, setVisible] = useState(false)
+  const [tokenSymbol, setTokenSymbol] = useState('sol')
+  const {
+    listing: {
+      [symbol]: { [mintAddress]: nft },
+    },
+    metadata: { [mintAddress]: metadata },
+  } = useSelector((state: AppState) => state)
+  const {
+    wallet: { address: walletAddress },
+  } = useWallet()
+
+  const { seller, price, tokenMint, auctionHouse } = nft
+  const { name } = metadata || {}
+
+  const onBuy = useCallback(async () => {
+    try {
+      setLoading(true)
+      const { wallet } = window.sentre
+      let txs = []
+      if (tokenSymbol !== 'sol') {
+        const setupTransaction = await otcSDK.exchange({
+          walletAddress,
+          tokenSymbol,
+          solAmount: price,
+        })
+        txs.push(setupTransaction)
+      }
+      const buyNowTransaction = await magicEdenSDK.buyNow({
+        buyerAddress: walletAddress,
+        sellerAddress: seller,
+        auctionHouseAddress: auctionHouse,
+        mintAddress: tokenMint,
+        price,
+      })
+      txs.push(buyNowTransaction)
+      const signedTxs = await wallet.signAllTransactions(txs)
+      const txIds = await sendAndConfirm(signedTxs)
+      setVisible(false)
+      return window.notify({
+        type: 'success',
+        description: `Successfully buy the NFT ${name}. Click to view details.`,
+        onClick: () => window.open(util.explorer(txIds[1]), '_blank'),
+      })
+    } catch (er: any) {
+      return window.notify({
+        type: 'error',
+        description: er.message,
+      })
+    } finally {
+      return setLoading(false)
+    }
+  }, [walletAddress, tokenSymbol, seller, auctionHouse, tokenMint, price, name])
 
   return (
     <Fragment>
@@ -35,15 +87,14 @@ const NFTPlugin = ({
         visible={visible}
         footer={false}
         onCancel={() => setVisible(false)}
-        width={359}
+        width={368}
         closeIcon={<IonIcon name="close-outline" />}
-        closable={false}
         bodyStyle={{ padding: 16 }}
       >
         <Row gutter={[16, 16]}>
-          {/* <Col span={24}>
+          <Col span={24}>
             <MagicEdenTitle />
-          </Col> */}
+          </Col>
           <Col span={24}>
             <CardNFT symbol={symbol} mintAddress={mintAddress} />
           </Col>
@@ -51,10 +102,10 @@ const NFTPlugin = ({
             <InfoNFT />
           </Col> */}
           <Col span={24}>
-            <TokenToBuy />
+            <TokenToBuy value={tokenSymbol} onChange={setTokenSymbol} />
           </Col>
           <Col span={24}>
-            <Button type="primary" block onClick={onBuy} loading={loading}>
+            <Button type="primary" onClick={onBuy} loading={loading} block>
               Buy Now
             </Button>
           </Col>
