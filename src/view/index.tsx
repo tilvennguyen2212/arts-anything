@@ -1,4 +1,5 @@
 import { Route, Switch } from 'react-router-dom'
+import { net } from '@sentre/senhub'
 
 import { Row, Col, Typography } from 'antd'
 import TextLoop from 'react-text-loop'
@@ -39,12 +40,20 @@ const View = () => {
               .
             </Typography.Text>
           </Col>
-          <Col span={24}>
-            <Switch>
-              <Route exact path={extend('/')} component={Collections} />
-              <Route exact path={extend('/:symbol')} component={Collection} />
-            </Switch>
-          </Col>
+          {net === 'mainnet' ? (
+            <Col span={24}>
+              <Switch>
+                <Route exact path={extend('/')} component={Collections} />
+                <Route exact path={extend('/:symbol')} component={Collection} />
+              </Switch>
+            </Col>
+          ) : (
+            <Col span={24} style={{ textAlign: 'center' }}>
+              <Typography.Title>
+                The application is only supported on mainnet.
+              </Typography.Title>
+            </Col>
+          )}
         </Row>
       </Col>
       <Col span={24} />
