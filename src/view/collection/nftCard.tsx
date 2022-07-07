@@ -2,12 +2,13 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { account } from '@senswap/sen-js'
 
-import { Card, Col, Row, Skeleton, Space, Typography } from 'antd'
+import { Avatar, Card, Col, Row, Skeleton, Space, Typography } from 'antd'
 import Rarity from 'components/rarity'
 import NFTPlugin from 'view/nftPlugin'
 
 import { AppDispatch, AppState } from 'model'
 import { getNFTMetadata } from 'model/metadata.controller'
+import SolLogo from 'static/images/sol-logo.svg'
 
 export type NFTCardProps = {
   symbol: string
@@ -71,7 +72,15 @@ const NFTCard = ({ symbol, mintAddress }: NFTCardProps) => {
         <Col span={24}>
           <Row gutter={[8, 8]} align="middle" wrap={false}>
             <Col flex="auto">
-              <Typography.Title level={5}>{price} SOL</Typography.Title>
+              <Space size={4}>
+                <Avatar
+                  shape="square"
+                  src={SolLogo}
+                  size={24}
+                  style={{ padding: 3 }}
+                />
+                <Typography.Title level={5}>{price}</Typography.Title>
+              </Space>
             </Col>
             <Col>
               <NFTPlugin symbol={symbol} mintAddress={mintAddress} />
