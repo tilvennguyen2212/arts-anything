@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, MouseEvent } from 'react'
 
 import { Avatar, Card, Col, Row, Spin, Typography } from 'antd'
 import CollectionSocial from './collectionSocial'
@@ -17,6 +17,13 @@ const CollectionCard = ({ symbol }: CollectionCardProps) => {
   const { to } = useRoute()
 
   const onDetails = useCallback(() => to(`/${symbol}`), [to, symbol])
+  const onMagicEden = useCallback(
+    (e: MouseEvent<HTMLElement>) => {
+      e.stopPropagation()
+      return window.open(`https://magiceden.io/marketplace/${symbol}`, '_blank')
+    },
+    [symbol],
+  )
 
   return (
     <Spin spinning={loading}>
@@ -39,9 +46,11 @@ const CollectionCard = ({ symbol }: CollectionCardProps) => {
             </Typography.Paragraph>
           </Col>
           <Col span={24}>
-            <Row gutter={[8, 8]} align="middle">
+            <Row gutter={[8, 8]} align="middle" wrap={false}>
               <Col flex="auto">
-                <Avatar src={MagicEdenLogo} />
+                <span onClick={onMagicEden}>
+                  <Avatar src={MagicEdenLogo} size={24} />
+                </span>
               </Col>
               <Col>
                 <CollectionSocial symbol={symbol} />
