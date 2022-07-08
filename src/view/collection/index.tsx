@@ -10,7 +10,7 @@ import NFTCard from './nftCard'
 
 import { useRoute } from 'hooks/useRoute'
 import { AppDispatch, AppState } from 'model'
-import { pushViewed } from 'model/category.controller'
+import { setViewed } from 'model/category.controller'
 import { nextListingNFTs } from 'model/listing.controller'
 import configs from 'configs'
 
@@ -56,10 +56,12 @@ const Collection = () => {
   useEffect(() => {
     ;(async () => {
       if (!symbol) return
-      const storedList = (await pdb.getItem('history')) || []
-      if (!storedList.includes(symbol)) storedList.unshift(symbol)
+      const storedList: string[] = (await pdb.getItem('history')) || []
+      const index = storedList.findIndex((value) => value === symbol)
+      if (index >= 0) storedList.splice(index, 1)
+      storedList.unshift(symbol)
       await pdb.setItem('history', storedList)
-      await dispatch(pushViewed(storedList))
+      await dispatch(setViewed(storedList))
     })()
   }, [dispatch, symbol, pdb])
 

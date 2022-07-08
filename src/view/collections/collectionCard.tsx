@@ -13,7 +13,7 @@ const CollectionCard = ({ symbol }: CollectionCardProps) => {
   const {
     loading,
     collection: { name, description, image },
-  } = useCollection(symbol)
+  } = useCollection({ symbol, force: true })
   const { to } = useRoute()
 
   const onDetails = useCallback(() => to(`/${symbol}`), [to, symbol])

@@ -50,19 +50,12 @@ export const pushHot = createAsyncThunk<
   return { hot: newHot }
 })
 
-export const pushViewed = createAsyncThunk<
-  Partial<CategoryState>,
-  string[],
-  { state: { category: CategoryState } }
->(`${NAME}/pushViewed`, async (viewed, { getState }) => {
-  const {
-    category: { viewed: prevViewed },
-  } = getState()
-  const newViewed = [...prevViewed]
-  for (const symbol of viewed)
-    if (!newViewed.includes(symbol)) newViewed.push(symbol)
-  return { viewed: newViewed }
-})
+export const setViewed = createAsyncThunk(
+  `${NAME}/setViewed`,
+  async (viewed: string[]) => {
+    return { viewed }
+  },
+)
 
 /**
  * Usual procedure
@@ -83,7 +76,7 @@ const slice = createSlice({
         (state, { payload }) => void Object.assign(state, payload),
       )
       .addCase(
-        pushViewed.fulfilled,
+        setViewed.fulfilled,
         (state, { payload }) => void Object.assign(state, payload),
       ),
 })

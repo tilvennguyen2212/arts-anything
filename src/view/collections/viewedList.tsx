@@ -7,18 +7,18 @@ import MoreButton from 'components/moreButton'
 import CollectionCard from './collectionCard'
 
 import { AppDispatch, AppState } from 'model'
-import { pushViewed } from 'model/category.controller'
+import { setViewed } from 'model/category.controller'
 import configs from 'configs'
 
 const {
   manifest: { appId },
+  pagination: { limit: LIMIT },
 } = configs
-const LIMIT = 12
 
 const ViewedList = () => {
   const viewed = useSelector((state: AppState) => state.category.viewed)
   const dispatch = useDispatch<AppDispatch>()
-  const [limit, setLimit] = useState(12)
+  const [limit, setLimit] = useState(LIMIT)
   const {
     wallet: { address: walletAddress },
   } = useWallet()
@@ -33,8 +33,7 @@ const ViewedList = () => {
   useEffect(() => {
     ;(async () => {
       const storedList = await pdb.getItem('history')
-      console.log(storedList)
-      return dispatch(pushViewed(storedList))
+      return dispatch(setViewed(storedList))
     })()
   }, [dispatch, pdb])
 

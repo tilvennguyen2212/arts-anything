@@ -7,22 +7,11 @@ import CollectionCard from './collectionCard'
 
 import { AppDispatch, AppState } from 'model'
 import { pushHot } from 'model/category.controller'
+import configs from 'configs'
 
-const HOT_LIST = [
-  'degods',
-  'okay_bears',
-  'degentown',
-  'primates',
-  'shadowy_super_coder_dao',
-  'trippin_ape_tribe',
-  'justape',
-  'degenerate_ape_academy',
-  'solana_monkey_business',
-  'blocksmith_labs',
-  'communi3',
-  'bubblegoose_ballers',
-]
-const LIMIT = 12
+const {
+  pagination: { limit: LIMIT, hotList: HOT_LIST },
+} = configs
 
 const HotList = () => {
   const [limit, setLimit] = useState(LIMIT)
