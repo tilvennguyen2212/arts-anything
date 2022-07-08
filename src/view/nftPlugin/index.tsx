@@ -2,7 +2,7 @@ import { Fragment, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useWallet, util } from '@sentre/senhub'
 
-import { Alert, Button, Col, Modal, Row, Space, Typography } from 'antd'
+import { Alert, Button, Col, Modal, Row, Space, Tag, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import MagicEdenTitle from './magicEdenTitle'
 import CardNFT from './cardNFT'
@@ -130,13 +130,20 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
           <Col span={24}>
             <Space direction="vertical" size={8}>
               <Typography.Text>
-                Estimate the minimum {tokenSymbol.toUpperCase()} balance to buy
-                NFT
+                Minimum estimated balance required
               </Typography.Text>
-              <Typography.Text style={{ color: 'rgb(20, 224, 65)' }}>
-                {util.numeric(estPrice).format('0,0.[0000]')}{' '}
-                {tokenSymbol.toUpperCase()}
-              </Typography.Text>
+              <Tag
+                style={{
+                  padding: '6px 16px',
+                  border: '1px solid #1BFAEF',
+                  background: 'rgba(27, 250, 239, 0.1)',
+                }}
+              >
+                <Typography.Title level={3} style={{ color: '#1BFAEF' }}>
+                  {util.numeric(estPrice).format('0,0.[0000]')}{' '}
+                  {tokenSymbol.toUpperCase()}
+                </Typography.Title>
+              </Tag>
               {!validBuy && (
                 <Alert
                   message={
@@ -145,6 +152,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
                     '. Please select another token!'
                   }
                   type="warning"
+                  showIcon
                 />
               )}
             </Space>
