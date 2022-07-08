@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useWallet } from '@sentre/senhub'
 
 import useAccountBalance from 'shared/hooks/useAccountBalance'
@@ -10,6 +10,10 @@ const usePriceExchange = (price: number, tokenSymbol: string) => {
   const [estPrice, setEstPrice] = useState<number>(0)
   const [tokenAccount, setTokenAccount] = useState('')
   const { balance } = useAccountBalance(tokenAccount)
+  const validBuy = useMemo(
+    () => (balance < estPrice ? false : true),
+    [balance, estPrice],
+  )
 
   const estimateExchangePrice = async ({
     tokenSymbol,
@@ -49,12 +53,6 @@ const usePriceExchange = (price: number, tokenSymbol: string) => {
   useEffect(() => {
     estimatePrice()
   }, [estimatePrice])
-
-  const validBuy = useCallback(() => {
-    let isValid = true
-    if (balance < estPrice) isValid = false
-    return isValid
-  }, [balance, estPrice])
 
   return { estPrice, validBuy }
 }

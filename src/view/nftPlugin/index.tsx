@@ -2,7 +2,7 @@ import { Fragment, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useWallet, util } from '@sentre/senhub'
 
-import { Button, Col, Modal, Row, Space, Typography } from 'antd'
+import { Alert, Button, Col, Modal, Row, Space, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import MagicEdenTitle from './magicEdenTitle'
 import CardNFT from './cardNFT'
@@ -39,7 +39,8 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
   const { estPrice, validBuy } = usePriceExchange(priceNFT, tokenSymbol)
 
   const onBuy = useCallback(async () => {
-    if (!validBuy())
+    console.log('validBuy: ', validBuy)
+    if (!validBuy)
       return window.notify({
         type: 'error',
         description:
@@ -136,10 +137,26 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
                 {util.numeric(estPrice).format('0,0.[0000]')}{' '}
                 {tokenSymbol.toUpperCase()}
               </Typography.Text>
+              {!validBuy && (
+                <Alert
+                  message={
+                    'You are not enough ' +
+                    tokenSymbol.toUpperCase() +
+                    '. Please select another token!'
+                  }
+                  type="warning"
+                />
+              )}
             </Space>
           </Col>
           <Col span={24}>
-            <Button type="primary" onClick={onBuy} loading={loading} block>
+            <Button
+              type="primary"
+              onClick={onBuy}
+              loading={loading}
+              block
+              disabled={!validBuy}
+            >
               Buy Now
             </Button>
           </Col>
