@@ -61,20 +61,3 @@ export const sendAndConfirm = async (signedTxs: Transaction[]) => {
   }
   return txIds
 }
-
-export const estimateExchangePrice = async ({
-  tokenSymbol,
-  nftPrice,
-}: {
-  tokenSymbol: string
-  nftPrice: number
-}) => {
-  const solPrice = nftPrice
-  const { data } = await (
-    await fetch(`https://price.jup.ag/v1/price?id=SOL&vsToken=${tokenSymbol}`)
-  ).json()
-
-  const estimatePrice = solPrice * data.price
-
-  return { estimatePrice, solPrice, tokenInfo: data }
-}

@@ -133,7 +133,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
                 Estimate the minimum {tokenSymbol.toUpperCase()} balance to buy
                 NFT
               </Typography.Text>
-              <Typography.Text>
+              <Typography.Text style={{ color: 'rgb(20, 224, 65)' }}>
                 {util.numeric(estPrice).format('0,0.[0000]')}{' '}
                 {tokenSymbol.toUpperCase()}
               </Typography.Text>
