@@ -46,7 +46,7 @@ const ViewedList = () => {
 
   useEffect(() => {
     ;(async () => {
-      const storedList = await pdb.getItem('history')
+      const storedList: string[] = (await pdb.getItem('history')) || []
       return dispatch(setViewed(storedList))
     })()
   }, [dispatch, pdb])
