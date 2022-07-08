@@ -134,13 +134,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
           </Col>
           <Col span={24}>
             <Space direction="vertical" size={8}>
-              <Tag
-                style={{
-                  padding: '6px 16px',
-                  border: '1px solid #1BFAEF',
-                  background: 'rgba(27, 250, 239, 0.1)',
-                }}
-              >
+              <Tag className="estimate-balance-tag">
                 <Typography.Title level={3} style={{ color: '#1BFAEF' }}>
                   {util.numeric(estPrice).format('0,0.[0000]')}{' '}
                   {tokenSymbol.toUpperCase()}
