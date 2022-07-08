@@ -23,8 +23,22 @@ const ViewedList = () => {
     wallet: { address: walletAddress },
   } = useWallet()
   const pdb = useMemo(() => createPDB(walletAddress, appId), [walletAddress])
-  const isEmpty = useMemo(() => !viewed || !viewed.length, [viewed])
   const currentList = useMemo(() => viewed.slice(0, limit), [viewed, limit])
+  const isEmpty = useMemo(() => !viewed || !viewed.length, [viewed])
+  const noMore = useMemo(
+    () => currentList.length === viewed.length,
+    [currentList, viewed],
+  )
+
+  const onDelete = useCallback(
+    async (symbol: string) => {
+      const storedList: string[] = await pdb.getItem('history')
+      const viewedList = storedList.filter((value) => value !== symbol)
+      await pdb.setItem('history', viewedList)
+      return dispatch(setViewed(viewedList))
+    },
+    [dispatch, pdb],
+  )
 
   const onMore = useCallback(async () => {
     return setLimit(Math.min(viewed.length, limit + LIMIT))
@@ -50,14 +64,14 @@ const ViewedList = () => {
       ) : (
         currentList.map((symbol, i) => (
           <Col key={i} xs={12} sm={8} lg={6}>
-            <CollectionCard symbol={symbol} />
+            <CollectionCard symbol={symbol} onClose={onDelete} closable />
           </Col>
         ))
       )}
       <Col span={24}>
         <Row gutter={[24, 24]} justify="center">
           <Col>
-            <MoreButton onMore={onMore} />
+            <MoreButton onMore={onMore} disabled={noMore} />
           </Col>
         </Row>
       </Col>

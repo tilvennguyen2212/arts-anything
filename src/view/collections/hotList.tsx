@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Col, Row } from 'antd'
@@ -17,6 +17,7 @@ const HotList = () => {
   const [limit, setLimit] = useState(LIMIT)
   const dispatch = useDispatch<AppDispatch>()
   const hot = useSelector((state: AppState) => state.category.hot)
+  const noMore = useMemo(() => hot.length === HOT_LIST.length, [hot])
 
   const onMore = useCallback(async () => {
     return setLimit(Math.min(HOT_LIST.length, limit + LIMIT))
@@ -36,7 +37,7 @@ const HotList = () => {
       <Col span={24}>
         <Row gutter={[24, 24]} justify="center">
           <Col>
-            <MoreButton onMore={onMore} />
+            <MoreButton onMore={onMore} disabled={noMore} />
           </Col>
         </Row>
       </Col>
