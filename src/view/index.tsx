@@ -1,7 +1,7 @@
 import { Route, Switch } from 'react-router-dom'
 import { net } from '@sentre/senhub'
 
-import { Row, Col, Typography } from 'antd'
+import { Row, Col, Typography, Space } from 'antd'
 import TextLoop from 'react-text-loop'
 import Collections from './collections'
 import Collection from './collection'
@@ -49,9 +49,15 @@ const View = () => {
             </Col>
           ) : (
             <Col span={24} style={{ textAlign: 'center' }}>
-              <Typography.Title>
-                The application is only supported on mainnet.
-              </Typography.Title>
+              <Space direction="vertical">
+                <Typography.Title level={2}>
+                  ⚠️ Only supported on Solana mainnet.
+                </Typography.Title>
+                <Typography.Text>
+                  You can open the Control Center, switch to mainnet, and
+                  experience the application.
+                </Typography.Text>
+              </Space>
             </Col>
           )}
         </Row>

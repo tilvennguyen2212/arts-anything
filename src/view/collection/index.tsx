@@ -1,13 +1,12 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useParams } from 'react-router-dom'
 
-import { Button, Col, Row } from 'antd'
+import { Button, Empty, Col, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import MoreButton from 'components/moreButton'
 import NFTCard from './nftCard'
 
-import { useCollection } from 'hooks/useCollection'
 import { useRoute } from 'hooks/useRoute'
 import { AppDispatch, AppState } from 'model'
 import { getCollection } from 'model/collections.controller'
@@ -16,13 +15,18 @@ import { nextListingNFTs } from 'model/listing.controller'
 const Collection = () => {
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
-  const { symbol } = useCollection()
+  const { symbol } = useParams<{ symbol: string }>()
   const {
     collections: { [symbol]: collection },
     listing: { [symbol]: listingNFTs },
   } = useSelector((state: AppState) => state)
   const { to, back } = useRoute()
   const { action } = useHistory()
+
+  const isEmpty = useMemo(
+    () => !listingNFTs || !Object.keys(listingNFTs).length,
+    [listingNFTs],
+  )
 
   const onBack = useCallback(() => {
     if (action !== 'PUSH') return to('/')
@@ -61,11 +65,21 @@ const Collection = () => {
       </Col>
       <Col span={24}>
         <Row gutter={[24, 24]}>
-          {Object.values(listingNFTs || {}).map(({ tokenMint }, i) => (
-            <Col key={i} xs={12} sm={8} lg={6}>
-              <NFTCard symbol={symbol} mintAddress={tokenMint} />
+          {isEmpty ? (
+            <Col span={24}>
+              <Row gutter={[24, 24]} justify="center">
+                <Col>
+                  <Empty description="No listing NFT" />
+                </Col>
+              </Row>
             </Col>
-          ))}
+          ) : (
+            Object.values(listingNFTs || {}).map(({ tokenMint }, i) => (
+              <Col key={i} xs={12} sm={8} lg={6}>
+                <NFTCard symbol={symbol} mintAddress={tokenMint} />
+              </Col>
+            ))
+          )}
         </Row>
       </Col>
       <Col span={24}>

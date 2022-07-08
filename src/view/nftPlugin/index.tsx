@@ -83,7 +83,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
     } catch (er: any) {
       return window.notify({
         type: 'error',
-        description: er.message,
+        description: er.response?.data || er.message,
       })
     } finally {
       return setLoading(false)
