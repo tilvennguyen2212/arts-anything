@@ -39,7 +39,6 @@ const usePriceExchange = (price: number, tokenSymbol: string) => {
   const validBuy = useCallback(() => {
     let isValid = true
     if (balance < estPrice) isValid = false
-
     return isValid
   }, [balance, estPrice])
 

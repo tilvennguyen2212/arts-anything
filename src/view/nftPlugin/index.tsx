@@ -14,7 +14,6 @@ import { sendAndConfirm } from 'sdk/jupAgSDK'
 import OTCSDK from 'sdk/otcSDK'
 
 import usePriceExchange from 'hooks/usePriceExchange'
-import useAccountBalance from 'shared/hooks/useAccountBalance'
 
 const otcSDK = new OTCSDK()
 const NETWORK_FEE = 0.00001
@@ -37,7 +36,6 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
 
   const { seller, price, tokenMint, auctionHouse } = nft
   const { name } = metadata || {}
-  const { balance: solWalletBalance } = useAccountBalance(walletAddress)
   const priceNFT = price + NETWORK_FEE + CREATE_ACCOUNT_FEE
 
   const { estPrice, validBuy } = usePriceExchange(priceNFT, tokenSymbol)
@@ -56,7 +54,6 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
       const { wallet } = window.sentre
       let txs = []
       if (tokenSymbol !== 'sol') {
-        console.log('tokenSymbol: ', priceNFT, estPrice)
         const setupTransaction = await otcSDK.exchange({
           walletAddress,
           tokenSymbol,
@@ -98,7 +95,6 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
     tokenMint,
     price,
     name,
-    estPrice,
   ])
 
   return (
