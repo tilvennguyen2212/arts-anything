@@ -1,13 +1,11 @@
-import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { account } from '@senswap/sen-js'
+import { useSelector } from 'react-redux'
 
 import { Avatar, Card, Col, Row, Skeleton, Space, Typography } from 'antd'
 import Rarity from 'components/rarity'
 import NFTPlugin from 'view/nftPlugin'
 
-import { AppDispatch, AppState } from 'model'
-import { getNFTMetadata } from 'model/metadata.controller'
+import { AppState } from 'model'
+import { useMetadata } from 'hooks/useMetadata'
 import SolLogo from 'static/images/sol-logo.svg'
 
 export type NFTCardProps = {
@@ -18,23 +16,16 @@ export type NFTCardProps = {
 const NFTCard = ({ symbol, mintAddress }: NFTCardProps) => {
   const {
     listing: {
-      [symbol]: { [mintAddress]: nft },
+      [symbol]: {
+        [mintAddress]: {
+          price,
+          rarity,
+          extra: { img },
+        },
+      },
     },
-    metadata: { [mintAddress]: metadata },
   } = useSelector((state: AppState) => state)
-  const dispatch = useDispatch<AppDispatch>()
-
-  const {
-    price,
-    rarity,
-    extra: { img },
-  } = nft
-  const { name, image } = metadata || {}
-
-  useEffect(() => {
-    if (account.isAddress(mintAddress))
-      dispatch(getNFTMetadata({ mintAddress }))
-  }, [dispatch, mintAddress])
+  const { name, image } = useMetadata({ mintAddress, force: true })
 
   return (
     <Card

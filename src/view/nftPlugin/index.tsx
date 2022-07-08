@@ -1,8 +1,8 @@
-import { Fragment, useCallback, useState } from 'react'
+import { Fragment, useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useWallet, util } from '@sentre/senhub'
 
-import { Alert, Button, Col, Modal, Row, Space, Tag, Typography } from 'antd'
+import { Alert, Button, Col, Modal, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import MagicEdenTitle from './magicEdenTitle'
 import CardNFT from './cardNFT'
@@ -16,6 +16,7 @@ import usePriceExchange from 'hooks/usePriceExchange'
 const otcSDK = new OTCSDK()
 const NETWORK_FEE = 0.00001
 const CREATE_ACCOUNT_FEE = 0.00203928 + 0.00201144
+
 export type NFTPluginProps = { symbol: string; mintAddress: string }
 
 const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
@@ -24,30 +25,21 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
   const [tokenSymbol, setTokenSymbol] = useState('sol')
   const {
     listing: {
-      [symbol]: { [mintAddress]: nft },
+      [symbol]: {
+        [mintAddress]: { seller, price, tokenMint, auctionHouse },
+      },
     },
-    metadata: { [mintAddress]: metadata },
   } = useSelector((state: AppState) => state)
   const {
     wallet: { address: walletAddress },
   } = useWallet()
+  const tokenName = useMemo(() => tokenSymbol.toUpperCase(), [tokenSymbol])
 
-  const { seller, price, tokenMint, auctionHouse } = nft
-  const { name } = metadata || {}
   const priceNFT = price + NETWORK_FEE + CREATE_ACCOUNT_FEE
 
   const { estPrice, validBuy } = usePriceExchange(priceNFT, tokenSymbol)
 
   const onBuy = useCallback(async () => {
-    console.log('validBuy: ', validBuy)
-    if (!validBuy)
-      return window.notify({
-        type: 'error',
-        description:
-          'You are not enough ' +
-          tokenSymbol.toUpperCase() +
-          '. Please select another token!',
-      })
     try {
       setLoading(true)
       const { wallet } = window.sentre
@@ -73,7 +65,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
       setVisible(false)
       return window.notify({
         type: 'success',
-        description: `Successfully buy the NFT ${name}. Click to view details.`,
+        description: `Successfully buy the NFT. Click to view details.`,
         onClick: () => window.open(util.explorer(txIds[1]), '_blank'),
       })
     } catch (er: any) {
@@ -86,14 +78,12 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
     }
   }, [
     priceNFT,
-    validBuy,
     tokenSymbol,
     walletAddress,
     seller,
     auctionHouse,
     tokenMint,
     price,
-    name,
   ])
 
   return (
@@ -128,31 +118,23 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
             <TokenToBuy value={tokenSymbol} onChange={setTokenSymbol} />
           </Col>
           <Col span={24}>
-            <Typography.Text>
-              Minimum estimated balance required
-            </Typography.Text>
+            <Alert
+              message={`Estimated payment is ${util
+                .numeric(estPrice)
+                .format('0,0.[0000]')} ${tokenName}.`}
+              type="info"
+              showIcon
+            />
           </Col>
-          <Col span={24}>
-            <Space direction="vertical" size={8}>
-              <Tag className="estimate-balance-tag">
-                <Typography.Title level={3} style={{ color: '#1BFAEF' }}>
-                  {util.numeric(estPrice).format('0,0.[0000]')}{' '}
-                  {tokenSymbol.toUpperCase()}
-                </Typography.Title>
-              </Tag>
-              {!validBuy && (
-                <Alert
-                  message={
-                    'You are not enough ' +
-                    tokenSymbol.toUpperCase() +
-                    '. Please select another token!'
-                  }
-                  type="warning"
-                  showIcon
-                />
-              )}
-            </Space>
-          </Col>
+          {!validBuy && (
+            <Col span={24}>
+              <Alert
+                message={`Not enough ${tokenName} in your balance. Please add more ${tokenName}, or select another token!`}
+                type="warning"
+                showIcon
+              />
+            </Col>
+          )}
           <Col span={24}>
             <Button
               type="primary"
