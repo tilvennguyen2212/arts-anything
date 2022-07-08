@@ -61,7 +61,7 @@ const HotList = () => {
       <Col span={24}>
         <Row gutter={[24, 24]} justify="center">
           <Col>
-            <MoreButton onMore={onMore} loading={loading} />
+            <MoreButton onMore={onMore} loading={loading} disabled />
           </Col>
         </Row>
       </Col>

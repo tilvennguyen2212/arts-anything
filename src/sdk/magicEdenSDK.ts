@@ -19,27 +19,24 @@ class MagicEdenSDK extends Offset {
 
   constructor({
     network,
+    rpc,
     service = 'https://cors.sentre.io/magic-eden',
   }: {
     network: Net
+    rpc: string
     service?: string
   }) {
     super()
     this.network = network
     this.service = service
     this.endpoint = MagicEdenSDK.ENDPOINTS[this.network]
-    this.connection = new Connection(MagicEdenSDK.RPCS[this.network])
+    this.connection = new Connection(rpc)
   }
 
   static ENDPOINTS: Record<Net, string> = {
     devnet: 'https://api-devnet.magiceden.dev/v2',
     testnet: 'https://api-testnet.magiceden.dev/v2',
     mainnet: 'https://api-mainnet.magiceden.dev/v2',
-  }
-  static RPCS: Record<Net, string> = {
-    devnet: 'https://devnet.genesysgo.net',
-    testnet: 'https://api.testnet.solana.com',
-    mainnet: 'https://ssc-dao.genesysgo.net/',
   }
   static DEFAULT_REFERRAL: string =
     'autMW8SgBkVYeBgqYiTuJZnkvDZMVU2MHJh9Jh7CSQ2'
@@ -159,6 +156,22 @@ class MagicEdenSDK extends Offset {
     })
     const { data } = await axios.get(url)
     return Transaction.from(Buffer.from(data.txSigned))
+  }
+
+  sendAndConfirm = async (signedTxs: Transaction[]) => {
+    let txIds = []
+    for (const signedTx of signedTxs) {
+      const txId = await this.connection.sendRawTransaction(
+        signedTx.serialize(),
+        {
+          skipPreflight: true,
+          preflightCommitment: 'confirmed',
+        },
+      )
+      await this.connection.confirmTransaction(txId)
+      txIds.push(txId)
+    }
+    return txIds
   }
 }
 
