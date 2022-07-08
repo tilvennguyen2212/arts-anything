@@ -12,7 +12,6 @@ import { AppState } from 'model'
 import { magicEdenSDK } from 'model/collections.controller'
 import { sendAndConfirm } from 'sdk/jupAgSDK'
 import OTCSDK from 'sdk/otcSDK'
-
 import usePriceExchange from 'hooks/usePriceExchange'
 
 const otcSDK = new OTCSDK()
