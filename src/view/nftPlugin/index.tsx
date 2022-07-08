@@ -2,7 +2,7 @@ import { Fragment, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useWallet, util } from '@sentre/senhub'
 
-import { Button, Col, Modal, Row, Space, Typography } from 'antd'
+import { Alert, Button, Col, Modal, Row, Space, Tag, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import MagicEdenTitle from './magicEdenTitle'
 import CardNFT from './cardNFT'
@@ -39,7 +39,8 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
   const { estPrice, validBuy } = usePriceExchange(priceNFT, tokenSymbol)
 
   const onBuy = useCallback(async () => {
-    if (!validBuy())
+    console.log('validBuy: ', validBuy)
+    if (!validBuy)
       return window.notify({
         type: 'error',
         description:
@@ -127,19 +128,39 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
             <TokenToBuy value={tokenSymbol} onChange={setTokenSymbol} />
           </Col>
           <Col span={24}>
+            <Typography.Text>
+              Minimum estimated balance required
+            </Typography.Text>
+          </Col>
+          <Col span={24}>
             <Space direction="vertical" size={8}>
-              <Typography.Text>
-                Estimate the minimum {tokenSymbol.toUpperCase()} balance to buy
-                NFT
-              </Typography.Text>
-              <Typography.Text style={{ color: 'rgb(20, 224, 65)' }}>
-                {util.numeric(estPrice).format('0,0.[0000]')}{' '}
-                {tokenSymbol.toUpperCase()}
-              </Typography.Text>
+              <Tag className="estimate-balance-tag">
+                <Typography.Title level={3} style={{ color: '#1BFAEF' }}>
+                  {util.numeric(estPrice).format('0,0.[0000]')}{' '}
+                  {tokenSymbol.toUpperCase()}
+                </Typography.Title>
+              </Tag>
+              {!validBuy && (
+                <Alert
+                  message={
+                    'You are not enough ' +
+                    tokenSymbol.toUpperCase() +
+                    '. Please select another token!'
+                  }
+                  type="warning"
+                  showIcon
+                />
+              )}
             </Space>
           </Col>
           <Col span={24}>
-            <Button type="primary" onClick={onBuy} loading={loading} block>
+            <Button
+              type="primary"
+              onClick={onBuy}
+              loading={loading}
+              block
+              disabled={!validBuy}
+            >
               Buy Now
             </Button>
           </Col>
