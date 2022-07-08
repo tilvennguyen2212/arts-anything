@@ -6,7 +6,6 @@ import MoreButton from 'components/moreButton'
 import CollectionCard from './collectionCard'
 
 import { AppDispatch, AppState } from 'model'
-import { getCollection } from 'model/collections.controller'
 import { pushHot } from 'model/category.controller'
 
 const HOT_LIST = [
@@ -23,33 +22,20 @@ const HOT_LIST = [
   'communi3',
   'bubblegoose_ballers',
 ]
+const LIMIT = 12
 
 const HotList = () => {
-  const [loading, setLoading] = useState(false)
-  const hot = useSelector((state: AppState) => state.category.hot)
+  const [limit, setLimit] = useState(LIMIT)
   const dispatch = useDispatch<AppDispatch>()
+  const hot = useSelector((state: AppState) => state.category.hot)
 
   const onMore = useCallback(async () => {
-    try {
-      setLoading(true)
-      for (const symbol of HOT_LIST) {
-        try {
-          const data = await dispatch(getCollection(symbol)).unwrap()
-          await dispatch(pushHot(Object.keys(data)))
-        } catch (er: any) {
-          console.warn(symbol, er.message)
-        }
-      }
-    } catch (er: any) {
-      return window.notify({ type: 'warning', description: er.message })
-    } finally {
-      return setLoading(false)
-    }
-  }, [dispatch])
+    return setLimit(Math.min(HOT_LIST.length, limit + LIMIT))
+  }, [limit])
 
   useEffect(() => {
-    onMore()
-  }, [onMore])
+    dispatch(pushHot(HOT_LIST.slice(0, limit)))
+  }, [dispatch, limit])
 
   return (
     <Row gutter={[24, 24]}>
@@ -61,7 +47,7 @@ const HotList = () => {
       <Col span={24}>
         <Row gutter={[24, 24]} justify="center">
           <Col>
-            <MoreButton onMore={onMore} loading={loading} disabled />
+            <MoreButton onMore={onMore} />
           </Col>
         </Row>
       </Col>

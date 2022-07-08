@@ -1,14 +1,17 @@
-import { Col, Row, Segmented } from 'antd'
 import { useState } from 'react'
+
+import { Col, Row, Segmented } from 'antd'
 import RecentList from './recentList'
+import HotList from './hotList'
+import ViewedList from './viewedList'
 import Search from './search'
 
 import { Category } from 'model/category.controller'
-import HotList from './hotList'
 
 const CurrentList = ({ type = 'recent' }: { type?: Category }) => {
   if (type === 'recent') return <RecentList />
   if (type === 'hot') return <HotList />
+  if (type === 'viewed') return <ViewedList />
   return <RecentList />
 }
 
@@ -26,6 +29,7 @@ const Collections = () => {
                 { label: '💎 Recent', value: 'recent' },
                 { label: '🔥 Hot', value: 'hot' },
                 { label: '⏳ Comming', value: 'comming', disabled: true },
+                { label: '👀 Viewed', value: 'viewed' },
               ]}
               value={type}
               onChange={(e) => setType(e as Category)}

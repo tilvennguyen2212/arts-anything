@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory, useParams } from 'react-router-dom'
+import { createPDB, useWallet } from '@sentre/senhub'
 
 import { Button, Empty, Col, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
@@ -9,19 +10,27 @@ import NFTCard from './nftCard'
 
 import { useRoute } from 'hooks/useRoute'
 import { AppDispatch, AppState } from 'model'
-import { getCollection } from 'model/collections.controller'
+import { pushViewed } from 'model/category.controller'
 import { nextListingNFTs } from 'model/listing.controller'
+import configs from 'configs'
+
+const {
+  manifest: { appId },
+} = configs
 
 const Collection = () => {
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
   const { symbol } = useParams<{ symbol: string }>()
   const {
-    collections: { [symbol]: collection },
     listing: { [symbol]: listingNFTs },
   } = useSelector((state: AppState) => state)
   const { to, back } = useRoute()
   const { action } = useHistory()
+  const {
+    wallet: { address: walletAddress },
+  } = useWallet()
+  const pdb = useMemo(() => createPDB(walletAddress, appId), [walletAddress])
 
   const isEmpty = useMemo(
     () => !listingNFTs || !Object.keys(listingNFTs).length,
@@ -45,8 +54,14 @@ const Collection = () => {
   }, [dispatch, symbol])
 
   useEffect(() => {
-    if (!collection && symbol) dispatch(getCollection(symbol))
-  }, [dispatch, collection, symbol])
+    ;(async () => {
+      if (!symbol) return
+      const storedList = (await pdb.getItem('history')) || []
+      if (!storedList.includes(symbol)) storedList.unshift(symbol)
+      await pdb.setItem('history', storedList)
+      await dispatch(pushViewed(storedList))
+    })()
+  }, [dispatch, symbol, pdb])
 
   useEffect(() => {
     if (!listingNFTs) onMore()

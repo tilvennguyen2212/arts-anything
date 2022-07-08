@@ -1,8 +1,10 @@
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { AppState } from 'model'
+import { AppDispatch, AppState } from 'model'
 import { MagicEdenCollection } from 'sdk/types'
 import EMPTY_IMAGE from 'static/images/nft-default.svg'
+import { useEffect } from 'react'
+import { getCollection } from 'model/collections.controller'
 
 const EMPTY_COLLECTION: MagicEdenCollection = {
   categories: [],
@@ -16,8 +18,13 @@ const EMPTY_COLLECTION: MagicEdenCollection = {
 }
 
 export const useCollection = (symbol: string) => {
+  const dispatch = useDispatch<AppDispatch>()
   const collections = useSelector((state: AppState) => state.collections)
   const { [symbol]: collection } = collections
+
+  useEffect(() => {
+    if (!collection && symbol) dispatch(getCollection(symbol))
+  }, [dispatch, collection, symbol])
 
   if (!collection) return { loading: true, collection: EMPTY_COLLECTION }
   return { loading: false, collection }

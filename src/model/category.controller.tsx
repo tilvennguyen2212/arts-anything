@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
  * Interface & Utility
  */
 
-export type Category = 'recent' | 'hot' | 'comming' | 'history'
+export type Category = 'recent' | 'hot' | 'comming' | 'viewed'
 export type CategoryState = Record<Category, string[]>
 
 /**
@@ -16,7 +16,7 @@ const initialState: CategoryState = {
   recent: [],
   hot: [],
   comming: [],
-  history: [],
+  viewed: [],
 }
 
 /**
@@ -50,6 +50,20 @@ export const pushHot = createAsyncThunk<
   return { hot: newHot }
 })
 
+export const pushViewed = createAsyncThunk<
+  Partial<CategoryState>,
+  string[],
+  { state: { category: CategoryState } }
+>(`${NAME}/pushViewed`, async (viewed, { getState }) => {
+  const {
+    category: { viewed: prevViewed },
+  } = getState()
+  const newViewed = [...prevViewed]
+  for (const symbol of viewed)
+    if (!newViewed.includes(symbol)) newViewed.push(symbol)
+  return { viewed: newViewed }
+})
+
 /**
  * Usual procedure
  */
@@ -66,6 +80,10 @@ const slice = createSlice({
       )
       .addCase(
         pushHot.fulfilled,
+        (state, { payload }) => void Object.assign(state, payload),
+      )
+      .addCase(
+        pushViewed.fulfilled,
         (state, { payload }) => void Object.assign(state, payload),
       ),
 })
