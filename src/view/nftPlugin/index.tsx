@@ -128,10 +128,12 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
             <TokenToBuy value={tokenSymbol} onChange={setTokenSymbol} />
           </Col>
           <Col span={24}>
+            <Typography.Text>
+              Minimum estimated balance required
+            </Typography.Text>
+          </Col>
+          <Col span={24}>
             <Space direction="vertical" size={8}>
-              <Typography.Text>
-                Minimum estimated balance required
-              </Typography.Text>
               <Tag
                 style={{
                   padding: '6px 16px',
