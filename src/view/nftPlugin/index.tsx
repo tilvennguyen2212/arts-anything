@@ -10,7 +10,6 @@ import TokenToBuy from './tokenToBuy'
 
 import { AppState } from 'model'
 import { magicEdenSDK } from 'model/collections.controller'
-import { sendAndConfirm } from 'sdk/jupAgSDK'
 import OTCSDK from 'sdk/otcSDK'
 
 const otcSDK = new OTCSDK()
@@ -56,7 +55,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
       })
       txs.push(buyNowTransaction)
       const signedTxs = await wallet.signAllTransactions(txs)
-      const txIds = await sendAndConfirm(signedTxs)
+      const txIds = await magicEdenSDK.sendAndConfirm(signedTxs)
       setVisible(false)
       return window.notify({
         type: 'success',
