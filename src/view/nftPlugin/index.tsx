@@ -2,7 +2,7 @@ import { Fragment, useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useWallet, util } from '@sentre/senhub'
 
-import { Button, Col, Modal, Row } from 'antd'
+import { Button, Col, Modal, Row, Space, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import MagicEdenTitle from './magicEdenTitle'
 import CardNFT from './cardNFT'
@@ -11,9 +11,11 @@ import TokenToBuy from './tokenToBuy'
 import { AppState } from 'model'
 import { magicEdenSDK } from 'model/collections.controller'
 import OTCSDK from 'sdk/otcSDK'
+import usePriceExchange from 'hooks/usePriceExchange'
 
 const otcSDK = new OTCSDK()
-
+const NETWORK_FEE = 0.00001
+const CREATE_ACCOUNT_FEE = 0.00203928 + 0.00201144
 export type NFTPluginProps = { symbol: string; mintAddress: string }
 
 const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
@@ -32,8 +34,19 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
 
   const { seller, price, tokenMint, auctionHouse } = nft
   const { name } = metadata || {}
+  const priceNFT = price + NETWORK_FEE + CREATE_ACCOUNT_FEE
+
+  const { estPrice, validBuy } = usePriceExchange(priceNFT, tokenSymbol)
 
   const onBuy = useCallback(async () => {
+    if (!validBuy())
+      return window.notify({
+        type: 'error',
+        description:
+          'You are not enough ' +
+          tokenSymbol.toUpperCase() +
+          '. Please select another token!',
+      })
     try {
       setLoading(true)
       const { wallet } = window.sentre
@@ -42,7 +55,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
         const setupTransaction = await otcSDK.exchange({
           walletAddress,
           tokenSymbol,
-          solAmount: price,
+          solAmount: priceNFT,
         })
         txs.push(setupTransaction)
       }
@@ -70,7 +83,17 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
     } finally {
       return setLoading(false)
     }
-  }, [walletAddress, tokenSymbol, seller, auctionHouse, tokenMint, price, name])
+  }, [
+    priceNFT,
+    validBuy,
+    tokenSymbol,
+    walletAddress,
+    seller,
+    auctionHouse,
+    tokenMint,
+    price,
+    name,
+  ])
 
   return (
     <Fragment>
@@ -102,6 +125,18 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
           </Col> */}
           <Col span={24}>
             <TokenToBuy value={tokenSymbol} onChange={setTokenSymbol} />
+          </Col>
+          <Col span={24}>
+            <Space direction="vertical" size={8}>
+              <Typography.Text>
+                Estimate the minimum {tokenSymbol.toUpperCase()} balance to buy
+                NFT
+              </Typography.Text>
+              <Typography.Text style={{ color: 'rgb(20, 224, 65)' }}>
+                {util.numeric(estPrice).format('0,0.[0000]')}{' '}
+                {tokenSymbol.toUpperCase()}
+              </Typography.Text>
+            </Space>
           </Col>
           <Col span={24}>
             <Button type="primary" onClick={onBuy} loading={loading} block>
