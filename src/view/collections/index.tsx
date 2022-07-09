@@ -28,7 +28,6 @@ const Collections = () => {
               options={[
                 { label: '💎 Recent', value: 'recent' },
                 { label: '🔥 Hot', value: 'hot' },
-                { label: '⏳ Comming', value: 'comming', disabled: true },
                 { label: '👀 Viewed', value: 'viewed' },
               ]}
               value={type}
