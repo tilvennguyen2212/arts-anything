@@ -4,7 +4,7 @@ import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
  * Interface & Utility
  */
 
-export type Category = 'recent' | 'hot' | 'comming' | 'viewed'
+export type Category = 'recent' | 'hot' | 'viewed'
 export type CategoryState = Record<Category, string[]>
 
 /**
@@ -15,7 +15,6 @@ const NAME = 'category'
 const initialState: CategoryState = {
   recent: [],
   hot: [],
-  comming: [],
   viewed: [],
 }
 

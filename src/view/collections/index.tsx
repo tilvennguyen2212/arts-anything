@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useCallback, useMemo } from 'react'
+import { useLocation } from 'react-router-dom'
 
 import { Col, Row, Segmented } from 'antd'
 import RecentList from './recentList'
@@ -7,6 +8,9 @@ import ViewedList from './viewedList'
 import Search from './search'
 
 import { Category } from 'model/category.controller'
+import { useRoute } from 'hooks/useRoute'
+
+const TABS: Category[] = ['recent', 'hot', 'viewed']
 
 const CurrentList = ({ type = 'recent' }: { type?: Category }) => {
   if (type === 'recent') return <RecentList />
@@ -16,7 +20,16 @@ const CurrentList = ({ type = 'recent' }: { type?: Category }) => {
 }
 
 const Collections = () => {
-  const [type, setType] = useState<Category>('recent')
+  const { to } = useRoute()
+  const { search } = useLocation()
+  const tab = useMemo(() => {
+    const params = new URLSearchParams(search)
+    const value = params.get('tab') as Category
+    if (!TABS.includes(value)) return 'recent'
+    return value
+  }, [search])
+
+  const setTab = useCallback((valye: Category) => to(`?tab=${valye}`), [to])
 
   return (
     <Row gutter={[24, 24]}>
@@ -30,8 +43,8 @@ const Collections = () => {
                 { label: '🔥 Hot', value: 'hot' },
                 { label: '👀 Viewed', value: 'viewed' },
               ]}
-              value={type}
-              onChange={(e) => setType(e as Category)}
+              value={tab}
+              onChange={(e) => setTab(e as Category)}
             />
           </Col>
           <Col>
@@ -40,7 +53,7 @@ const Collections = () => {
         </Row>
       </Col>
       <Col span={24}>
-        <CurrentList type={type} />
+        <CurrentList type={tab} />
       </Col>
     </Row>
   )

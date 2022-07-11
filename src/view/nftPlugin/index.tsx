@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useWallet, util } from '@sentre/senhub'
+import { useUI, useWallet, util } from '@sentre/senhub'
 
 import { Alert, Button, Col, Modal, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
@@ -33,10 +33,13 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
   const {
     wallet: { address: walletAddress },
   } = useWallet()
+  const {
+    ui: { width },
+  } = useUI()
+
+  const isMobile = useMemo(() => width < 768, [width])
   const tokenName = useMemo(() => tokenSymbol.toUpperCase(), [tokenSymbol])
-
   const priceNFT = price + NETWORK_FEE + CREATE_ACCOUNT_FEE
-
   const { estPrice, validBuy } = usePriceExchange(priceNFT, tokenSymbol)
 
   const onBuy = useCallback(async () => {
@@ -91,7 +94,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
       <Button
         onClick={() => setVisible(true)}
         type="primary"
-        icon={<IonIcon name="card-outline" />}
+        icon={isMobile ? undefined : <IonIcon name="card-outline" />}
       >
         Buy
       </Button>

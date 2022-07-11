@@ -1,3 +1,6 @@
+import { useMemo } from 'react'
+import { useUI } from '@sentre/senhub'
+
 import { Avatar, Card, Space, Tooltip, Typography } from 'antd'
 
 import { MagicEdenRarity } from 'sdk/magicEdenSDK'
@@ -13,14 +16,19 @@ export type RarityProps = {
 }
 
 const Rarity = ({ name, rank }: RarityProps) => {
+  const {
+    ui: { width },
+  } = useUI()
+  const isMobile = useMemo(() => width < 768, [width])
+
   return (
     <Tooltip title={name}>
       <Card
-        bodyStyle={{ padding: 8, cursor: 'pointer' }}
-        style={{ minWidth: 80, maxWidth: 96 }}
+        bodyStyle={{ padding: isMobile ? 4 : 8, cursor: 'pointer' }}
+        style={{ minWidth: 60, maxWidth: 96 }}
       >
         <Space>
-          <Avatar shape="circle" size="small" src={RANKS[name]} />
+          <Avatar shape="circle" size={isMobile ? 16 : 24} src={RANKS[name]} />
           <Space>
             <Typography.Text>{rank}</Typography.Text>
           </Space>
