@@ -8,11 +8,15 @@ const HOT_LIST = [
   'shadowy_super_coder_dao',
   'trippin_ape_tribe',
   'justape',
-  'degenerate_ape_academy',
+  'yeah_tigers',
   'solana_monkey_business',
   'blocksmith_labs',
-  'communi3',
   'bubblegoose_ballers',
+  'aurory',
+  'degenerate_ape_academy',
+  'communi3',
+  'solpunks',
+  'stepn',
 ]
 
 /**
