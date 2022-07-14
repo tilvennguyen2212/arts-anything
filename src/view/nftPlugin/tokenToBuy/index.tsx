@@ -1,6 +1,10 @@
 import { Button, Col, Row, Typography } from 'antd'
 
-import { CACHED_WHITELIST } from 'sdk/otcSDK'
+import configs from 'configs'
+
+const {
+  payment: { whitelist },
+} = configs
 
 export type TokenToBuyProps = {
   value?: string
@@ -18,7 +22,7 @@ const TokenToBuy = ({
       </Col>
       <Col span={24}>
         <Row gutter={[8, 8]}>
-          {['sol', ...Object.keys(CACHED_WHITELIST)].map((symbol) => (
+          {['sol', ...Object.keys(whitelist)].map((symbol) => (
             <Col key={symbol}>
               <Button
                 onClick={() => onChange(symbol)}

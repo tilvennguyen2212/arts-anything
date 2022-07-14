@@ -1,6 +1,7 @@
 import { Fragment, useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { useUI, useWallet, util } from '@sentre/senhub'
+import { OTC } from '@sentre/otc-sdk'
 
 import { Alert, Button, Col, Modal, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
@@ -10,10 +11,9 @@ import TokenToBuy from './tokenToBuy'
 
 import { AppState } from 'model'
 import { magicEdenSDK } from 'model/collections.controller'
-import OTCSDK from 'sdk/otcSDK'
 import usePriceExchange from 'hooks/usePriceExchange'
 
-const otcSDK = new OTCSDK()
+const otcSDK = new OTC()
 const NETWORK_FEE = 0.00001
 const CREATE_ACCOUNT_FEE = 0.00203928 + 0.00201144
 

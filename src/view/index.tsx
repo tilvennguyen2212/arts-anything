@@ -7,10 +7,14 @@ import Collections from './collections'
 import Collection from './collection'
 
 import { useRoute } from 'hooks/useRoute'
-import { CACHED_WHITELIST } from 'sdk/otcSDK'
+import configs from 'configs'
 
 import 'static/styles/light.less'
 import 'static/styles/dark.less'
+
+const {
+  payment: { whitelist },
+} = configs
 
 const View = () => {
   const { extend } = useRoute()
@@ -23,19 +27,17 @@ const View = () => {
             <Typography.Text style={{ fontSize: 64, fontWeight: 900 }}>
               Buy NFTs by{' '}
               <TextLoop>
-                {Object.values(CACHED_WHITELIST).map(
-                  ({ address, url, symbol }) => (
-                    <a
-                      key={address}
-                      href={url}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="gradient-text"
-                    >
-                      {symbol}
-                    </a>
-                  ),
-                )}
+                {Object.values(whitelist).map(({ address, url, symbol }) => (
+                  <a
+                    key={address}
+                    href={url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="gradient-text"
+                  >
+                    {symbol}
+                  </a>
+                ))}
               </TextLoop>
               .
             </Typography.Text>
