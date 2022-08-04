@@ -1,7 +1,5 @@
-import { Transaction, PublicKey, Connection } from '@solana/web3.js'
-import { utils } from '@project-serum/anchor'
-import { Net } from '@sentre/senhub'
-import { account } from '@senswap/sen-js'
+import { Transaction, Connection } from '@solana/web3.js'
+import { Net, util } from '@sentre/senhub'
 import axios from 'axios'
 
 import Offset from './offset'
@@ -94,7 +92,7 @@ class MagicEdenSDK extends Offset {
   }
 
   getNFTMetadata = async (mintAddress: string) => {
-    if (!account.isAddress(mintAddress)) throw new Error('Invalid mint address')
+    if (!util.isAddress(mintAddress)) throw new Error('Invalid mint address')
     const url = this.getURL({ path: `/tokens/${mintAddress}` })
     const { data } = await axios.get(url)
     if (!data) throw new Error('Invalid mint address')
@@ -126,17 +124,15 @@ class MagicEdenSDK extends Offset {
     buyerExpiry?: number
     sellerExpiry?: number
   }) => {
-    if (!account.isAddress(buyerAddress))
-      throw new Error('Invalid buyer address')
-    if (!account.isAddress(sellerAddress))
+    if (!util.isAddress(buyerAddress)) throw new Error('Invalid buyer address')
+    if (!util.isAddress(sellerAddress))
       throw new Error('Invalid seller address')
-    if (!account.isAddress(mintAddress)) throw new Error('Invalid mint address')
+    if (!util.isAddress(mintAddress)) throw new Error('Invalid mint address')
 
-    const accountPublicKey = await utils.token.associatedAddress({
-      mint: new PublicKey(mintAddress),
-      owner: new PublicKey(sellerAddress),
-    })
-    const accountAddress = accountPublicKey.toBase58()
+    const accountAddress = await util.deriveAssociatedAddress(
+      sellerAddress,
+      mintAddress,
+    )
     const params = {
       buyer: buyerAddress,
       seller: sellerAddress,

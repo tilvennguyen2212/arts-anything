@@ -1986,10 +1986,10 @@
   resolved "https://registry.yarnpkg.com/@sentre/react-lazyload/-/react-lazyload-3.2.2.tgz#f3d921327a2b14b9b3a9e906d01034f11387097a"
   integrity sha512-NKJhz9G8pModoZJaLMziRJtd582pFHbIydNXwRI72ECkjqbc7XIgBX+8kssrUtRxK2rW9VVQnGKDpmyZ8iSIyw==
 
-"@sentre/senhub@^3.1.3":
-  version "3.1.3"
-  resolved "https://registry.yarnpkg.com/@sentre/senhub/-/senhub-3.1.3.tgz#2667c705fbc3db66c88274618c98ee433a5933a6"
-  integrity sha512-ZGKxV0SaHyI4GI5y/QM3lpnLoJPCA9mrqiWOQOE0Ru+HRazloDhchRtZL3d5nim3hULYyV3MFePHr+LjLUSKtw==
+"@sentre/senhub@^3.1.4":
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/@sentre/senhub/-/senhub-3.1.4.tgz#fe2af1f86fd328fd20297d018b88b7bc2b55030a"
+  integrity sha512-YjamXILud73fROqHYMav/dpHBflljEiQkp+Uvl/LTNVePvdXmFVPw9sv4bmGm9jdhs6CQvJIVQNyh5ejP8QUXQ==
   dependencies:
     "@dnd-kit/core" "^4.0.1"
     "@dnd-kit/sortable" "^5.0.0"

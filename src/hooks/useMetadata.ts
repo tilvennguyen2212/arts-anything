@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { account } from '@senswap/sen-js'
+import { util } from '@sentre/senhub'
 
 import { AppDispatch, AppState } from 'model'
 import { getNFTMetadata } from 'model/metadata.controller'
@@ -18,7 +18,7 @@ export const useMetadata = ({
   } = useSelector((state: AppState) => state)
 
   useEffect(() => {
-    if (!metadata && force && account.isAddress(mintAddress))
+    if (!metadata && force && util.isAddress(mintAddress))
       dispatch(getNFTMetadata({ mintAddress }))
   }, [dispatch, force, metadata, mintAddress])
 
