@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { account, DEFAULT_EMPTY_ADDRESS, utils } from '@senswap/sen-js'
+import { PublicKey } from '@solana/web3.js'
+import { utils as anchorUtils } from '@project-serum/anchor'
 import {
   useAccounts,
   useWalletAddress,
@@ -76,18 +78,13 @@ export const useAccountBalanceByMintAddress = (mintAddress: string) => {
     ;(async () => {
       if (!account.isAddress(walletAddress) || !account.isAddress(mintAddress))
         return setAccountAddress('')
-      const {
-        sentre: { splt },
-      } = window
-      try {
-        const address = await splt.deriveAssociatedAddress(
-          walletAddress,
-          mintAddress,
-        )
-        return setAccountAddress(address)
-      } catch (er) {
-        return setAccountAddress('')
-      }
+      const accountAddress = (
+        await anchorUtils.token.associatedAddress({
+          owner: new PublicKey(walletAddress),
+          mint: new PublicKey(mintAddress),
+        })
+      ).toBase58()
+      return setAccountAddress(accountAddress)
     })()
   })
 
