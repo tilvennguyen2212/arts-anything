@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
+import { useAppRoute } from '@sentre/senhub'
 
 import { Col, Row, Segmented } from 'antd'
 import RecentList from './recentList'
@@ -8,8 +9,11 @@ import ViewedList from './viewedList'
 import Search from './search'
 
 import { Category } from 'model/category.controller'
-import { useRoute } from 'hooks/useRoute'
+import configs from 'configs'
 
+const {
+  manifest: { appId },
+} = configs
 const TABS: Category[] = ['recent', 'hot', 'viewed']
 
 const CurrentList = ({ type = 'recent' }: { type?: Category }) => {
@@ -20,7 +24,7 @@ const CurrentList = ({ type = 'recent' }: { type?: Category }) => {
 }
 
 const Collections = () => {
-  const { to } = useRoute()
+  const { to } = useAppRoute(appId)
   const { search } = useLocation()
   const tab = useMemo(() => {
     const params = new URLSearchParams(search)
@@ -29,7 +33,7 @@ const Collections = () => {
     return value
   }, [search])
 
-  const setTab = useCallback((valye: Category) => to(`?tab=${valye}`), [to])
+  const setTab = useCallback((value: Category) => to(`?tab=${value}`), [to])
 
   return (
     <Row gutter={[24, 24]}>

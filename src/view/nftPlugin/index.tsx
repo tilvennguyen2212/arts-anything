@@ -1,6 +1,6 @@
 import { Fragment, useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useUI, useWallet, util } from '@sentre/senhub'
+import { useUI, useWalletAddress, util } from '@sentre/senhub'
 import { OTC } from '@sentre/otc-sdk'
 
 import { Alert, Button, Col, Modal, Row } from 'antd'
@@ -30,9 +30,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
       },
     },
   } = useSelector((state: AppState) => state)
-  const {
-    wallet: { address: walletAddress },
-  } = useWallet()
+  const walletAddress = useWalletAddress()
   const {
     ui: { width },
   } = useUI()

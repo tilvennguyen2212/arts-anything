@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { createPDB, useWallet } from '@sentre/senhub'
+import { createPDB, useWalletAddress } from '@sentre/senhub'
 
 import { Col, Row, Empty } from 'antd'
 import MoreButton from 'components/moreButton'
@@ -19,9 +19,7 @@ const ViewedList = () => {
   const viewed = useSelector((state: AppState) => state.category.viewed)
   const dispatch = useDispatch<AppDispatch>()
   const [limit, setLimit] = useState(LIMIT)
-  const {
-    wallet: { address: walletAddress },
-  } = useWallet()
+  const walletAddress = useWalletAddress()
   const pdb = useMemo(() => createPDB(walletAddress, appId), [walletAddress])
   const currentList = useMemo(() => viewed.slice(0, limit), [viewed, limit])
   const isEmpty = useMemo(() => !viewed || !viewed.length, [viewed])

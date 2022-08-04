@@ -1,12 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useWallet } from '@sentre/senhub'
+import { useWalletAddress } from '@sentre/senhub'
 
-import useAccountBalance from 'shared/hooks/useAccountBalance'
+import useAccountBalance from 'hooks/useAccountBalance'
 
 const usePriceExchange = (price: number, tokenSymbol: string) => {
-  const {
-    wallet: { address: walletAddress },
-  } = useWallet()
+  const walletAddress = useWalletAddress()
   const [estPrice, setEstPrice] = useState<number>(0)
   const [tokenAccount, setTokenAccount] = useState('')
   const { balance } = useAccountBalance(tokenAccount)

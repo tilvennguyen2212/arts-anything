@@ -1,12 +1,11 @@
 import { Route, Switch } from 'react-router-dom'
-import { net } from '@sentre/senhub'
+import { net, useAppRoute } from '@sentre/senhub'
 
 import { Row, Col, Typography, Space } from 'antd'
 import TextLoop from 'react-text-loop'
 import Collections from './collections'
 import Collection from './collection'
 
-import { useRoute } from 'hooks/useRoute'
 import configs from 'configs'
 
 import 'static/styles/light.less'
@@ -14,10 +13,11 @@ import 'static/styles/dark.less'
 
 const {
   payment: { whitelist },
+  manifest: { appId },
 } = configs
 
 const View = () => {
-  const { extend } = useRoute()
+  const { extend } = useAppRoute(appId)
 
   return (
     <Row gutter={[24, 24]} justify="center">

@@ -37,14 +37,6 @@ const conf: Record<Env, Conf> = {
   },
 
   /**
-   * Staging configurations
-   */
-  staging: {
-    limit: 12,
-    hotList: HOT_LIST,
-  },
-
-  /**
    * Production configurations
    */
   production: {

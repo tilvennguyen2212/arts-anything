@@ -1,13 +1,18 @@
 import { useCallback, MouseEvent } from 'react'
+import { useAppRoute } from '@sentre/senhub'
 
 import { Avatar, Button, Card, Col, Row, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import CollectionSocial from './collectionSocial'
 
-import { useRoute } from 'hooks/useRoute'
 import { useCollection } from 'hooks/useCollection'
+import configs from 'configs'
 import MagicEdenLogo from 'static/images/magic-eden-logo.jpeg'
 import './index.less'
+
+const {
+  manifest: { appId },
+} = configs
 
 export type CollectionCardProps = {
   symbol: string
@@ -24,7 +29,7 @@ const CollectionCard = ({
     loading,
     collection: { name, description, image },
   } = useCollection({ symbol, force: true })
-  const { to } = useRoute()
+  const { to } = useAppRoute(appId)
 
   const onDetails = useCallback(() => to(`/${symbol}`), [to, symbol])
   const onMagicEden = useCallback(

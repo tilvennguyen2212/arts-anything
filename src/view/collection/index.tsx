@@ -1,14 +1,13 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory, useParams } from 'react-router-dom'
-import { createPDB, useWallet } from '@sentre/senhub'
+import { useParams } from 'react-router-dom'
+import { createPDB, useAppRoute, useWalletAddress } from '@sentre/senhub'
 
 import { Button, Empty, Col, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import MoreButton from 'components/moreButton'
 import NFTCard from './nftCard'
 
-import { useRoute } from 'hooks/useRoute'
 import { AppDispatch, AppState } from 'model'
 import { setViewed } from 'model/category.controller'
 import { nextListingNFTs } from 'model/listing.controller'
@@ -22,25 +21,17 @@ const Collection = () => {
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
   const { symbol } = useParams<{ symbol: string }>()
-  const {
-    listing: { [symbol]: listingNFTs },
-  } = useSelector((state: AppState) => state)
-  const { to, back } = useRoute()
-  const { action } = useHistory()
-  const {
-    wallet: { address: walletAddress },
-  } = useWallet()
+  const { [symbol]: listingNFTs } = useSelector(
+    (state: AppState) => state.listing,
+  )
+  const { back } = useAppRoute(appId)
+  const walletAddress = useWalletAddress()
   const pdb = useMemo(() => createPDB(walletAddress, appId), [walletAddress])
 
   const isEmpty = useMemo(
     () => !listingNFTs || !Object.keys(listingNFTs).length,
     [listingNFTs],
   )
-
-  const onBack = useCallback(() => {
-    if (action !== 'PUSH') return to('/')
-    return back()
-  }, [to, back, action])
 
   const onMore = useCallback(async () => {
     try {
@@ -75,7 +66,7 @@ const Collection = () => {
         <Button
           size="large"
           icon={<IonIcon name="arrow-back-outline" />}
-          onClick={onBack}
+          onClick={() => back('/')}
         >
           Back
         </Button>
