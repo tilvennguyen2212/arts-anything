@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { DEFAULT_EMPTY_ADDRESS, utils } from '@senswap/sen-js'
 import {
   util,
@@ -62,28 +61,3 @@ const useAccountBalance = (accountAddress: string) => {
 }
 
 export default useAccountBalance
-
-/**
- * The same as useAccountBalance but the input is mint address
- * @param mintAddress Mint address
- * @returns AccountBalanceReturn
- */
-export const useAccountBalanceByMintAddress = (mintAddress: string) => {
-  const [accountAddress, setAccountAddress] = useState('')
-  const walletAddress = useWalletAddress()
-  const data = useAccountBalance(accountAddress)
-
-  useEffect(() => {
-    ;(async () => {
-      if (!util.isAddress(walletAddress) || !util.isAddress(mintAddress))
-        return setAccountAddress('')
-      const address = await util.deriveAssociatedAddress(
-        walletAddress,
-        mintAddress,
-      )
-      return setAccountAddress(address)
-    })()
-  })
-
-  return data
-}
