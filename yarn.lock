@@ -1882,31 +1882,28 @@
     soprox-abi "^0.0.18"
     tweetnacl "^1.0.3"
 
-"@sentre/antd-ionicon@^1.0.31":
-  version "1.0.31"
-  resolved "https://registry.yarnpkg.com/@sentre/antd-ionicon/-/antd-ionicon-1.0.31.tgz#6d9f84c69bd886c7513853bbb8c5a82c65e0919c"
-  integrity sha512-/xQVEHRkK4yzmav/WzFZ5SxMV2g624FF+/hXD0GNwbyP0WQb/mEM7eEvmUVhBDAL1ne9d6byUn1OfGvMHJzCLA==
+"@sentre/antd-ionicon@^1.0.37":
+  version "1.0.37"
+  resolved "https://registry.yarnpkg.com/@sentre/antd-ionicon/-/antd-ionicon-1.0.37.tgz#32a875e5824d5d7bed8e86b7dcfb39ecc022dd98"
+  integrity sha512-TdZCXj4EmnI/CKvJ+K/yvRcF9ZPRGMsCSAj6yKY9bnTHDHa7Ka4rVpX+ugMNegIdhcBIQmErtKauqzSZtkRXVg==
   dependencies:
     react-helmet "^6.1.0"
 
-"@sentre/antd-ionicon@^1.0.36":
-  version "1.0.36"
-  resolved "https://registry.yarnpkg.com/@sentre/antd-ionicon/-/antd-ionicon-1.0.36.tgz#2776aa100470f883f49dc5342194410ab393b4b5"
-  integrity sha512-pARsl+TzfS06HvRSwDccOzCORBkJYPHj2Q5SrNcrMyZDl4OWChllcMWul7O0adWZIEO2OxNGUDG2yhacmmQNiw==
+"@sentre/connector@^0.0.55":
+  version "0.0.55"
+  resolved "https://registry.yarnpkg.com/@sentre/connector/-/connector-0.0.55.tgz#85985c42b077774f358fed0c65d1e0691d015ed6"
+  integrity sha512-Zs50Gl2IdT9fhzCrQZPrCdfh6JYgxUb5XCOkYM5++MXG99HZW6LJ3MU/21opA7WzdOdKiDNygp+yEmSUiK7aOA==
   dependencies:
-    react-helmet "^6.1.0"
+    "@solana/wallet-adapter-base" "^0.9.7"
+    "@solana/web3.js" "^1.44.3"
+    bs58 "^5.0.0"
+    tweetnacl "^1.0.3"
+    uuid "^8.3.2"
 
-"@sentre/connector@^0.0.30":
-  version "0.0.30"
-  resolved "https://registry.yarnpkg.com/@sentre/connector/-/connector-0.0.30.tgz#c77162b7d799e12b74d8d3b65eea465d0ffb5fcc"
-  integrity sha512-/tJHcOBfsk96LcCM98JfuOtD/Ski1W4hBowiG7/tRw/u639R3hFCbUfg3pUcA9DwMJXCv1dTK2ld/99TvQGVyw==
-  dependencies:
-    "@solana/web3.js" "^1.43.1"
-
-"@sentre/craco-plugins@^1.0.36":
-  version "1.0.36"
-  resolved "https://registry.yarnpkg.com/@sentre/craco-plugins/-/craco-plugins-1.0.36.tgz#b22f0b02379e814556b699be7dfcba1172d9dc42"
-  integrity sha512-vskl54PuS+qxkhhe3ktLCZ8bNjLVraPKwc7Wo6ym8M+7LQy75bPpee6C4+77Aslx9ISdEKbkLlNImjlOPbK26w==
+"@sentre/craco-plugins@^1.0.37":
+  version "1.0.37"
+  resolved "https://registry.yarnpkg.com/@sentre/craco-plugins/-/craco-plugins-1.0.37.tgz#59c31c5b8376c3f5ff81a90abd15d9270c448ed2"
+  integrity sha512-HF+vqFwkLlVvve1x7f7Y+qJ2NACU+vxoEjgNDqwwXt9OQjsY6hB/xN6wRMCqixhTpwgWS+xIziHSLw5hDk86XQ==
   dependencies:
     "@babel/cli" "^7.17.10"
     "@babel/core" "^7.18.2"
@@ -1957,18 +1954,18 @@
   resolved "https://registry.yarnpkg.com/@sentre/react-lazyload/-/react-lazyload-3.2.2.tgz#f3d921327a2b14b9b3a9e906d01034f11387097a"
   integrity sha512-NKJhz9G8pModoZJaLMziRJtd582pFHbIydNXwRI72ECkjqbc7XIgBX+8kssrUtRxK2rW9VVQnGKDpmyZ8iSIyw==
 
-"@sentre/senhub@^3.1.13":
-  version "3.1.13"
-  resolved "https://registry.yarnpkg.com/@sentre/senhub/-/senhub-3.1.13.tgz#62793bc56f142c4e956ecb71c9733accf626c208"
-  integrity sha512-BnhSVTgKJe9a3Gyck3rfd0K2LuxGx0O1yU9Xp10yaBbLCJOiBI52Cx3x/JaLuhTy+RnRm4fFNoKN9EBLhE2tNg==
+"@sentre/senhub@^3.1.19":
+  version "3.1.19"
+  resolved "https://registry.yarnpkg.com/@sentre/senhub/-/senhub-3.1.19.tgz#eff9f95bab8b9df8d0e364dce47e6a6264beef4a"
+  integrity sha512-XltYTJQy5gFO2poTV2jy0sX1c/6tP3nWVF2Dh4xJX71kINjhCh2b+dVl+b7qxvuSu/3bXCmYQIHEKCQIcecHoQ==
   dependencies:
     "@dnd-kit/core" "^4.0.1"
     "@dnd-kit/sortable" "^5.0.0"
     "@project-serum/sol-wallet-adapter" "^0.2.6"
     "@reduxjs/toolkit" "^1.8.0"
     "@senswap/sen-js" "^1.4.0"
-    "@sentre/antd-ionicon" "^1.0.31"
-    "@sentre/connector" "^0.0.30"
+    "@sentre/antd-ionicon" "^1.0.37"
+    "@sentre/connector" "^0.0.55"
     "@sentre/react-dynamic-remote-component" "^0.0.6"
     "@sentre/react-lazyload" "^3.2.2"
     "@solana/spl-token-registry" "^0.2.3771"
@@ -1986,7 +1983,6 @@
     react-redux "^7.2.6"
     react-router-dom "^5.3.0"
     remarkable "^2.0.1"
-    swiper "^7.2.0"
     swr "^1.3.0"
     tweetnacl "^1.0.3"
 
@@ -2028,7 +2024,14 @@
   dependencies:
     cross-fetch "3.0.6"
 
-"@solana/web3.js@^1.29.2", "@solana/web3.js@^1.43.1":
+"@solana/wallet-adapter-base@^0.9.7":
+  version "0.9.10"
+  resolved "https://registry.yarnpkg.com/@solana/wallet-adapter-base/-/wallet-adapter-base-0.9.10.tgz#6a4b2e5218b5939fb607e263760c48cd016af0f3"
+  integrity sha512-NmNybJSoQ4jYb62lKbTIqMhAivpwwzBBrgHNQjGQlhunIusbYf3an7pyPPfeqgBKdPi4IaNA782O0g6q2tjGRQ==
+  dependencies:
+    eventemitter3 "^4.0.0"
+
+"@solana/web3.js@^1.29.2":
   version "1.47.3"
   resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.47.3.tgz#ec13f2cf4f9f54cc4fbd26d20be1e026c6e2279c"
   integrity sha512-TQJulaN/+b0xXq5EhQAYFwVyOORxSyVJn1EiXupClZm8DY7f9EeUG6vl0FzSAgwEAwXKsgK3sVs/3px2e7H7dQ==
@@ -2045,6 +2048,29 @@
     jayson "^3.4.4"
     js-sha3 "^0.8.0"
     node-fetch "2"
+    rpc-websockets "^7.5.0"
+    secp256k1 "^4.0.2"
+    superstruct "^0.14.2"
+    tweetnacl "^1.0.0"
+
+"@solana/web3.js@^1.44.3":
+  version "1.50.1"
+  resolved "https://registry.yarnpkg.com/@solana/web3.js/-/web3.js-1.50.1.tgz#dae726a06267d1bcd88b1e3cd8ae44c709302dcf"
+  integrity sha512-1l9N/nS8pJEA2YibNT8wa072718O0/A1eKWE0+pdWC5wDGQgBNxZSLuv7Cq5Dcn46WsZ5J5ZstK89q8J/ZZaQA==
+  dependencies:
+    "@babel/runtime" "^7.12.5"
+    "@ethersproject/sha2" "^5.5.0"
+    "@solana/buffer-layout" "^4.0.0"
+    bigint-buffer "^1.1.5"
+    bn.js "^5.0.0"
+    borsh "^0.7.0"
+    bs58 "^4.0.1"
+    buffer "6.0.1"
+    fast-stable-stringify "^1.0.0"
+    jayson "^3.4.4"
+    js-sha3 "^0.8.0"
+    node-fetch "2"
+    react-native-url-polyfill "^1.3.0"
     rpc-websockets "^7.5.0"
     secp256k1 "^4.0.2"
     superstruct "^0.14.2"
@@ -3703,6 +3729,11 @@ base-x@^3.0.2:
   dependencies:
     safe-buffer "^5.0.1"
 
+base-x@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/base-x/-/base-x-4.0.0.tgz#d0e3b7753450c73f8ad2389b5c018a4af7b2224a"
+  integrity sha512-FuwxlW4H5kh37X/oW59pwTzzTKRzfrrQwhmyspRM7swOEZcHtDZSCt45U6oKgtuFE+WYPblePMVIPR4RZrh/hw==
+
 base16@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/base16/-/base16-1.0.0.tgz#e297f60d7ec1014a7a971a39ebc8a98c0b681e70"
@@ -3976,6 +4007,13 @@ bs58@^4.0.0, bs58@^4.0.1:
   integrity sha512-Ok3Wdf5vOIlBrgCvTq96gBkJw+JUEzdBgyaza5HLtPm7yTHkjRy8+JzNyHF7BHa0bNWOQIp3m5YF0nnFcOIKLw==
   dependencies:
     base-x "^3.0.2"
+
+bs58@^5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/bs58/-/bs58-5.0.0.tgz#865575b4d13c09ea2a84622df6c8cbeb54ffc279"
+  integrity sha512-r+ihvQJvahgYT50JD05dyJNKlmmSlMoOGwn1lCcEzanPglg7TxYjioQUYehQ9mAR/+hOSd2jRc/Z2y5UxBymvQ==
+  dependencies:
+    base-x "^4.0.0"
 
 bser@2.1.1:
   version "2.1.1"
@@ -5128,13 +5166,6 @@ dom-serializer@^1.0.1:
     domelementtype "^2.0.1"
     domhandler "^4.2.0"
     entities "^2.0.0"
-
-dom7@^4.0.2:
-  version "4.0.4"
-  resolved "https://registry.yarnpkg.com/dom7/-/dom7-4.0.4.tgz#8b68c5d8e5e2ed0fddb1cb93e433bc9060c8f3fb"
-  integrity sha512-DSSgBzQ4rJWQp1u6o+3FVwMNnT5bzQbMb+o31TjYYeRi05uAcpF8koxdfzeoe5ElzPmua7W7N28YJhF7iEKqIw==
-  dependencies:
-    ssr-window "^4.0.0"
 
 domelementtype@1:
   version "1.3.1"
@@ -12278,11 +12309,6 @@ sshpk@^1.7.0:
     safer-buffer "^2.0.2"
     tweetnacl "~0.14.0"
 
-ssr-window@^4.0.0, ssr-window@^4.0.2:
-  version "4.0.2"
-  resolved "https://registry.yarnpkg.com/ssr-window/-/ssr-window-4.0.2.tgz#dc6b3ee37be86ac0e3ddc60030f7b3bc9b8553be"
-  integrity sha512-ISv/Ch+ig7SOtw7G2+qkwfVASzazUnvlDTwypdLoPoySv+6MqlOV10VwPSE6EWkGjhW50lUmghPmpYZXMu/+AQ==
-
 stable@^0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.8.tgz#836eb3c8382fe2936feaf544631017ce7d47a3cf"
@@ -12571,14 +12597,6 @@ svgo@^2.7.0:
     csso "^4.2.0"
     picocolors "^1.0.0"
     stable "^0.1.8"
-
-swiper@^7.2.0:
-  version "7.4.1"
-  resolved "https://registry.yarnpkg.com/swiper/-/swiper-7.4.1.tgz#99fc586d1335b45250d2c6b3128dc91f8047d3e7"
-  integrity sha512-dhbL4tpYFvHug1J7GnKElfTi6EYhlZy/vNZRhHkWFyUsWZ1Vovipxj3la5gqllMogygXJMe3zvVv+f6eppvWiA==
-  dependencies:
-    dom7 "^4.0.2"
-    ssr-window "^4.0.2"
 
 swr@^1.3.0:
   version "1.3.0"

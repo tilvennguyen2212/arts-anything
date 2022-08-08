@@ -6,11 +6,7 @@ import IonIcon from '@sentre/antd-ionicon'
 
 import { MagicEdenCollection } from 'sdk/magicEdenSDK'
 import { magicEdenSDK } from 'model/collections.controller'
-import configs from 'configs'
 
-const {
-  manifest: { appId },
-} = configs
 let timeoutId: NodeJS.Timeout | undefined = undefined
 
 export type SearchResultProps = {
@@ -18,7 +14,7 @@ export type SearchResultProps = {
   data?: MagicEdenCollection
 }
 export const SearchResult = ({ loading, data }: SearchResultProps) => {
-  const { to } = useAppRoute(appId)
+  const { to } = useAppRoute()
   const onView = useCallback(() => {
     if (data?.symbol) return to(`/${data.symbol}`)
   }, [to, data])

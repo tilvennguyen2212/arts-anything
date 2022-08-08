@@ -9,11 +9,7 @@ import ViewedList from './viewedList'
 import Search from './search'
 
 import { Category } from 'model/category.controller'
-import configs from 'configs'
 
-const {
-  manifest: { appId },
-} = configs
 const TABS: Category[] = ['recent', 'hot', 'viewed']
 
 const CurrentList = ({ type = 'recent' }: { type?: Category }) => {
@@ -24,7 +20,7 @@ const CurrentList = ({ type = 'recent' }: { type?: Category }) => {
 }
 
 const Collections = () => {
-  const { to } = useAppRoute(appId)
+  const { to } = useAppRoute()
   const { search } = useLocation()
   const tab = useMemo(() => {
     const params = new URLSearchParams(search)

@@ -4,9 +4,9 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.8.0",
     "@senswap/sen-js": "^1.4.0",
-    "@sentre/antd-ionicon": "^1.0.36",
+    "@sentre/antd-ionicon": "^1.0.37",
     "@sentre/otc-sdk": "^1.0.11",
-    "@sentre/senhub": "^3.1.13",
+    "@sentre/senhub": "^3.1.19",
     "antd": "^4.21.1",
     "axios": "^0.27.2",
     "bn.js": "^5.2.0",
@@ -20,7 +20,7 @@
     "web-vitals": "^2.1.1"
   },
   "scripts": {
-    "start": "craco start",
+    "start": "REACT_APP_HMR=$PWD/src/bootstrap.app.tsx craco start",
     "build": "craco build",
     "test": "craco test",
     "predeploy": "yarn build",
@@ -46,7 +46,7 @@
   },
   "devDependencies": {
     "@craco/craco": "^7.0.0-alpha.5",
-    "@sentre/craco-plugins": "^1.0.36",
+    "@sentre/craco-plugins": "^1.0.37",
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.2.1",

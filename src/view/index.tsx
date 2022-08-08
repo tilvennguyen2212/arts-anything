@@ -13,11 +13,10 @@ import 'static/styles/dark.less'
 
 const {
   payment: { whitelist },
-  manifest: { appId },
 } = configs
 
 const View = () => {
-  const { extend } = useAppRoute(appId)
+  const { extend } = useAppRoute()
 
   return (
     <Row gutter={[24, 24]} justify="center">

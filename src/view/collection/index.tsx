@@ -24,7 +24,7 @@ const Collection = () => {
   const { [symbol]: listingNFTs } = useSelector(
     (state: AppState) => state.listing,
   )
-  const { back } = useAppRoute(appId)
+  const { back } = useAppRoute()
   const walletAddress = useWalletAddress()
   const pdb = useMemo(() => createPDB(walletAddress, appId), [walletAddress])
 
