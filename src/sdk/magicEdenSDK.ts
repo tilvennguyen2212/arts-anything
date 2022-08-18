@@ -52,7 +52,7 @@ class MagicEdenSDK extends Offset {
     const origin = this.endpoint + path
     const searchParams = params ? new URLSearchParams(params).toString() : ''
     const encodedURI = encodeURIComponent(`${origin}?${searchParams}`)
-    return `${this.service}/${encodedURI}?auth=${auth}`
+    return `${this.service}/forward/${encodedURI}?auth=${auth}`
   }
 
   getCollection = async (symbol: string) => {
@@ -63,14 +63,13 @@ class MagicEdenSDK extends Offset {
     return data as MagicEdenCollection
   }
 
-  getCollections = async (offset = 0, limit = 200) => {
-    const params = { offset, limit }
-    const url = this.getURL({ path: '/collections', params })
+  getCollections = async (offset = 0, limit = 50) => {
+    const url = `${this.service}/collections?offset=${offset}&limit=${limit}`
     const { data } = await axios.get(url)
     return (data || []) as MagicEdenCollection[]
   }
 
-  nextCollections = async (limit = 200) => {
+  nextCollections = async (limit = 50) => {
     const offset = this.get('collections')
     const data = await this.getCollections(offset, limit)
     this.set('collections', offset + data.length)
