@@ -9,6 +9,8 @@ import {
   MagicEdenNFTMetadata,
 } from './types'
 
+export const MIN_SEARCH_LENGTH = 3
+
 class MagicEdenSDK extends Offset {
   public network: Net
   public endpoint: string
@@ -57,7 +59,7 @@ class MagicEdenSDK extends Offset {
 
   getCollection = async (symbol: string) => {
     if (!symbol) throw new Error('Invalid symbol')
-    const url = this.getURL({ path: `/collections/${symbol}` })
+    const url = `${this.service}/collections/${symbol}`
     const { data } = await axios.get(url)
     if (!data) throw new Error('Invalid symbol')
     return data as MagicEdenCollection
@@ -74,6 +76,15 @@ class MagicEdenSDK extends Offset {
     const data = await this.getCollections(offset, limit)
     this.set('collections', offset + data.length)
     return data
+  }
+
+  searchCollections = async (search = '') => {
+    if (!search || search.length <= MIN_SEARCH_LENGTH) return undefined
+    const offset = 0
+    const limit = 5
+    const url = `${this.service}/collections?search=${search}&offset=${offset}&limit=${limit}`
+    const { data } = await axios.get(url)
+    return (data || []) as MagicEdenCollection[]
   }
 
   getListingNFTs = async (symbol: string, offset = 0, limit = 20) => {
