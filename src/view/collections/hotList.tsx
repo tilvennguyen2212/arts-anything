@@ -30,8 +30,8 @@ const HotList = () => {
   return (
     <Spin spinning={loading}>
       <Row gutter={[24, 24]}>
-        {hot.map((symbol, i) => (
-          <Col key={i} xs={12} sm={8} lg={6}>
+        {hot.map((symbol) => (
+          <Col key={symbol} xs={12} sm={8} lg={6}>
             <CollectionCard symbol={symbol} />
           </Col>
         ))}

@@ -9,6 +9,7 @@ import ViewedList from './viewedList'
 import Search from './search'
 
 import { Category } from 'model/category.controller'
+import PopularCollections from 'view/popularCollections'
 
 const TABS: Category[] = ['recent', 'hot', 'viewed']
 
@@ -34,12 +35,15 @@ const Collections = () => {
   return (
     <Row gutter={[24, 24]}>
       <Col span={24}>
+        <PopularCollections />
+      </Col>
+      <Col span={24}>
         <Row gutter={[16, 16]}>
           <Col flex="auto">
             <Segmented
               size="large"
               options={[
-                { label: '💎 Recent', value: 'recent' },
+                { label: '💎 Newest', value: 'recent' },
                 { label: '🔥 Hot (24h)', value: 'hot' },
                 { label: '👀 Viewed', value: 'viewed' },
               ]}
