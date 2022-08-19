@@ -1,5 +1,6 @@
-import { useEffect } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useUI } from '@sentre/senhub'
 
 import { Col, Row, Typography } from 'antd'
 import PopularCollectionCard from './popularCollectionCard'
@@ -12,6 +13,10 @@ const PopularCollections = () => {
     (state: AppState) => state.popularCollections,
   )
   const dispatch = useDispatch<AppDispatch>()
+  const {
+    ui: { width },
+  } = useUI()
+  const limit = useMemo(() => (width < 576 ? 3 : 6), [width])
 
   useEffect(() => {
     dispatch(getPopularCollections())
@@ -28,11 +33,13 @@ const PopularCollections = () => {
           </Col>
         </Row>
       </Col>
-      {Object.keys(popularCollections).map((symbol) => (
-        <Col key={symbol} xs={24} sm={12} lg={8}>
-          <PopularCollectionCard symbol={symbol} />
-        </Col>
-      ))}
+      {Object.keys(popularCollections)
+        .slice(0, limit)
+        .map((symbol) => (
+          <Col key={symbol} xs={24} sm={12} lg={8}>
+            <PopularCollectionCard symbol={symbol} />
+          </Col>
+        ))}
     </Row>
   )
 }
