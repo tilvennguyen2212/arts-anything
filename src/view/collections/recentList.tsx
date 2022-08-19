@@ -27,8 +27,8 @@ const RecentList = () => {
   }, [dispatch])
 
   useEffect(() => {
-    onMore()
-  }, [onMore])
+    if (!recent.length) onMore()
+  }, [recent, onMore])
 
   return (
     <Row gutter={[24, 24]}>

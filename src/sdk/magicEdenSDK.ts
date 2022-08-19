@@ -52,8 +52,10 @@ class MagicEdenSDK extends Offset {
   }) => {
     if (params) for (const key in params) params[key] = params[key].toString()
     const origin = this.endpoint + path
-    const searchParams = params ? new URLSearchParams(params).toString() : ''
-    const encodedURI = encodeURIComponent(`${origin}?${searchParams}`)
+    const searchParams = params
+      ? `?${new URLSearchParams(params).toString()}`
+      : ''
+    const encodedURI = encodeURIComponent(`${origin}${searchParams}`)
     return `${this.service}/forward/${encodedURI}?auth=${auth}`
   }
 
