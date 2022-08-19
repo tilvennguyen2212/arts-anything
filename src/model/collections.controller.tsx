@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { net, rpc } from '@sentre/senhub'
+import { rpc } from '@sentre/senhub'
 
 import MagicEdenSDK, { MagicEdenCollection } from 'sdk/magicEdenSDK'
 
@@ -15,7 +15,7 @@ export type MagicEdenState = Record<string, MagicEdenCollection>
 
 const NAME = 'collections'
 const initialState: MagicEdenState = {}
-export const magicEdenSDK = new MagicEdenSDK({ network: net, rpc })
+export const magicEdenSDK = new MagicEdenSDK(rpc)
 
 /**
  * Actions

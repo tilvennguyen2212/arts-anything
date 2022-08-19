@@ -40,7 +40,7 @@ const Collections = () => {
               size="large"
               options={[
                 { label: '💎 Recent', value: 'recent' },
-                { label: '🔥 Hot', value: 'hot' },
+                { label: '🔥 Hot (24h)', value: 'hot' },
                 { label: '👀 Viewed', value: 'viewed' },
               ]}
               value={tab}

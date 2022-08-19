@@ -1,4 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { magicEdenSDK } from './collections.controller'
 
 /**
  * Interface & Utility
@@ -36,18 +37,35 @@ export const pushRecent = createAsyncThunk<
   return { recent: newRecent }
 })
 
-export const pushHot = createAsyncThunk<
+export type PopularCollectionsParams = { window: string; limit: number }
+export const PopularCollectionsDefault: PopularCollectionsParams = {
+  window: '1d',
+  limit: 12,
+}
+export const loadHot = createAsyncThunk<
   Partial<CategoryState>,
-  string[],
+  PopularCollectionsParams | undefined,
   { state: { category: CategoryState } }
->(`${NAME}/pushHot`, async (hot, { getState }) => {
-  const {
-    category: { hot: prevHot },
-  } = getState()
-  const newHot = [...prevHot]
-  for (const symbol of hot) if (!newHot.includes(symbol)) newHot.push(symbol)
-  return { hot: newHot }
-})
+>(
+  `${NAME}/loadHot`,
+  async (
+    popularCollectionsParams = PopularCollectionsDefault,
+    { getState },
+  ) => {
+    const { window, limit } = {
+      ...PopularCollectionsDefault,
+      ...popularCollectionsParams,
+    }
+    const {
+      category: { hot: prevHot },
+    } = getState()
+    const data = await magicEdenSDK.getPopularCollections(window, limit)
+    const hot = data.map(({ collectionSymbol }) => collectionSymbol)
+    const newHot = [...prevHot]
+    for (const symbol of hot) if (!newHot.includes(symbol)) newHot.push(symbol)
+    return { hot: newHot }
+  },
+)
 
 export const setViewed = createAsyncThunk(
   `${NAME}/setViewed`,
@@ -71,7 +89,7 @@ const slice = createSlice({
         (state, { payload }) => void Object.assign(state, payload),
       )
       .addCase(
-        pushHot.fulfilled,
+        loadHot.fulfilled,
         (state, { payload }) => void Object.assign(state, payload),
       )
       .addCase(

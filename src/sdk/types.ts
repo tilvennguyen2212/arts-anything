@@ -9,6 +9,21 @@ export type MagicEdenCollection = {
   website: string
 }
 
+export type MagicEdenPopularCollection = {
+  collectionSymbol: string
+  fp: number
+  image: string
+  name: string
+  ownerCount: number
+  rank: number
+  tokenCount: number
+  totalVol: number
+  txns: number
+  updatedAt: number
+  vol: number
+  volDelta: number
+}
+
 export type MagicEdenRarity = Record<
   'moonrank' | 'howrare',
   {

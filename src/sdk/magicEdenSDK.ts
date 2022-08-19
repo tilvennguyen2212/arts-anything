@@ -1,10 +1,11 @@
 import { Transaction, Connection } from '@solana/web3.js'
-import { Net, util } from '@sentre/senhub'
+import { util } from '@sentre/senhub'
 import axios from 'axios'
 
 import Offset from './offset'
 import {
   MagicEdenCollection,
+  MagicEdenPopularCollection,
   MagicEdenListingNFT,
   MagicEdenNFTMetadata,
 } from './types'
@@ -12,36 +13,20 @@ import {
 export const MIN_SEARCH_LENGTH = 3
 
 class MagicEdenSDK extends Offset {
-  public network: Net
-  public endpoint: string
-  public connection: Connection
-  public service: string
+  private api: string = 'https://api-mainnet.magiceden.dev/v2'
+  private stat: string = 'https://stats-mainnet.magiceden.io/collection_stats'
+  private connection: Connection
+  private service: string = 'https://cors.sentre.io/magic-eden'
 
-  constructor({
-    network,
-    rpc,
-    service = 'https://cors.sentre.io/magic-eden',
-  }: {
-    network: Net
-    rpc: string
-    service?: string
-  }) {
+  constructor(rpc: string) {
     super()
-    this.network = network
-    this.service = service
-    this.endpoint = MagicEdenSDK.ENDPOINTS[this.network]
     this.connection = new Connection(rpc)
   }
 
-  static ENDPOINTS: Record<Net, string> = {
-    devnet: 'https://api-devnet.magiceden.dev/v2',
-    testnet: 'https://api-testnet.magiceden.dev/v2',
-    mainnet: 'https://api-mainnet.magiceden.dev/v2',
-  }
   static DEFAULT_REFERRAL: string =
     'autMW8SgBkVYeBgqYiTuJZnkvDZMVU2MHJh9Jh7CSQ2'
 
-  private getURL = ({
+  private getAPI = ({
     path,
     params,
     auth = false,
@@ -51,12 +36,28 @@ class MagicEdenSDK extends Offset {
     auth?: boolean
   }) => {
     if (params) for (const key in params) params[key] = params[key].toString()
-    const origin = this.endpoint + path
+    const origin = this.api + path
     const searchParams = params
       ? `?${new URLSearchParams(params).toString()}`
       : ''
     const encodedURI = encodeURIComponent(`${origin}${searchParams}`)
     return `${this.service}/forward/${encodedURI}?auth=${auth}`
+  }
+
+  private getStat = ({
+    path,
+    params,
+  }: {
+    path: string
+    params?: Record<string, any>
+  }) => {
+    if (params) for (const key in params) params[key] = params[key].toString()
+    const origin = this.stat + path
+    const searchParams = params
+      ? `?${new URLSearchParams(params).toString()}`
+      : ''
+    const encodedURI = encodeURIComponent(`${origin}${searchParams}`)
+    return `${this.service}/forward/${encodedURI}`
   }
 
   getCollection = async (symbol: string) => {
@@ -71,6 +72,18 @@ class MagicEdenSDK extends Offset {
     const url = `${this.service}/collections?offset=${offset}&limit=${limit}`
     const { data } = await axios.get(url)
     return (data || []) as MagicEdenCollection[]
+  }
+
+  getPopularCollections = async (window = '1d', limit = 12) => {
+    const url = this.getStat({
+      path: '/popular_collections/sol',
+      params: {
+        window,
+        limit,
+      },
+    })
+    const { data } = await axios.get(url)
+    return (data || []) as MagicEdenPopularCollection[]
   }
 
   nextCollections = async (limit = 50) => {
@@ -91,7 +104,7 @@ class MagicEdenSDK extends Offset {
 
   getListingNFTs = async (symbol: string, offset = 0, limit = 20) => {
     const params = { offset, limit }
-    const url = this.getURL({ path: `/collections/${symbol}/listings`, params })
+    const url = this.getAPI({ path: `/collections/${symbol}/listings`, params })
     const { data } = await axios.get(url)
     return (data || []) as MagicEdenListingNFT[]
   }
@@ -105,7 +118,7 @@ class MagicEdenSDK extends Offset {
 
   getNFTMetadata = async (mintAddress: string) => {
     if (!util.isAddress(mintAddress)) throw new Error('Invalid mint address')
-    const url = this.getURL({ path: `/tokens/${mintAddress}` })
+    const url = this.getAPI({ path: `/tokens/${mintAddress}` })
     const { data } = await axios.get(url)
     if (!data) throw new Error('Invalid mint address')
     return data as MagicEdenNFTMetadata
@@ -157,7 +170,7 @@ class MagicEdenSDK extends Offset {
       buyerExpiry,
       sellerExpiry,
     }
-    const url = this.getURL({
+    const url = this.getAPI({
       path: '/instructions/buy_now',
       params,
       auth: true,
