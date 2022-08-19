@@ -1,30 +1,10 @@
 import { Env } from '@sentre/senhub'
 
-const HOT_LIST = [
-  'degods',
-  'okay_bears',
-  'degentown',
-  'primates',
-  'shadowy_super_coder_dao',
-  'trippin_ape_tribe',
-  'justape',
-  'yeah_tigers',
-  'solana_monkey_business',
-  'blocksmith_labs',
-  'bubblegoose_ballers',
-  'aurory',
-  'degenerate_ape_academy',
-  'communi3',
-  'solpunks',
-  'stepn',
-]
-
 /**
  * Contructor
  */
 type Conf = {
   limit: number
-  hotList: string[]
 }
 
 const conf: Record<Env, Conf> = {
@@ -33,7 +13,6 @@ const conf: Record<Env, Conf> = {
    */
   development: {
     limit: 12,
-    hotList: HOT_LIST,
   },
 
   /**
@@ -41,7 +20,6 @@ const conf: Record<Env, Conf> = {
    */
   production: {
     limit: 12,
-    hotList: HOT_LIST,
   },
 }
 
