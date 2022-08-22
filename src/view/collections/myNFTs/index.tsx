@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useWalletAddress, util } from '@sentre/senhub'
 
@@ -14,6 +14,13 @@ const MyNFTs = () => {
   const walletAddress = useWalletAddress()
   const mine = useSelector((state: AppState) => state.mine)
 
+  const onSell = useCallback((mintAddress: string, price: string) => {
+    return console.log(price, mintAddress)
+  }, [])
+  const onCancel = useCallback((mintAddress: string) => {
+    return console.log(mintAddress)
+  }, [])
+
   useEffect(() => {
     if (util.isAddress(walletAddress)) dispatch(getMyNFTs(walletAddress))
   }, [walletAddress, dispatch])
@@ -24,7 +31,11 @@ const MyNFTs = () => {
         <Row gutter={[24, 24]}>
           {Object.keys(mine).map((mintAddress) => (
             <Col key={mintAddress} xs={12} sm={8} lg={6}>
-              <MyNFTCard mintAddress={mintAddress} />
+              <MyNFTCard
+                mintAddress={mintAddress}
+                onSell={onSell}
+                onCancel={onCancel}
+              />
             </Col>
           ))}
         </Row>

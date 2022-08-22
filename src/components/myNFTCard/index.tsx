@@ -1,10 +1,13 @@
+import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { useAppRoute } from '@sentre/senhub'
 
 import {
   Avatar,
   Button,
   Card,
   Col,
+  InputNumber,
   Row,
   Skeleton,
   Space,
@@ -13,15 +16,13 @@ import {
 import IonIcon from '@sentre/antd-ionicon'
 
 import { AppState } from 'model'
+import { useCollection } from 'hooks/useCollection'
 import SolLogo from 'static/images/sol-logo.svg'
 import './index.less'
-import { useAppRoute } from '@sentre/senhub/dist'
-import { useCollection } from 'hooks/useCollection'
-import { useMemo } from 'react'
 
 export type MyNFTCardProps = {
   mintAddress: string
-  onSell?: (mintAddress: string) => void
+  onSell?: (mintAddress: string, price: string) => void
   onCancel?: (mintAddress: string) => void
 }
 
@@ -30,6 +31,7 @@ const MyNFTCard = ({
   onSell = () => {},
   onCancel = () => {},
 }: MyNFTCardProps) => {
+  const [price, setPrice] = useState('')
   const {
     image,
     name,
@@ -86,17 +88,34 @@ const MyNFTCard = ({
         </Col>
         <Col span={24}>
           <Row gutter={[16, 16]} wrap={false}>
-            <Col flex="auto"></Col>
-            <Col>
-              {selling ? (
-                <Button type="text" onClick={() => onCancel(mintAddress)}>
-                  Cancel
-                </Button>
-              ) : (
-                <Button type="primary" onClick={() => onSell(mintAddress)}>
-                  Sell
-                </Button>
+            <Col flex="auto">
+              {!selling && (
+                <InputNumber
+                  addonAfter={
+                    <Avatar
+                      shape="square"
+                      src={SolLogo}
+                      size={18}
+                      style={{ padding: 3 }}
+                    />
+                  }
+                  placeholder="Price in SOL"
+                  value={price}
+                  onChange={(value) => setPrice(value)}
+                  readOnly={selling}
+                  controls={false}
+                />
               )}
+            </Col>
+            <Col>
+              <Button
+                type={!selling ? 'primary' : 'text'}
+                onClick={() =>
+                  !selling ? onSell(mintAddress, price) : onCancel(mintAddress)
+                }
+              >
+                {!selling ? 'Sell' : 'Cancel'}
+              </Button>
             </Col>
           </Row>
         </Col>
