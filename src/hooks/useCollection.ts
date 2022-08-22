@@ -17,19 +17,13 @@ const EMPTY_COLLECTION: MagicEdenCollection = {
   website: '',
 }
 
-export const useCollection = ({
-  symbol,
-  force = false,
-}: {
-  symbol: string
-  force?: boolean
-}) => {
+export const useCollection = (symbol: string) => {
   const dispatch = useDispatch<AppDispatch>()
   const collection = useSelector((state: AppState) => state.collections[symbol])
 
   useEffect(() => {
-    if (!collection || force) dispatch(getCollection(symbol))
-  }, [dispatch, collection, symbol, force])
+    if (!collection) dispatch(getCollection({ symbol }))
+  }, [dispatch, collection, symbol])
 
   if (!collection) return { loading: true, collection: EMPTY_COLLECTION }
   return { loading: false, collection }

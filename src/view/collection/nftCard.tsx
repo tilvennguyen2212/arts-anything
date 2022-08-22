@@ -15,13 +15,11 @@ export type NFTCardProps = {
 
 const NFTCard = ({ symbol, mintAddress }: NFTCardProps) => {
   const {
-    [mintAddress]: {
-      price,
-      rarity,
-      extra: { img },
-    },
-  } = useSelector((state: AppState) => state.listing[symbol])
-  const { name, image } = useMetadata({ mintAddress, force: true })
+    price,
+    rarity,
+    extra: { img },
+  } = useSelector((state: AppState) => state.listing[symbol][mintAddress])
+  const { name, image } = useMetadata(mintAddress)
 
   return (
     <Card

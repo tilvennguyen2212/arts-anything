@@ -214,13 +214,48 @@ class MagicEdenSDK extends Offset {
       seller: sellerAddress,
       auctionHouseAddress: this.auctionHouseAddress,
       tokenMint: mintAddress,
-      tokenATA: accountAddress,
+      tokenAccount: accountAddress,
       price,
       sellerReferral: this.referralAddress,
       expiry: -1,
     }
     const url = this.getAPI({
       path: '/instructions/sell',
+      params,
+      auth: true,
+    })
+    const { data } = await axios.get(url)
+    return Transaction.from(Buffer.from(data.txSigned))
+  }
+
+  cancel = async ({
+    sellerAddress,
+    mintAddress,
+    price,
+  }: {
+    sellerAddress: string
+    mintAddress: string
+    price: number
+  }) => {
+    if (!util.isAddress(sellerAddress))
+      throw new Error('Invalid seller address')
+    if (!util.isAddress(mintAddress)) throw new Error('Invalid mint address')
+
+    const accountAddress = await util.deriveAssociatedAddress(
+      sellerAddress,
+      mintAddress,
+    )
+    const params = {
+      seller: sellerAddress,
+      auctionHouseAddress: this.auctionHouseAddress,
+      tokenMint: mintAddress,
+      tokenAccount: accountAddress,
+      price,
+      sellerReferral: this.referralAddress,
+      expiry: -1,
+    }
+    const url = this.getAPI({
+      path: '/instructions/sell_cancel',
       params,
       auth: true,
     })

@@ -10,7 +10,7 @@ export type CollectionSocialProps = { symbol: string }
 const CollectionSocial = ({ symbol }: CollectionSocialProps) => {
   const {
     collection: { website, twitter, discord },
-  } = useCollection({ symbol })
+  } = useCollection(symbol)
 
   const onSocialMedia = (e: MouseEvent<HTMLElement>, url: string) => {
     e.stopPropagation()

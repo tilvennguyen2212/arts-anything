@@ -31,13 +31,18 @@ export const nextCollections = createAsyncThunk(
   },
 )
 
-export const getCollection = createAsyncThunk(
-  `${NAME}/getCollection`,
-  async (symbol: string) => {
-    const data = await magicEdenSDK.getCollection(symbol)
-    return { [symbol]: data }
-  },
-)
+export const getCollection = createAsyncThunk<
+  MagicEdenState,
+  { symbol: string; force?: boolean },
+  { state: { collections: MagicEdenState } }
+>(`${NAME}/getCollection`, async ({ symbol, force = false }, { getState }) => {
+  const {
+    collections: { [symbol]: currentData },
+  } = getState()
+  if (currentData && !force) return { [symbol]: currentData }
+  const data = await magicEdenSDK.getCollection(symbol)
+  return { [symbol]: data }
+})
 
 /**
  * Usual procedure

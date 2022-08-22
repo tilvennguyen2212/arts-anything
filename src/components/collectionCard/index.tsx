@@ -23,7 +23,7 @@ const CollectionCard = ({
   const {
     loading,
     collection: { name, description, image },
-  } = useCollection({ symbol })
+  } = useCollection(symbol)
   const { to } = useAppRoute()
 
   const onDetails = useCallback(() => to(`/${symbol}`), [to, symbol])

@@ -13,20 +13,14 @@ export type CardNFTProps = { symbol: string; mintAddress: string }
 
 const CardNFT = ({ symbol, mintAddress }: CardNFTProps) => {
   const {
-    listing: {
-      [symbol]: {
-        [mintAddress]: {
-          price,
-          extra: { img },
-        },
-      },
-    },
-  } = useSelector((state: AppState) => state)
+    price,
+    extra: { img },
+  } = useSelector((state: AppState) => state.listing[symbol][mintAddress])
   const {
     loading,
     collection: { name: collectionName },
-  } = useCollection({ symbol, force: true })
-  const { name, image } = useMetadata({ mintAddress })
+  } = useCollection(symbol)
+  const { name, image } = useMetadata(mintAddress)
 
   return (
     <Spin spinning={loading}>

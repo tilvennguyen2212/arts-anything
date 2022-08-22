@@ -23,19 +23,8 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
   const [loading, setLoading] = useState(false)
   const [visible, setVisible] = useState(false)
   const [tokenSymbol, setTokenSymbol] = useState('sol')
-  const {
-    listing: {
-      [symbol]: {
-        [mintAddress]: {
-          seller,
-          sellerReferral,
-          price,
-          tokenMint,
-          auctionHouse,
-        },
-      },
-    },
-  } = useSelector((state: AppState) => state)
+  const { seller, sellerReferral, price, tokenMint, auctionHouse } =
+    useSelector((state: AppState) => state.listing[symbol][mintAddress])
   const walletAddress = useWalletAddress()
   const {
     ui: { width },
@@ -74,12 +63,13 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
       return window.notify({
         type: 'success',
         description: `Successfully buy the NFT. Click to view details.`,
-        onClick: () => window.open(util.explorer(txIds[1]), '_blank'),
+        onClick: () =>
+          window.open(util.explorer(txIds[txIds.length - 1]), '_blank'),
       })
     } catch (er: any) {
       return window.notify({
         type: 'error',
-        description: er.response?.data || er.message,
+        description: er.response?.data?.message || er.message,
       })
     } finally {
       return setLoading(false)

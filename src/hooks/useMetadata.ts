@@ -1,26 +1,16 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { util } from '@sentre/senhub'
 
 import { AppDispatch, AppState } from 'model'
 import { getNFTMetadata } from 'model/metadata.controller'
 
-export const useMetadata = ({
-  mintAddress,
-  force = false,
-}: {
-  mintAddress: string
-  force?: boolean
-}) => {
+export const useMetadata = (mintAddress: string) => {
   const dispatch = useDispatch<AppDispatch>()
-  const {
-    metadata: { [mintAddress]: metadata },
-  } = useSelector((state: AppState) => state)
+  const metadata = useSelector((state: AppState) => state.metadata[mintAddress])
 
   useEffect(() => {
-    if (util.isAddress(mintAddress) && (!metadata || force))
-      dispatch(getNFTMetadata({ mintAddress }))
-  }, [dispatch, force, metadata, mintAddress])
+    if (!metadata) dispatch(getNFTMetadata({ mintAddress }))
+  }, [dispatch, metadata, mintAddress])
 
   return metadata || {}
 }

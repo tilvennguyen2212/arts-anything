@@ -86,4 +86,5 @@ export type MagicEdenNFTMetadata = {
 
 export type MagicEdenMyNFT = MagicEdenNFTMetadata & {
   listStatus: ListStatus
+  price: number
 }
