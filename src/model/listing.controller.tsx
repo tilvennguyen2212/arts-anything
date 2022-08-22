@@ -8,21 +8,21 @@ import { magicEdenSDK } from './collections.controller'
  */
 
 export type ListingNFTs = Record<string, MagicEdenListingNFT>
-export type NFTState = Record<string, ListingNFTs>
+export type ListingNFTsState = Record<string, ListingNFTs>
 
 /**
  * Store constructor
  */
 
 const NAME = 'listing'
-const initialState: NFTState = {}
+const initialState: ListingNFTsState = {}
 
 /**
  * Actions
  */
 
 export const nextListingNFTs = createAsyncThunk<
-  Partial<NFTState>,
+  Partial<ListingNFTsState>,
   { symbol: string; limit?: number },
   { state: any }
 >(`${NAME}/nextListingNFTs`, async ({ symbol, limit = 12 }, { getState }) => {

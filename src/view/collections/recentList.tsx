@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { Col, Row } from 'antd'
 import MoreButton from 'components/moreButton'
-import CollectionCard from './collectionCard'
+import CollectionCard from '../../components/collectionCard'
 
 import { AppDispatch, AppState } from 'model'
 import { nextCollections } from 'model/collections.controller'

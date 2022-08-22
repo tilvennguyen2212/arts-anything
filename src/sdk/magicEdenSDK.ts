@@ -8,6 +8,8 @@ import {
   MagicEdenPopularCollection,
   MagicEdenListingNFT,
   MagicEdenNFTMetadata,
+  ListStatus,
+  MagicEdenMyNFT,
 } from './types'
 
 export const MIN_SEARCH_LENGTH = 3
@@ -17,14 +19,15 @@ class MagicEdenSDK extends Offset {
   private stat: string = 'https://stats-mainnet.magiceden.io/collection_stats'
   private connection: Connection
   private service: string = 'https://cors.sentre.io/magic-eden'
+  private referralAddress: string =
+    '9doo2HZQEmh2NgfT3Yx12M89aoBheycYqH1eaR5gKb3e'
+  private auctionHouseAddress: string =
+    'E8cU1WiRWjanGxmn96ewBgk9vPTcL6AEZ1t6F6fkgUWe'
 
   constructor(rpc: string) {
     super()
     this.connection = new Connection(rpc)
   }
-
-  static DEFAULT_REFERRAL: string =
-    'autMW8SgBkVYeBgqYiTuJZnkvDZMVU2MHJh9Jh7CSQ2'
 
   private getAPI = ({
     path,
@@ -58,6 +61,27 @@ class MagicEdenSDK extends Offset {
       : ''
     const encodedURI = encodeURIComponent(`${origin}${searchParams}`)
     return `${this.service}/forward/${encodedURI}`
+  }
+
+  getMyNFTs = async (
+    walletAddress: string,
+    listStatus: ListStatus = 'both',
+  ) => {
+    if (!util.isAddress(walletAddress))
+      throw new Error('Invalid wallet address')
+    const offset = 0
+    const limit = 500
+    const url = this.getAPI({
+      path: `/wallets/${walletAddress}/tokens`,
+      params: {
+        offset,
+        limit,
+        listStatus,
+      },
+    })
+    const { data } = await axios.get(url)
+    if (!data) throw new Error('Invalid wallet address')
+    return data as MagicEdenMyNFT[]
   }
 
   getCollection = async (symbol: string) => {
@@ -124,30 +148,20 @@ class MagicEdenSDK extends Offset {
     return data as MagicEdenNFTMetadata
   }
 
-  // In process
-  // M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K
-  // https://gist.github.com/tuphan-dn/ec00b4f54341120959e2b5deb65c0f36
   buyNow = async ({
     buyerAddress,
     sellerAddress,
-    auctionHouseAddress = '',
+    auctionHouseAddress,
     mintAddress,
     price,
-    buyerReferralAddress = MagicEdenSDK.DEFAULT_REFERRAL,
-    sellerReferralAddress = MagicEdenSDK.DEFAULT_REFERRAL,
-    buyerExpiry = 0,
-    sellerExpiry = -1,
+    sellerReferralAddress,
   }: {
     buyerAddress: string
     sellerAddress: string
     auctionHouseAddress: string
     mintAddress: string
-    accountAddress?: string
     price: number
-    buyerReferralAddress?: string
-    sellerReferralAddress?: string
-    buyerExpiry?: number
-    sellerExpiry?: number
+    sellerReferralAddress: string
   }) => {
     if (!util.isAddress(buyerAddress)) throw new Error('Invalid buyer address')
     if (!util.isAddress(sellerAddress))
@@ -165,13 +179,48 @@ class MagicEdenSDK extends Offset {
       tokenMint: mintAddress,
       tokenATA: accountAddress,
       price,
-      buyerReferral: buyerReferralAddress,
+      buyerReferral: this.referralAddress,
       sellerReferral: sellerReferralAddress,
-      buyerExpiry,
-      sellerExpiry,
+      buyerExpiry: 0,
+      sellerExpiry: -1,
     }
     const url = this.getAPI({
       path: '/instructions/buy_now',
+      params,
+      auth: true,
+    })
+    const { data } = await axios.get(url)
+    return Transaction.from(Buffer.from(data.txSigned))
+  }
+
+  sell = async ({
+    sellerAddress,
+    mintAddress,
+    price,
+  }: {
+    sellerAddress: string
+    mintAddress: string
+    price: number
+  }) => {
+    if (!util.isAddress(sellerAddress))
+      throw new Error('Invalid seller address')
+    if (!util.isAddress(mintAddress)) throw new Error('Invalid mint address')
+
+    const accountAddress = await util.deriveAssociatedAddress(
+      sellerAddress,
+      mintAddress,
+    )
+    const params = {
+      seller: sellerAddress,
+      auctionHouseAddress: this.auctionHouseAddress,
+      tokenMint: mintAddress,
+      tokenATA: accountAddress,
+      price,
+      sellerReferral: this.referralAddress,
+      expiry: -1,
+    }
+    const url = this.getAPI({
+      path: '/instructions/sell',
       params,
       auth: true,
     })

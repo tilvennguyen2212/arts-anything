@@ -5,18 +5,18 @@ import { useAppRoute } from '@sentre/senhub'
 import { Col, Row, Segmented } from 'antd'
 import RecentList from './recentList'
 import HotList from './hotList'
-import ViewedList from './viewedList'
 import Search from './search'
 
 import { Category } from 'model/category.controller'
-import PopularCollections from 'view/popularCollections'
+import MyNFTs from './myNFTs'
 
-const TABS: Category[] = ['recent', 'hot', 'viewed']
+export type ExtendedCategory = Category | 'my-nfts'
+const TABS: ExtendedCategory[] = ['recent', 'hot', 'my-nfts']
 
-const CurrentList = ({ type = 'recent' }: { type?: Category }) => {
+const CurrentList = ({ type = 'recent' }: { type?: ExtendedCategory }) => {
   if (type === 'recent') return <RecentList />
   if (type === 'hot') return <HotList />
-  if (type === 'viewed') return <ViewedList />
+  if (type === 'my-nfts') return <MyNFTs />
   return <RecentList />
 }
 
@@ -25,7 +25,7 @@ const Collections = () => {
   const { search } = useLocation()
   const tab = useMemo(() => {
     const params = new URLSearchParams(search)
-    const value = params.get('tab') as Category
+    const value = params.get('tab') as ExtendedCategory
     if (!TABS.includes(value)) return 'recent'
     return value
   }, [search])
@@ -35,9 +35,6 @@ const Collections = () => {
   return (
     <Row gutter={[24, 24]}>
       <Col span={24}>
-        <PopularCollections />
-      </Col>
-      <Col span={24}>
         <Row gutter={[16, 16]}>
           <Col flex="auto">
             <Segmented
@@ -45,7 +42,7 @@ const Collections = () => {
               options={[
                 { label: '💎 Newest', value: 'recent' },
                 { label: '🔥 Hot (24h)', value: 'hot' },
-                { label: '👀 Viewed', value: 'viewed' },
+                { label: '👀 My NFTs', value: 'my-nfts' },
               ]}
               value={tab}
               onChange={(e) => setTab(e as Category)}

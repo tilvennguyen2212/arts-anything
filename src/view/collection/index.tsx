@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { createPDB, useAppRoute, useWalletAddress } from '@sentre/senhub'
+import { useAppRoute, useWalletAddress, util } from '@sentre/senhub'
 
 import { Button, Empty, Col, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
@@ -9,24 +9,16 @@ import MoreButton from 'components/moreButton'
 import NFTCard from './nftCard'
 
 import { AppDispatch, AppState } from 'model'
-import { setViewed } from 'model/category.controller'
+import { addViewedSymbol } from 'model/viewed.controller'
 import { nextListingNFTs } from 'model/listing.controller'
-import configs from 'configs'
-
-const {
-  manifest: { appId },
-} = configs
 
 const Collection = () => {
   const [loading, setLoading] = useState(false)
   const dispatch = useDispatch<AppDispatch>()
   const { symbol } = useParams<{ symbol: string }>()
-  const { [symbol]: listingNFTs } = useSelector(
-    (state: AppState) => state.listing,
-  )
-  const { back } = useAppRoute()
+  const listingNFTs = useSelector((state: AppState) => state.listing[symbol])
   const walletAddress = useWalletAddress()
-  const pdb = useMemo(() => createPDB(walletAddress, appId), [walletAddress])
+  const { back } = useAppRoute()
 
   const isEmpty = useMemo(
     () => !listingNFTs || !Object.keys(listingNFTs).length,
@@ -46,15 +38,10 @@ const Collection = () => {
 
   useEffect(() => {
     ;(async () => {
-      if (!symbol) return
-      const storedList: string[] = (await pdb.getItem('history')) || []
-      const index = storedList.findIndex((value) => value === symbol)
-      if (index >= 0) storedList.splice(index, 1)
-      storedList.unshift(symbol)
-      await pdb.setItem('history', storedList)
-      await dispatch(setViewed(storedList))
+      if (!util.isAddress(walletAddress) || !symbol) return
+      await dispatch(addViewedSymbol({ symbol, walletAddress }))
     })()
-  }, [dispatch, symbol, pdb])
+  }, [dispatch, symbol, walletAddress])
 
   useEffect(() => {
     if (!listingNFTs) onMore()

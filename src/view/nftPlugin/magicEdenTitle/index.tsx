@@ -9,7 +9,7 @@ const MagicEdenTitle = () => {
       </Col>
       <Col flex="auto">
         <Space size={0} direction="vertical">
-          <Typography.Text>You are watching NFT on</Typography.Text>
+          <Typography.Text>You are watching NFTs on</Typography.Text>
           <Typography.Text type="secondary" className="caption">
             magiceden.io
           </Typography.Text>

@@ -1,3 +1,5 @@
+export type ListStatus = 'both' | 'listed' | 'unlisted'
+
 export type MagicEdenCollection = {
   categories: string[]
   description: string
@@ -37,6 +39,7 @@ export type MagicEdenListingNFT = {
   tokenAddress: string
   tokenMint: string
   seller: string
+  sellerReferral: string
   tokenSize: number
   price: number
   rarity: Partial<MagicEdenRarity>
@@ -65,6 +68,7 @@ export type MagicEdenNFTMetadata = {
   owner: string
   supply: number
   collection: string
+  collectionName: string
   name: string
   updateAuthority: string
   primarySaleHappened: number
@@ -78,4 +82,8 @@ export type MagicEdenNFTMetadata = {
     category: string
     creators: MagicEdenCreator[]
   }
+}
+
+export type MagicEdenMyNFT = MagicEdenNFTMetadata & {
+  listStatus: ListStatus
 }

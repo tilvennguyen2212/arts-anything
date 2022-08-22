@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { Col, Row, Spin } from 'antd'
-import CollectionCard from './collectionCard'
+import CollectionCard from '../../components/collectionCard'
 
 import { AppDispatch, AppState } from 'model'
 import { loadHot } from 'model/category.controller'

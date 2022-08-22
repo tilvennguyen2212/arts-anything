@@ -25,11 +25,10 @@ export const useCollection = ({
   force?: boolean
 }) => {
   const dispatch = useDispatch<AppDispatch>()
-  const collections = useSelector((state: AppState) => state.collections)
-  const { [symbol]: collection } = collections
+  const collection = useSelector((state: AppState) => state.collections[symbol])
 
   useEffect(() => {
-    if (!collection && symbol && force) dispatch(getCollection(symbol))
+    if (!collection || force) dispatch(getCollection(symbol))
   }, [dispatch, collection, symbol, force])
 
   if (!collection) return { loading: true, collection: EMPTY_COLLECTION }

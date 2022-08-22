@@ -18,7 +18,7 @@ export const useMetadata = ({
   } = useSelector((state: AppState) => state)
 
   useEffect(() => {
-    if (!metadata && force && util.isAddress(mintAddress))
+    if (util.isAddress(mintAddress) && (!metadata || force))
       dispatch(getNFTMetadata({ mintAddress }))
   }, [dispatch, force, metadata, mintAddress])
 

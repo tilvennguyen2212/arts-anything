@@ -5,7 +5,7 @@ import { magicEdenSDK } from './collections.controller'
  * Interface & Utility
  */
 
-export type Category = 'recent' | 'hot' | 'viewed'
+export type Category = 'recent' | 'hot'
 export type CategoryState = Record<Category, string[]>
 
 /**
@@ -16,7 +16,6 @@ const NAME = 'category'
 const initialState: CategoryState = {
   recent: [],
   hot: [],
-  viewed: [],
 }
 
 /**
@@ -67,13 +66,6 @@ export const loadHot = createAsyncThunk<
   },
 )
 
-export const setViewed = createAsyncThunk(
-  `${NAME}/setViewed`,
-  async (viewed: string[]) => {
-    return { viewed }
-  },
-)
-
 /**
  * Usual procedure
  */
@@ -90,10 +82,6 @@ const slice = createSlice({
       )
       .addCase(
         loadHot.fulfilled,
-        (state, { payload }) => void Object.assign(state, payload),
-      )
-      .addCase(
-        setViewed.fulfilled,
         (state, { payload }) => void Object.assign(state, payload),
       ),
 })

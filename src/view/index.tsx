@@ -1,19 +1,15 @@
 import { Route, Switch } from 'react-router-dom'
 import { net, useAppRoute } from '@sentre/senhub'
 
-import { Row, Col, Typography, Space } from 'antd'
-import TextLoop from 'react-text-loop'
+import { Row, Col } from 'antd'
 import Collections from './collections'
 import Collection from './collection'
-
-import configs from 'configs'
+import MainnetOnly from 'components/mainnetOnly'
+import HeroBanner from 'components/heroBanner'
+import PopularCollections from './popularCollections'
 
 import 'static/styles/light.less'
 import 'static/styles/dark.less'
-
-const {
-  payment: { whitelist },
-} = configs
 
 const View = () => {
   const { extend } = useAppRoute()
@@ -21,25 +17,12 @@ const View = () => {
   return (
     <Row gutter={[24, 24]} justify="center">
       <Col span={24} style={{ maxWidth: 1200 }}>
-        <Row gutter={[24, 24]} justify="center">
-          <Col style={{ marginTop: 64, marginBottom: 64 }}>
-            <Typography.Text style={{ fontSize: 64, fontWeight: 900 }}>
-              Buy NFTs by{' '}
-              <TextLoop>
-                {Object.values(whitelist).map(({ address, url, symbol }) => (
-                  <a
-                    key={address}
-                    href={url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="gradient-text"
-                  >
-                    {symbol}
-                  </a>
-                ))}
-              </TextLoop>
-              .
-            </Typography.Text>
+        <Row gutter={[24, 24]}>
+          <Col span={24} style={{ marginTop: 64, marginBottom: 64 }}>
+            <HeroBanner />
+          </Col>
+          <Col span={24} style={{ marginBottom: 32 }}>
+            <PopularCollections />
           </Col>
           {net === 'mainnet' ? (
             <Col span={24}>
@@ -49,16 +32,8 @@ const View = () => {
               </Switch>
             </Col>
           ) : (
-            <Col span={24} style={{ textAlign: 'center' }}>
-              <Space direction="vertical">
-                <Typography.Title level={2}>
-                  ⚠️ Only supported on Solana mainnet.
-                </Typography.Title>
-                <Typography.Text>
-                  You can open the Control Center, switch to mainnet, and
-                  experience the application.
-                </Typography.Text>
-              </Space>
+            <Col span={24}>
+              <MainnetOnly />
             </Col>
           )}
         </Row>

@@ -1,26 +1,25 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { createPDB, useWalletAddress } from '@sentre/senhub'
+import { useWalletAddress, util } from '@sentre/senhub'
 
-import { Col, Row, Empty } from 'antd'
+import { Col, Divider, Row, Typography, Empty, Button } from 'antd'
+import IonIcon from '@sentre/antd-ionicon'
 import MoreButton from 'components/moreButton'
-import CollectionCard from './collectionCard'
+import CollectionCard from 'components/collectionCard'
 
 import { AppDispatch, AppState } from 'model'
-import { setViewed } from 'model/category.controller'
+import { deleteViewedSymbol, getViewedSymbols } from 'model/viewed.controller'
 import configs from 'configs'
 
 const {
-  manifest: { appId },
   pagination: { limit: LIMIT },
 } = configs
 
 const ViewedList = () => {
-  const viewed = useSelector((state: AppState) => state.category.viewed)
+  const viewed = useSelector((state: AppState) => state.viewed)
   const dispatch = useDispatch<AppDispatch>()
   const [limit, setLimit] = useState(LIMIT)
   const walletAddress = useWalletAddress()
-  const pdb = useMemo(() => createPDB(walletAddress, appId), [walletAddress])
   const currentList = useMemo(() => viewed.slice(0, limit), [viewed, limit])
   const isEmpty = useMemo(() => !viewed || !viewed.length, [viewed])
   const noMore = useMemo(
@@ -30,27 +29,47 @@ const ViewedList = () => {
 
   const onDelete = useCallback(
     async (symbol: string) => {
-      const storedList: string[] = await pdb.getItem('history')
-      const viewedList = storedList.filter((value) => value !== symbol)
-      await pdb.setItem('history', viewedList)
-      return dispatch(setViewed(viewedList))
+      if (!util.isAddress(walletAddress) || !symbol) return
+      return dispatch(deleteViewedSymbol({ walletAddress, symbol }))
     },
-    [dispatch, pdb],
+    [dispatch, walletAddress],
   )
+  const onClearAll = useCallback(() => {
+    if (!util.isAddress(walletAddress)) return
+    return dispatch(deleteViewedSymbol({ walletAddress, all: true }))
+  }, [dispatch, walletAddress])
 
   const onMore = useCallback(async () => {
     return setLimit(Math.min(viewed.length, limit + LIMIT))
   }, [viewed, limit])
 
   useEffect(() => {
-    ;(async () => {
-      const storedList: string[] = (await pdb.getItem('history')) || []
-      return dispatch(setViewed(storedList))
-    })()
-  }, [dispatch, pdb])
+    if (util.isAddress(walletAddress))
+      dispatch(getViewedSymbols({ walletAddress }))
+  }, [dispatch, walletAddress])
 
   return (
     <Row gutter={[24, 24]}>
+      <Col span={24}>
+        <Row gutter={[16, 16]} wrap={false}>
+          <Col flex="auto">
+            <Divider orientation="left" style={{ margin: 0 }}>
+              <Typography.Title level={4} type="secondary">
+                🔍 Viewed Collections
+              </Typography.Title>
+            </Divider>
+          </Col>
+          <Col>
+            <Button
+              onClick={onClearAll}
+              size="small"
+              icon={<IonIcon name="trash-outline" />}
+            >
+              Clear All
+            </Button>
+          </Col>
+        </Row>
+      </Col>
       {isEmpty ? (
         <Col span={24}>
           <Row gutter={[24, 24]} justify="center">

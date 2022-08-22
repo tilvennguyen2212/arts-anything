@@ -4,6 +4,8 @@ import { devTools, bigintSerializationMiddleware } from 'model/devTools'
 import collections from 'model/collections.controller'
 import popularCollections from 'model/popularCollections.controller'
 import category from 'model/category.controller'
+import mine from 'model/mine.controller'
+import viewed from 'model/viewed.controller'
 import listing from 'model/listing.controller'
 import metadata from 'model/metadata.controller'
 
@@ -18,6 +20,8 @@ const model = configureStore({
     collections,
     popularCollections,
     category,
+    mine,
+    viewed,
     listing,
     metadata,
   },

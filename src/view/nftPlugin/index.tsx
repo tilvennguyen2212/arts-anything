@@ -26,7 +26,13 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
   const {
     listing: {
       [symbol]: {
-        [mintAddress]: { seller, price, tokenMint, auctionHouse },
+        [mintAddress]: {
+          seller,
+          sellerReferral,
+          price,
+          tokenMint,
+          auctionHouse,
+        },
       },
     },
   } = useSelector((state: AppState) => state)
@@ -57,6 +63,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
         buyerAddress: walletAddress,
         sellerAddress: seller,
         auctionHouseAddress: auctionHouse,
+        sellerReferralAddress: sellerReferral,
         mintAddress: tokenMint,
         price,
       })
@@ -82,6 +89,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
     tokenSymbol,
     walletAddress,
     seller,
+    sellerReferral,
     auctionHouse,
     tokenMint,
     price,

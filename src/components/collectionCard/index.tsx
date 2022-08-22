@@ -3,7 +3,7 @@ import { useAppRoute } from '@sentre/senhub'
 
 import { Avatar, Button, Card, Col, Row, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
-import CollectionSocial from './collectionSocial'
+import CollectionSocial from './social'
 
 import { useCollection } from 'hooks/useCollection'
 import MagicEdenLogo from 'static/images/magic-eden-logo.jpeg'
@@ -23,7 +23,7 @@ const CollectionCard = ({
   const {
     loading,
     collection: { name, description, image },
-  } = useCollection({ symbol, force: true })
+  } = useCollection({ symbol })
   const { to } = useAppRoute()
 
   const onDetails = useCallback(() => to(`/${symbol}`), [to, symbol])
