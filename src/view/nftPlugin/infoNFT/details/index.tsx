@@ -6,8 +6,6 @@ import { Avatar, Col, Row, Space, Tooltip, Typography } from 'antd'
 import SolLogo from 'static/images/sol-logo.svg'
 import SolScanLogo from 'static/images/solscan-logo.svg'
 
-import { NFTCardProps } from 'view/collection/nftCard'
-
 type ItemDetailProps = {
   title?: string
   content?: ReactNode
@@ -54,7 +52,9 @@ const SolScanAddress = ({ address }: { address: string }) => {
   )
 }
 
-const Details = ({ symbol, mintAddress }: NFTCardProps) => {
+export type DetailsProps = { symbol: string; mintAddress: string }
+
+const Details = ({ symbol, mintAddress }: DetailsProps) => {
   return (
     <Row
       gutter={[8, 8]}

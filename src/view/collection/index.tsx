@@ -6,7 +6,7 @@ import { useAppRoute, useWalletAddress, util } from '@sentre/senhub'
 import { Button, Empty, Col, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import MoreButton from 'components/moreButton'
-import NFTCard from './nftCard'
+import ListingNFTCard from 'components/listingNFTCard'
 
 import { AppDispatch, AppState } from 'model'
 import { addViewedSymbol } from 'model/viewed.controller'
@@ -71,7 +71,7 @@ const Collection = () => {
           ) : (
             Object.values(listingNFTs || {}).map(({ tokenMint }, i) => (
               <Col key={i} xs={12} sm={8} lg={6}>
-                <NFTCard symbol={symbol} mintAddress={tokenMint} />
+                <ListingNFTCard symbol={symbol} mintAddress={tokenMint} />
               </Col>
             ))
           )}

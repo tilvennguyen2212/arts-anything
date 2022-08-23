@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { useUI } from '@sentre/senhub'
+import { Infix, useInfix } from '@sentre/senhub'
 
 import { Avatar, Card, Space, Tooltip, Typography } from 'antd'
 
@@ -16,10 +16,8 @@ export type RarityProps = {
 }
 
 const Rarity = ({ name, rank }: RarityProps) => {
-  const {
-    ui: { width },
-  } = useUI()
-  const isMobile = useMemo(() => width < 768, [width])
+  const infix = useInfix()
+  const isMobile = useMemo(() => infix < Infix.md, [infix])
 
   return (
     <Tooltip title={name}>

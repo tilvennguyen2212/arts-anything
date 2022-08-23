@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { useAppRoute } from '@sentre/senhub'
+import { Infix, useAppRoute, useInfix } from '@sentre/senhub'
 
 import {
   Avatar,
@@ -45,6 +45,7 @@ const MyNFTCard = ({
     collection: { image: collectionImage },
   } = useCollection(symbol)
   const { to } = useAppRoute()
+  const infix = useInfix()
   const selling = useMemo(() => listStatus === 'listed', [listStatus])
 
   return (
@@ -89,8 +90,8 @@ const MyNFTCard = ({
           )}
         </Col>
         <Col span={24}>
-          <Row gutter={[16, 16]} wrap={false}>
-            <Col flex="auto">
+          <Row gutter={[16, 16]} wrap={infix < Infix.md}>
+            <Col {...(infix < Infix.md ? { xs: 24 } : { flex: 'auto' })}>
               <InputNumber
                 addonAfter={
                   <Avatar
@@ -107,7 +108,7 @@ const MyNFTCard = ({
                 controls={false}
               />
             </Col>
-            <Col>
+            <Col {...(infix < Infix.md ? { xs: 24 } : {})}>
               <Button
                 type={!selling ? 'primary' : 'default'}
                 onClick={() =>
@@ -116,6 +117,7 @@ const MyNFTCard = ({
                     : onCancel(mintAddress, String(listedPrice))
                 }
                 loading={loading}
+                block
               >
                 {!selling ? 'Sell' : 'Cancel'}
               </Button>

@@ -1,7 +1,6 @@
 import { Card, Row, Col, Typography } from 'antd'
 
 import { MagicEdenAttribute } from 'sdk/types'
-import { NFTCardProps } from 'view/collection/nftCard'
 
 const ItemAttribute = ({ attribute }: { attribute: MagicEdenAttribute }) => {
   return (
@@ -28,7 +27,9 @@ const ItemAttribute = ({ attribute }: { attribute: MagicEdenAttribute }) => {
   )
 }
 
-const Attributes = ({ symbol, mintAddress }: NFTCardProps) => {
+export type AttributesProps = { symbol: string; mintAddress: string }
+
+const Attributes = ({ symbol, mintAddress }: AttributesProps) => {
   const nftInfo = {
     attributes: [
       {

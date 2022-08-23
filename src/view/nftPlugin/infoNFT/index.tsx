@@ -2,9 +2,9 @@ import { Tabs } from 'antd'
 import Attributes from './attributes'
 import Details from './details'
 
-import { NFTCardProps } from 'view/collection/nftCard'
+export type InfoNFTProps = { symbol: string; mintAddress: string }
 
-const InfoNFT = ({ symbol, mintAddress }: NFTCardProps) => {
+const InfoNFT = ({ symbol, mintAddress }: InfoNFTProps) => {
   return (
     <Tabs defaultActiveKey="Attributes" style={{ height: 210 }}>
       <Tabs.TabPane tab="Attributes" key="Attributes">

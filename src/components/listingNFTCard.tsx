@@ -1,4 +1,5 @@
 import { useSelector } from 'react-redux'
+import { util } from '@sentre/senhub'
 
 import { Avatar, Card, Col, Row, Skeleton, Space, Typography } from 'antd'
 import Rarity from 'components/rarity'
@@ -8,12 +9,12 @@ import { AppState } from 'model'
 import { useMetadata } from 'hooks/useMetadata'
 import SolLogo from 'static/images/sol-logo.svg'
 
-export type NFTCardProps = {
+export type ListingNFTCardProps = {
   symbol: string
   mintAddress: string
 }
 
-const NFTCard = ({ symbol, mintAddress }: NFTCardProps) => {
+const ListingNFTCard = ({ symbol, mintAddress }: ListingNFTCardProps) => {
   const {
     price,
     rarity,
@@ -64,7 +65,9 @@ const NFTCard = ({ symbol, mintAddress }: NFTCardProps) => {
                   size={24}
                   style={{ padding: 3 }}
                 />
-                <Typography.Title level={5}>{price}</Typography.Title>
+                <Typography.Title level={5}>
+                  {util.numeric(price).format('0,0.[0000]')}
+                </Typography.Title>
               </Space>
             </Col>
             <Col>
@@ -77,4 +80,4 @@ const NFTCard = ({ symbol, mintAddress }: NFTCardProps) => {
   )
 }
 
-export default NFTCard
+export default ListingNFTCard
