@@ -51,7 +51,6 @@ const CollectionCard = ({
     [symbol, onClose],
   )
 
-  console.log(symbol, floorPrice)
   return (
     <Card
       cover={
