@@ -2,6 +2,7 @@ import { util } from '@sentre/senhub'
 
 import { Col, Row, Space, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
+import CountUp from 'react-countup'
 
 import { useStat } from 'hooks/useStat'
 
@@ -12,7 +13,11 @@ const StatElement = ({ title = '', value = 0 }: StatElementProps) => {
     <Space align="center" direction="vertical" size={4}>
       <Typography.Title level={4}>
         <IonIcon style={{ fontSize: 16, marginRight: 6 }} name="logo-solana" />
-        <span>{util.numeric(value).format('0,0.[000]')}</span>
+        <CountUp
+          end={value}
+          decimals={9}
+          formattingFn={(value) => util.numeric(value).format('0,0.[000]')}
+        />
       </Typography.Title>
       <Typography.Text type="secondary" className="caption">
         {title}
