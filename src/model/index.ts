@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import { devTools, bigintSerializationMiddleware } from 'model/devTools'
 
 import collections from 'model/collections.controller'
+import stat from 'model/stat.controller'
 import popularCollections from 'model/popularCollections.controller'
 import category from 'model/category.controller'
 import mine from 'model/mine.controller'
@@ -18,6 +19,7 @@ const model = configureStore({
   devTools: devTools(process.env.REACT_APP_ID as string),
   reducer: {
     collections,
+    stat,
     popularCollections,
     category,
     mine,

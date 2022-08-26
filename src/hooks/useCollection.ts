@@ -1,10 +1,10 @@
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { AppDispatch, AppState } from 'model'
 import { MagicEdenCollection } from 'sdk/types'
-import EMPTY_IMAGE from 'static/images/nft-default.svg'
-import { useEffect } from 'react'
+import { AppDispatch, AppState } from 'model'
 import { getCollection } from 'model/collections.controller'
+import EMPTY_IMAGE from 'static/images/nft-default.svg'
 
 const EMPTY_COLLECTION: MagicEdenCollection = {
   categories: [],

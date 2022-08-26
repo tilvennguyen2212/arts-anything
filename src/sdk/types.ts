@@ -11,6 +11,13 @@ export type MagicEdenCollection = {
   website: string
 }
 
+export type MagicEdenCollectionStat = {
+  symbol: string
+  floorPrice: number
+  listedCount: number
+  volumeAll: number
+}
+
 export type MagicEdenPopularCollection = {
   collectionSymbol: string
   fp: number

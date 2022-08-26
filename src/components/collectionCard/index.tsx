@@ -1,13 +1,14 @@
-import { useCallback, MouseEvent } from 'react'
-import { useAppRoute } from '@sentre/senhub'
+import { useCallback, MouseEvent, useMemo } from 'react'
+import { useAppRoute, util } from '@sentre/senhub'
 
-import { Avatar, Button, Card, Col, Row, Typography } from 'antd'
+import { Avatar, Button, Card, Col, Row, Tooltip, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import CollectionSocial from './social'
 
 import { useCollection } from 'hooks/useCollection'
 import MagicEdenLogo from 'static/images/magic-eden-logo.jpeg'
 import './index.less'
+import { useStat } from 'hooks/useStat'
 
 export type CollectionCardProps = {
   symbol: string
@@ -21,11 +22,19 @@ const CollectionCard = ({
   onClose = () => {},
 }: CollectionCardProps) => {
   const {
-    loading,
+    loading: collectionLoading,
     collection: { name, description, image },
   } = useCollection(symbol)
+  const {
+    loading: statLoading,
+    stat: { floorPrice },
+  } = useStat(symbol)
   const { to } = useAppRoute()
 
+  const loading = useMemo(
+    () => collectionLoading || statLoading,
+    [collectionLoading, statLoading],
+  )
   const onDetails = useCallback(() => to(`/${symbol}`), [to, symbol])
   const onMagicEden = useCallback(
     (e: MouseEvent<HTMLElement>) => {
@@ -42,11 +51,24 @@ const CollectionCard = ({
     [symbol, onClose],
   )
 
+  console.log(symbol, floorPrice)
   return (
     <Card
       cover={
         <div>
           <img width="100%" height="100%" alt={symbol} src={image} />
+          {floorPrice && (
+            <Tooltip title="Floor Price">
+              <Button
+                className="floor-button"
+                icon={<IonIcon name="logo-solana" />}
+              >
+                <span style={{ fontWeight: 800 }}>
+                  {util.numeric(floorPrice / 10 ** 9).format('0,0.[000]')}
+                </span>
+              </Button>
+            </Tooltip>
+          )}
           {closable && (
             <Button
               shape="circle"

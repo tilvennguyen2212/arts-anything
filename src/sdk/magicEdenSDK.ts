@@ -10,6 +10,7 @@ import {
   MagicEdenNFTMetadata,
   ListStatus,
   MagicEdenMyNFT,
+  MagicEdenCollectionStat,
 } from './types'
 
 export const MIN_SEARCH_LENGTH = 3
@@ -90,6 +91,14 @@ class MagicEdenSDK extends Offset {
     const { data } = await axios.get(url)
     if (!data) throw new Error('Invalid symbol')
     return data as MagicEdenCollection
+  }
+
+  getCollectionStat = async (symbol: string) => {
+    if (!symbol) throw new Error('Invalid symbol')
+    const url = this.getAPI({ path: `/collections/${symbol}/stats` })
+    const { data } = await axios.get(url)
+    if (!data) throw new Error('Invalid symbol')
+    return data as MagicEdenCollectionStat
   }
 
   getCollections = async (offset = 0, limit = 50) => {
