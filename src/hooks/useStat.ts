@@ -10,6 +10,7 @@ const EMPTY_STAT: MagicEdenCollectionStat = {
   floorPrice: 0,
   volumeAll: 0,
   listedCount: 0,
+  avgPrice24hr: 0,
 }
 
 export const useStat = (symbol: string) => {

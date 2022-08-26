@@ -16,6 +16,7 @@ export type MagicEdenCollectionStat = {
   floorPrice: number
   listedCount: number
   volumeAll: number
+  avgPrice24hr: number
 }
 
 export type MagicEdenPopularCollection = {

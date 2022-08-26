@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { useAppRoute, useWalletAddress, util } from '@sentre/senhub'
@@ -7,6 +14,7 @@ import { Button, Empty, Col, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
 import MoreButton from 'components/moreButton'
 import ListingNFTCard from 'components/listingNFTCard'
+import CollectionBanner from 'components/collectionBanner'
 
 import { AppDispatch, AppState } from 'model'
 import { addViewedSymbol } from 'model/viewed.controller'
@@ -19,6 +27,7 @@ const Collection = () => {
   const listingNFTs = useSelector((state: AppState) => state.listing[symbol])
   const walletAddress = useWalletAddress()
   const { back } = useAppRoute()
+  const ref = useRef<HTMLDivElement>(null)
 
   const isEmpty = useMemo(
     () => !listingNFTs || !Object.keys(listingNFTs).length,
@@ -47,8 +56,12 @@ const Collection = () => {
     if (!listingNFTs) onMore()
   }, [onMore, listingNFTs])
 
+  useLayoutEffect(() => {
+    if (ref.current) ref.current.scrollIntoView()
+  }, [ref])
+
   return (
-    <Row gutter={[24, 24]}>
+    <Row gutter={[24, 24]} ref={ref}>
       <Col span={24}>
         <Button
           size="large"
@@ -57,6 +70,9 @@ const Collection = () => {
         >
           Back
         </Button>
+      </Col>
+      <Col span={24}>
+        <CollectionBanner symbol={symbol} />
       </Col>
       <Col span={24}>
         <Row gutter={[24, 24]}>

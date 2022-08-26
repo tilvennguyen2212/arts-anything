@@ -1,10 +1,10 @@
 import { useSelector } from 'react-redux'
 
 import { Avatar, Col, Row, Space, Spin, Typography } from 'antd'
+import CollectionSocial from 'components/collectionSocial'
 import ImageNFT from './imageNFT'
 
 import { AppState } from 'model'
-import CollectionSocial from 'components/collectionCard/social'
 import { useCollection } from 'hooks/useCollection'
 import { useMetadata } from 'hooks/useMetadata'
 import SolLogo from 'static/images/sol-logo.svg'

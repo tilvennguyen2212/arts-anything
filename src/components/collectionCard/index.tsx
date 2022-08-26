@@ -1,14 +1,14 @@
 import { useCallback, MouseEvent, useMemo } from 'react'
 import { useAppRoute, util } from '@sentre/senhub'
 
-import { Avatar, Button, Card, Col, Row, Tooltip, Typography } from 'antd'
+import { Avatar, Button, Card, Col, Row, Typography } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
-import CollectionSocial from './social'
+import CollectionSocial from 'components/collectionSocial'
 
 import { useCollection } from 'hooks/useCollection'
+import { useStat } from 'hooks/useStat'
 import MagicEdenLogo from 'static/images/magic-eden-logo.jpeg'
 import './index.less'
-import { useStat } from 'hooks/useStat'
 
 export type CollectionCardProps = {
   symbol: string
@@ -54,19 +54,19 @@ const CollectionCard = ({
   return (
     <Card
       cover={
-        <div>
+        <div className="cover">
           <img width="100%" height="100%" alt={symbol} src={image} />
-          {floorPrice && (
-            <Tooltip title="Floor Price">
-              <Button
-                className="floor-button"
-                icon={<IonIcon name="logo-solana" />}
-              >
-                <span style={{ fontWeight: 800 }}>
-                  {util.numeric(floorPrice / 10 ** 9).format('0,0.[000]')}
-                </span>
-              </Button>
-            </Tooltip>
+          {!!floorPrice && (
+            <Button
+              type="primary"
+              className="floor-button"
+              icon={<IonIcon name="logo-solana" />}
+            >
+              <span style={{ marginRight: 4 }}>Floor:</span>
+              <span style={{ fontWeight: 800 }}>
+                {util.numeric(floorPrice / 10 ** 9).format('0,0.[000]')}
+              </span>
+            </Button>
           )}
           {closable && (
             <Button
@@ -85,7 +85,7 @@ const CollectionCard = ({
       hoverable
     >
       <Row gutter={[16, 16]}>
-        <Col span={24}>
+        <Col span={24} style={{ marginTop: 16 }}>
           <Typography.Title level={5} ellipsis>
             {name}
           </Typography.Title>
