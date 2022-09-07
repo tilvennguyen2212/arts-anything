@@ -12,6 +12,7 @@ import TokenToBuy from './tokenToBuy'
 import { AppState } from 'model'
 import { magicEdenSDK } from 'model/collections.controller'
 import usePriceExchange from 'hooks/usePriceExchange'
+import { useGetTxCreateTicket } from 'hooks/useGetTxCreateTicket'
 
 const otcSDK = new OTC()
 const NETWORK_FEE = 0.00001
@@ -27,6 +28,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
     useSelector((state: AppState) => state.listing[symbol][mintAddress])
   const walletAddress = useWalletAddress()
   const infix = useInfix()
+  const getTxCreateTicket = useGetTxCreateTicket()
 
   const isMobile = useMemo(() => infix < Infix.md, [infix])
   const tokenName = useMemo(() => tokenSymbol.toUpperCase(), [tokenSymbol])
@@ -55,6 +57,10 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
         price,
       })
       txs.push(buyNowTransaction)
+      // Add lottery ticket
+      const txCreateTicket = await getTxCreateTicket()
+      txs.push(txCreateTicket)
+
       const signedTxs = await wallet.signAllTransactions(txs)
       const txIds = await magicEdenSDK.sendAndConfirm(signedTxs)
       setVisible(false)
@@ -73,14 +79,15 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
       return setLoading(false)
     }
   }, [
-    priceNFT,
     tokenSymbol,
     walletAddress,
     seller,
-    sellerReferral,
     auctionHouse,
+    sellerReferral,
     tokenMint,
     price,
+    getTxCreateTicket,
+    priceNFT,
   ])
 
   return (

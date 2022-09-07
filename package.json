@@ -5,6 +5,7 @@
     "@reduxjs/toolkit": "^1.8.0",
     "@senswap/sen-js": "^1.4.0",
     "@sentre/antd-ionicon": "^1.0.45",
+    "@sentre/lucky-wheel-core": "^0.4.3",
     "@sentre/otc-sdk": "^1.0.11",
     "@sentre/senhub": "^3.2.22",
     "antd": "^4.21.1",
