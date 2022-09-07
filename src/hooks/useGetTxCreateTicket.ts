@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { Connection, PublicKey } from '@solana/web3.js'
-import { AnchorProvider, Wallet } from '@project-serum/anchor'
+import { AnchorProvider } from '@project-serum/anchor'
 import { rpc, useWalletAddress } from '@sentre/senhub'
 import LuckyWheelProgram from '@sentre/lucky-wheel-core'
 
@@ -12,8 +12,7 @@ export const useGetTxCreateTicket = () => {
   const getTxCreateTicket = useCallback(async () => {
     const connection = new Connection(rpc, 'confirmed')
 
-    const wrapWallet: Wallet = {
-      payer: undefined as any,
+    const wrapWallet = {
       publicKey: new PublicKey(walletAddress),
       signAllTransactions: window.sentre.wallet.signAllTransactions,
       signTransaction: window.sentre.wallet.signTransaction,
@@ -27,6 +26,10 @@ export const useGetTxCreateTicket = () => {
       campaign: new PublicKey(configs.lottery.campaignId),
       sendAndConfirm: false,
     })
+    tx.feePayer = tx.feePayer || wrapWallet.publicKey
+    tx.recentBlockhash =
+      tx.recentBlockhash ||
+      (await provider.connection.getLatestBlockhash()).blockhash
     return tx
   }, [walletAddress])
 

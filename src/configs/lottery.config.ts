@@ -21,8 +21,8 @@ const conf: Record<Net, Conf> = {
    * Testnet configurations
    */
   testnet: {
-    programId: '38k8ejgfKJ2VKRApCMkev1hQwqobTTZPLnX11t2dxAXA',
-    campaignId: '8cFGT2AKmVvbmHMNZ23SNbL6rvqAcvZ79TXtanmEEBDm',
+    programId: '',
+    campaignId: '',
   },
 
   /**
