@@ -26,7 +26,7 @@ const Announcement = () => {
       centered
     >
       <Row gutter={[48, 48]}>
-        <Confetti style={{ width: '100%', height: 456 }} />
+        <Confetti style={{ width: '100%', height: 456 }} numberOfPieces={100} />
         <Col span={24} style={{ marginTop: 24 }}>
           <Typography.Title level={2} style={{ textAlign: 'center' }}>
             The Lucky Wheel Event
