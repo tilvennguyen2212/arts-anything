@@ -41,14 +41,14 @@ const conf: Record<Net, Conf> = {
    * Devnet configurations
    */
   devnet: {
-    whitelist: {},
+    whitelist: WHITELIST,
   },
 
   /**
    * Testnet configurations
    */
   testnet: {
-    whitelist: {},
+    whitelist: WHITELIST,
   },
 
   /**

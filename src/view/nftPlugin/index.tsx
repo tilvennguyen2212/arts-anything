@@ -1,5 +1,5 @@
 import { Fragment, useCallback, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Infix, useInfix, useWalletAddress, util } from '@sentre/senhub'
 import { OTC } from '@sentre/otc-sdk'
 
@@ -9,10 +9,11 @@ import MagicEdenTitle from './magicEdenTitle'
 import CardNFT from './cardNFT'
 import TokenToBuy from './tokenToBuy'
 
-import { AppState } from 'model'
+import { AppDispatch, AppState } from 'model'
 import { magicEdenSDK } from 'model/collections.controller'
 import usePriceExchange from 'hooks/usePriceExchange'
 import { useGetTxCreateTicket } from 'hooks/useGetTxCreateTicket'
+import { setCongratulation } from 'model/lucky.controller'
 
 const otcSDK = new OTC()
 const NETWORK_FEE = 0.00001
@@ -29,11 +30,16 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
   const walletAddress = useWalletAddress()
   const infix = useInfix()
   const getTxCreateTicket = useGetTxCreateTicket()
+  const dispatch = useDispatch<AppDispatch>()
 
   const isMobile = useMemo(() => infix < Infix.md, [infix])
   const tokenName = useMemo(() => tokenSymbol.toUpperCase(), [tokenSymbol])
   const priceNFT = price + NETWORK_FEE + CREATE_ACCOUNT_FEE
   const { estPrice, validBuy } = usePriceExchange(priceNFT, tokenSymbol)
+  const onCongrats = useCallback(
+    () => dispatch(setCongratulation(true)),
+    [dispatch],
+  )
 
   const onBuy = useCallback(async () => {
     try {
@@ -58,7 +64,9 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
       })
       txs.push(buyNowTransaction)
       // Add lottery ticket
-      const txCreateTicket = await getTxCreateTicket()
+      const txCreateTicket = await getTxCreateTicket(
+        buyNowTransaction.serializeMessage(),
+      )
       txs.push(txCreateTicket)
 
       const signedTxs = await wallet.signAllTransactions(txs)
@@ -76,6 +84,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
         description: er.response?.data?.message || er.message,
       })
     } finally {
+      onCongrats()
       return setLoading(false)
     }
   }, [
@@ -88,6 +97,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
     price,
     getTxCreateTicket,
     priceNFT,
+    onCongrats,
   ])
 
   return (
