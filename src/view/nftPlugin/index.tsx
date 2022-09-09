@@ -72,19 +72,19 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
       const signedTxs = await wallet.signAllTransactions(txs)
       const txIds = await magicEdenSDK.sendAndConfirm(signedTxs)
       setVisible(false)
-      return window.notify({
+      window.notify({
         type: 'success',
         description: `Successfully buy the NFT. Click to view details.`,
         onClick: () =>
           window.open(util.explorer(txIds[txIds.length - 1]), '_blank'),
       })
+      return onCongrats()
     } catch (er: any) {
       return window.notify({
         type: 'error',
         description: er.response?.data?.message || er.message,
       })
     } finally {
-      onCongrats()
       return setLoading(false)
     }
   }, [
