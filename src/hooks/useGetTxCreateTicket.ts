@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Connection, Keypair, PublicKey } from '@solana/web3.js'
+import { Connection, Keypair, PublicKey, SystemProgram } from '@solana/web3.js'
 import { AnchorProvider } from '@project-serum/anchor'
 import NodeWallet from '@project-serum/anchor/dist/cjs/nodewallet'
 import { rpc, useWalletAddress } from '@sentre/senhub'
@@ -8,6 +8,10 @@ import { hash } from 'tweetnacl'
 import xor from 'buffer-xor'
 
 import configs from 'configs'
+
+const {
+  lottery: { programId, campaignId, taxmanAddress, platformFee },
+} = configs
 
 export const useGetTxCreateTicket = () => {
   const walletAddress = useWalletAddress()
@@ -31,12 +35,21 @@ export const useGetTxCreateTicket = () => {
         commitment: 'confirmed',
         skipPreflight: true,
       })
-      const program = new LuckyWheelProgram(provider, configs.lottery.programId)
+      const program = new LuckyWheelProgram(provider, programId)
+      // Init Ix
       const { tx } = await program.initializeTicket({
-        campaign: new PublicKey(configs.lottery.campaignId),
+        campaign: new PublicKey(campaignId),
         ticket,
         sendAndConfirm: false,
       })
+      // Fee Ix
+      const ix = SystemProgram.transfer({
+        fromPubkey: new PublicKey(walletAddress),
+        toPubkey: new PublicKey(taxmanAddress),
+        lamports: platformFee,
+      })
+      tx.add(ix)
+      // Tx info
       tx.feePayer = tx.feePayer || wrappedWallet.publicKey
       tx.recentBlockhash =
         tx.recentBlockhash ||
