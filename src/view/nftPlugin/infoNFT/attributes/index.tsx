@@ -1,4 +1,5 @@
 import { Card, Row, Col, Typography } from 'antd'
+import { useMetadata } from 'hooks/useMetadata'
 
 import { MagicEdenAttribute } from 'sdk/types'
 
@@ -9,7 +10,11 @@ const ItemAttribute = ({ attribute }: { attribute: MagicEdenAttribute }) => {
         <Col span={24} style={{ textAlign: 'center' }}>
           <Typography.Text
             ellipsis={{ tooltip: true }}
-            style={{ fontSize: 10 }}
+            style={{
+              fontSize: 10,
+              textTransform: 'uppercase',
+              color: '#B4ABBA',
+            }}
           >
             {attribute.trait_type}
           </Typography.Text>
@@ -27,49 +32,10 @@ const ItemAttribute = ({ attribute }: { attribute: MagicEdenAttribute }) => {
   )
 }
 
-export type AttributesProps = { symbol: string; mintAddress: string }
+export type AttributesProps = { mintAddress: string }
 
-const Attributes = ({ symbol, mintAddress }: AttributesProps) => {
-  const nftInfo = {
-    attributes: [
-      {
-        trait_type: 'BACKGROUND',
-        value: 'Cream',
-      },
-      {
-        trait_type: 'FUR',
-        value: 'Dark Brown',
-      },
-      {
-        trait_type: 'CLOTHES',
-        value: 'Double Jacket',
-      },
-      {
-        trait_type: 'BACKGROUND',
-        value: 'Cream',
-      },
-      {
-        trait_type: 'FUR',
-        value: 'Dark Brown',
-      },
-      {
-        trait_type: 'CLOTHES',
-        value: 'Double Jacket',
-      },
-      {
-        trait_type: 'BACKGROUND',
-        value: 'Cream',
-      },
-      {
-        trait_type: 'FUR',
-        value: 'Dark Brown',
-      },
-      {
-        trait_type: 'CLOTHES',
-        value: 'Double Jacket',
-      },
-    ],
-  }
+const Attributes = ({ mintAddress }: AttributesProps) => {
+  const nftInfo = useMetadata(mintAddress)
   return (
     <Row
       gutter={[8, 8]}

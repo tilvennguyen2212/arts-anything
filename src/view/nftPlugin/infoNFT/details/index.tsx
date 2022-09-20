@@ -1,12 +1,16 @@
 import { ReactNode, useState } from 'react'
+import { useSelector } from 'react-redux'
 import copy from 'copy-to-clipboard'
 import { util } from '@sentre/senhub'
 
 import { Avatar, Col, Row, Space, Tooltip, Typography } from 'antd'
-import SolLogo from 'static/images/sol-logo.svg'
+// import SolLogo from 'static/images/sol-logo.svg'
 import SolScanLogo from 'static/images/solscan-logo.svg'
+import { useMetadata } from 'hooks/useMetadata'
 
-type ItemDetailProps = {
+import { AppState } from 'model'
+
+export type ItemDetailProps = {
   title?: string
   content?: ReactNode
 }
@@ -40,9 +44,9 @@ const SolScanAddress = ({ address }: { address: string }) => {
       >
         <Avatar src={SolScanLogo} size={16} />
       </Typography.Text>
-      <Typography.Text>
+      {/* <Typography.Text>
         <Avatar shape="square" src={SolLogo} size={20} style={{ padding: 3 }} />
-      </Typography.Text>
+      </Typography.Text> */}
       <Tooltip title="Copied" visible={copied}>
         <Typography.Text onClick={onCopy}>
           {util.shortenAddress(address)}
@@ -55,6 +59,10 @@ const SolScanAddress = ({ address }: { address: string }) => {
 export type DetailsProps = { symbol: string; mintAddress: string }
 
 const Details = ({ symbol, mintAddress }: DetailsProps) => {
+  const nftInfo = useMetadata(mintAddress)
+  const { tokenMint, tokenAddress } = useSelector(
+    (state: AppState) => state.listing[symbol][mintAddress],
+  )
   return (
     <Row
       gutter={[8, 8]}
@@ -64,29 +72,26 @@ const Details = ({ symbol, mintAddress }: DetailsProps) => {
       <Col span={24}>
         <ItemDetail
           title="Mint address"
-          content={
-            <SolScanAddress address="s9PuJosqhC8pdKJThNxH97wUtKZHyUGAUyVwpzPg49j" />
-          }
+          content={<SolScanAddress address={tokenMint} />}
         />
       </Col>
       <Col span={24}>
         <ItemDetail
           title="Token address"
-          content={
-            <SolScanAddress address="s9PuJosqhC8pdKJThNxH97wUtKZHyUGAUyVwpzPg49j" />
-          }
+          content={<SolScanAddress address={tokenAddress} />}
         />
       </Col>
       <Col span={24}>
         <ItemDetail
           title="Owner"
-          content={
-            <SolScanAddress address="s9PuJosqhC8pdKJThNxH97wUtKZHyUGAUyVwpzPg49j" />
-          }
+          content={<SolScanAddress address={nftInfo.owner} />}
         />
       </Col>
       <Col span={24}>
-        <ItemDetail title="Artist Royalties" content="7.5%" />
+        <ItemDetail
+          title="Artist Royalties"
+          content={`${nftInfo.sellerFeeBasisPoints / 100}%`}
+        />
       </Col>
       <Col span={24}>
         <ItemDetail title="Transaction Fee" content="2%" />
