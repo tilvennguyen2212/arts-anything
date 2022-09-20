@@ -4,11 +4,11 @@ import copy from 'copy-to-clipboard'
 import { util } from '@sentre/senhub'
 
 import { Avatar, Col, Row, Space, Tooltip, Typography } from 'antd'
-// import SolLogo from 'static/images/sol-logo.svg'
-import SolScanLogo from 'static/images/solscan-logo.svg'
-import { useMetadata } from 'hooks/useMetadata'
 
 import { AppState } from 'model'
+import { useMetadata } from 'hooks/useMetadata'
+// import SolLogo from 'static/images/sol-logo.svg'
+import SolScanLogo from 'static/images/solscan-logo.svg'
 
 export type ItemDetailProps = {
   title?: string
@@ -47,7 +47,7 @@ const SolScanAddress = ({ address }: { address: string }) => {
       {/* <Typography.Text>
         <Avatar shape="square" src={SolLogo} size={20} style={{ padding: 3 }} />
       </Typography.Text> */}
-      <Tooltip title="Copied" visible={copied}>
+      <Tooltip title="Copied" open={copied}>
         <Typography.Text onClick={onCopy}>
           {util.shortenAddress(address)}
         </Typography.Text>

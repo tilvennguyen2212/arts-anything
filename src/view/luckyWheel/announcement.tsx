@@ -19,7 +19,7 @@ const Announcement = () => {
 
   return (
     <Modal
-      visible={annoucement}
+      open={annoucement}
       onCancel={onCancel}
       footer={null}
       closeIcon={<IonIcon name="close" />}

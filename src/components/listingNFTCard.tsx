@@ -1,12 +1,12 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { util } from '@sentre/senhub'
+import { Infix, useInfix, util } from '@sentre/senhub'
 
 import {
   Avatar,
+  Button,
   Card,
   Col,
-  Modal,
   Row,
   Skeleton,
   Space,
@@ -19,7 +19,6 @@ import { AppState } from 'model'
 import { useMetadata } from 'hooks/useMetadata'
 import SolLogo from 'static/images/sol-logo.svg'
 import IonIcon from '@sentre/antd-ionicon'
-import InfoNFT from 'view/nftPlugin/infoNFT'
 
 export type ListingNFTCardProps = {
   symbol: string
@@ -34,6 +33,8 @@ const ListingNFTCard = ({ symbol, mintAddress }: ListingNFTCardProps) => {
     extra: { img },
   } = useSelector((state: AppState) => state.listing[symbol][mintAddress])
   const { name, image } = useMetadata(mintAddress)
+  const infix = useInfix()
+  const isMobile = useMemo(() => infix < Infix.md, [infix])
 
   return (
     <Card
@@ -86,26 +87,23 @@ const ListingNFTCard = ({ symbol, mintAddress }: ListingNFTCardProps) => {
               </Space>
             </Col>
             <Col>
-              <NFTPlugin symbol={symbol} mintAddress={mintAddress} />
+              <Button
+                onClick={() => setVisible(true)}
+                type="primary"
+                icon={isMobile ? undefined : <IonIcon name="card-outline" />}
+              >
+                Buy
+              </Button>
+              <NFTPlugin
+                symbol={symbol}
+                mintAddress={mintAddress}
+                visible={visible}
+                onClose={() => setVisible(false)}
+              />
             </Col>
           </Row>
         </Col>
       </Row>
-      <Modal
-        className="modal-nft-plugin"
-        visible={visible}
-        footer={false}
-        onCancel={() => setVisible(false)}
-        width={368}
-        closeIcon={<IonIcon name="close-outline" />}
-        bodyStyle={{ padding: 16 }}
-      >
-        <Row gutter={[16, 16]}>
-          <Col span={24}>
-            <InfoNFT symbol={symbol} mintAddress={mintAddress} />
-          </Col>
-        </Row>
-      </Modal>
     </Card>
   )
 }
