@@ -8,6 +8,7 @@ import IonIcon from '@sentre/antd-ionicon'
 import MagicEdenTitle from './magicEdenTitle'
 import CardNFT from './cardNFT'
 import TokenToBuy from './tokenToBuy'
+import InfoNFT from './infoNFT'
 
 import { AppDispatch, AppState } from 'model'
 import { magicEdenSDK } from 'model/collections.controller'
@@ -125,9 +126,9 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
           <Col span={24}>
             <CardNFT symbol={symbol} mintAddress={mintAddress} />
           </Col>
-          {/* <Col span={24}>
-            <InfoNFT />
-          </Col> */}
+          <Col span={24}>
+            <InfoNFT symbol={symbol} mintAddress={mintAddress} />
+          </Col>
           <Col span={24}>
             <TokenToBuy value={tokenSymbol} onChange={setTokenSymbol} />
           </Col>

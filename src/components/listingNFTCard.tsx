@@ -1,13 +1,25 @@
+import { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { util } from '@sentre/senhub'
 
-import { Avatar, Card, Col, Row, Skeleton, Space, Typography } from 'antd'
+import {
+  Avatar,
+  Card,
+  Col,
+  Modal,
+  Row,
+  Skeleton,
+  Space,
+  Typography,
+} from 'antd'
 import Rarity from 'components/rarity'
 import NFTPlugin from 'view/nftPlugin'
 
 import { AppState } from 'model'
 import { useMetadata } from 'hooks/useMetadata'
 import SolLogo from 'static/images/sol-logo.svg'
+import IonIcon from '@sentre/antd-ionicon'
+import InfoNFT from 'view/nftPlugin/infoNFT'
 
 export type ListingNFTCardProps = {
   symbol: string
@@ -15,6 +27,7 @@ export type ListingNFTCardProps = {
 }
 
 const ListingNFTCard = ({ symbol, mintAddress }: ListingNFTCardProps) => {
+  const [visible, setVisible] = useState(false)
   const {
     price,
     rarity,
@@ -24,7 +37,9 @@ const ListingNFTCard = ({ symbol, mintAddress }: ListingNFTCardProps) => {
 
   return (
     <Card
-      cover={<img alt={name} src={img || image} />}
+      cover={
+        <img alt={name} src={img || image} onClick={() => setVisible(true)} />
+      }
       bodyStyle={{ padding: 16 }}
       bordered={false}
       hoverable
@@ -76,6 +91,21 @@ const ListingNFTCard = ({ symbol, mintAddress }: ListingNFTCardProps) => {
           </Row>
         </Col>
       </Row>
+      <Modal
+        className="modal-nft-plugin"
+        visible={visible}
+        footer={false}
+        onCancel={() => setVisible(false)}
+        width={368}
+        closeIcon={<IonIcon name="close-outline" />}
+        bodyStyle={{ padding: 16 }}
+      >
+        <Row gutter={[16, 16]}>
+          <Col span={24}>
+            <InfoNFT symbol={symbol} mintAddress={mintAddress} />
+          </Col>
+        </Row>
+      </Modal>
     </Card>
   )
 }
