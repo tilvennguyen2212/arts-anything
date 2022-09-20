@@ -10,7 +10,11 @@ const ItemAttribute = ({ attribute }: { attribute: MagicEdenAttribute }) => {
         <Col span={24} style={{ textAlign: 'center' }}>
           <Typography.Text
             ellipsis={{ tooltip: true }}
-            style={{ fontSize: 10 }}
+            style={{
+              fontSize: 10,
+              textTransform: 'uppercase',
+              color: '#B4ABBA',
+            }}
           >
             {attribute.trait_type}
           </Typography.Text>
