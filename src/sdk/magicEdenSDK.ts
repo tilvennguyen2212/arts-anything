@@ -1,4 +1,4 @@
-import { Transaction, Connection } from '@solana/web3.js'
+import { Transaction, Connection, Commitment } from '@solana/web3.js'
 import { util } from '@sentre/senhub'
 import axios from 'axios'
 
@@ -17,8 +17,8 @@ export const MIN_SEARCH_LENGTH = 3
 
 class MagicEdenSDK extends Offset {
   private api: string = 'https://api-mainnet.magiceden.dev/v2'
-  private stat: string = 'https://stats-mainnet.magiceden.io/collection_stats'
   private connection: Connection
+  private stat: string = 'https://stats-mainnet.magiceden.io/collection_stats'
   private service: string = 'https://cors.sentre.io/magic-eden'
   private referralAddress: string =
     '9doo2HZQEmh2NgfT3Yx12M89aoBheycYqH1eaR5gKb3e'
@@ -272,20 +272,19 @@ class MagicEdenSDK extends Offset {
     return Transaction.from(Buffer.from(data.txSigned))
   }
 
-  sendAndConfirm = async (signedTxs: Transaction[]) => {
-    let txIds = []
-    for (const signedTx of signedTxs) {
-      const txId = await this.connection.sendRawTransaction(
-        signedTx.serialize(),
-        {
-          skipPreflight: true,
-          preflightCommitment: 'confirmed',
-        },
-      )
-      await this.connection.confirmTransaction(txId)
-      txIds.push(txId)
-    }
-    return txIds
+  sendAndConfirm = async (
+    signedTx: Transaction,
+    commitment: Commitment = 'confirmed',
+  ) => {
+    const txId = await this.connection.sendRawTransaction(
+      signedTx.serialize(),
+      {
+        skipPreflight: true,
+        preflightCommitment: 'confirmed',
+      },
+    )
+    await this.connection.confirmTransaction(txId, commitment)
+    return txId
   }
 }
 

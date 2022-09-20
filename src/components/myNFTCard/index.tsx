@@ -103,7 +103,7 @@ const MyNFTCard = ({
                 }
                 placeholder="Price in SOL"
                 value={selling ? String(listedPrice) : price}
-                onChange={(value) => setPrice(value)}
+                onChange={(value) => setPrice(value || '')}
                 readOnly={selling}
                 controls={false}
               />

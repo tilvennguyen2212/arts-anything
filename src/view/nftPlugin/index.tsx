@@ -24,6 +24,7 @@ export type NFTPluginProps = { symbol: string; mintAddress: string }
 const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
   const [loading, setLoading] = useState(false)
   const [visible, setVisible] = useState(false)
+  const [counter, setCounter] = useState<number | string>(0)
   const [tokenSymbol, setTokenSymbol] = useState('sol')
   const { seller, sellerReferral, price, tokenMint, auctionHouse } =
     useSelector((state: AppState) => state.listing[symbol][mintAddress])
@@ -70,13 +71,19 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
       txs.push(txCreateTicket)
 
       const signedTxs = await wallet.signAllTransactions(txs)
-      const txIds = await magicEdenSDK.sendAndConfirm(signedTxs)
+      let txId = ''
+      for (let i = 0; i < signedTxs.length; i++) {
+        const signedTx = signedTxs[i]
+        const commitment =
+          i === signedTxs.length - 1 ? 'finalized' : 'confirmed'
+        txId = await magicEdenSDK.sendAndConfirm(signedTx, commitment)
+        setCounter(i + 1)
+      }
       setVisible(false)
       window.notify({
         type: 'success',
         description: `Successfully buy the NFT. Click to view details.`,
-        onClick: () =>
-          window.open(util.explorer(txIds[txIds.length - 1]), '_blank'),
+        onClick: () => window.open(util.explorer(txId), '_blank'),
       })
       return onCongrats()
     } catch (er: any) {
@@ -85,6 +92,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
         description: er.response?.data?.message || er.message,
       })
     } finally {
+      setCounter(0)
       return setLoading(false)
     }
   }, [
@@ -157,7 +165,7 @@ const NFTPlugin = ({ symbol, mintAddress }: NFTPluginProps) => {
               block
               disabled={!validBuy}
             >
-              Buy Now
+              Buy Now {loading && `(${counter}/3 confirmations)`}
             </Button>
           </Col>
           {/* <Col span={24}>

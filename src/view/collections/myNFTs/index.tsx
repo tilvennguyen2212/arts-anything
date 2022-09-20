@@ -27,7 +27,7 @@ const MyNFTs = () => {
           price: Number(price),
         })
         const signedTx = await wallet.signTransaction(sellTransaction)
-        const [txId] = await magicEdenSDK.sendAndConfirm([signedTx])
+        const txId = await magicEdenSDK.sendAndConfirm(signedTx)
         return window.notify({
           type: 'success',
           description: `Successfully list the NFT. Click to view details.`,
@@ -56,7 +56,7 @@ const MyNFTs = () => {
           price: Number(price),
         })
         const signedTx = await wallet.signTransaction(sellTransaction)
-        const [txId] = await magicEdenSDK.sendAndConfirm([signedTx])
+        const txId = await magicEdenSDK.sendAndConfirm(signedTx)
         return window.notify({
           type: 'success',
           description: `Successfully cancel the NFT. Click to view details.`,
