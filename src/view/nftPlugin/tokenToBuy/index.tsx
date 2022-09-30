@@ -1,6 +1,7 @@
-import { Button, Col, Row, Typography } from 'antd'
+import { Button, Col, Row, Space, Tooltip, Typography } from 'antd'
 
 import configs from 'configs'
+import { onDetail } from 'view/events/tradingContest/announcement'
 
 const {
   payment: { whitelist },
@@ -24,12 +25,27 @@ const TokenToBuy = ({
         <Row gutter={[8, 8]}>
           {['sol', ...Object.keys(whitelist)].map((symbol) => (
             <Col key={symbol}>
-              <Button
-                onClick={() => onChange(symbol)}
-                className={symbol === value ? 'token-selected' : undefined}
+              <Tooltip
+                title={
+                  <Typography.Text
+                    onClick={onDetail}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    You're eligible to join the Trading Contest! Click here to
+                    read more!
+                  </Typography.Text>
+                }
               >
-                {symbol.toUpperCase()}
-              </Button>
+                <Button
+                  onClick={() => onChange(symbol)}
+                  className={symbol === value ? 'token-selected' : undefined}
+                >
+                  <Space>
+                    {symbol.toUpperCase()}
+                    {symbol !== 'sol' && '🔥'}
+                  </Space>
+                </Button>
+              </Tooltip>
             </Col>
           ))}
         </Row>

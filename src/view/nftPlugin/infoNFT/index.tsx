@@ -1,4 +1,5 @@
 import { Tabs } from 'antd'
+import { useMemo } from 'react'
 import Attributes from './attributes'
 import Details from './details'
 
@@ -8,15 +9,24 @@ export type InfoNFTProps = {
 }
 
 const InfoNFT = ({ symbol, mintAddress }: InfoNFTProps) => {
+  const items = useMemo(
+    () => [
+      {
+        label: 'Attributes',
+        key: 'Attributes',
+        children: <Attributes mintAddress={mintAddress} />,
+      },
+      {
+        label: 'Details',
+        key: 'Details',
+        children: <Details symbol={symbol} mintAddress={mintAddress} />,
+      },
+    ],
+    [symbol, mintAddress],
+  )
+
   return (
-    <Tabs defaultActiveKey="Attributes" style={{ height: 210 }}>
-      <Tabs.TabPane tab="Attributes" key="Attributes">
-        <Attributes mintAddress={mintAddress} />
-      </Tabs.TabPane>
-      <Tabs.TabPane tab="Details" key="Details">
-        <Details symbol={symbol} mintAddress={mintAddress} />
-      </Tabs.TabPane>
-    </Tabs>
+    <Tabs defaultActiveKey="Attributes" style={{ height: 210 }} items={items} />
   )
 }
 

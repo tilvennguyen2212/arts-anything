@@ -9,7 +9,7 @@ import mine from 'model/mine.controller'
 import viewed from 'model/viewed.controller'
 import listing from 'model/listing.controller'
 import metadata from 'model/metadata.controller'
-import lucky from 'model/lucky.controller'
+import event from 'model/event.controller'
 
 /**
  * Isolated store
@@ -27,7 +27,7 @@ const model = configureStore({
     viewed,
     listing,
     metadata,
-    lucky,
+    event,
   },
 })
 

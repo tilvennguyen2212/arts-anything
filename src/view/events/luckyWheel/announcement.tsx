@@ -6,27 +6,22 @@ import IonIcon from '@sentre/antd-ionicon'
 import Confetti from 'react-confetti'
 
 import { AppDispatch, AppState } from 'model'
-import { setCongratulation } from 'model/lucky.controller'
-import LuckyTicket from 'static/images/lucky-ticket.png'
+import { Events, setAnnouncement } from 'model/event.controller'
+import LuckyWheel from 'static/images/lucky-wheel.png'
 
-const Congratulation = () => {
+const Announcement = () => {
   const dispatch = useDispatch<AppDispatch>()
-  const congratulation = useSelector(
-    (state: AppState) => state.lucky.congratulation,
+  const visible = useSelector(
+    (state: AppState) => state.event.announcement === Events.LuckyWheel,
   )
 
   const onCancel = useCallback(() => {
-    dispatch(setCongratulation(false))
+    return dispatch(setAnnouncement(Events.None))
   }, [dispatch])
-  const onLuckyWheel = () =>
-    window.open(
-      'https://hub.sentre.io/app/lucky_wheel?autoInstall=true',
-      '_blank',
-    )
 
   return (
     <Modal
-      visible={congratulation}
+      open={visible}
       onCancel={onCancel}
       footer={null}
       closeIcon={<IonIcon name="close" />}
@@ -36,39 +31,46 @@ const Congratulation = () => {
         <Confetti style={{ width: '100%', height: 456 }} numberOfPieces={100} />
         <Col span={24} style={{ marginTop: 24 }}>
           <Typography.Title level={2} style={{ textAlign: 'center' }}>
-            Got A Lucky Ticket!
+            The Lucky Wheel Event
           </Typography.Title>
         </Col>
         <Col span={24}>
           <Row gutter={[24, 24]} justify="center">
             <Col>
-              <Avatar size={311} shape="circle" src={LuckyTicket} />
+              <Avatar size={311} shape="circle" src={LuckyWheel} />
             </Col>
           </Row>
         </Col>
         <Col span={24}>
           <Space direction="vertical">
             <Typography.Text>
-              🎉 Congrats! You have received{' '}
+              🎉 Buying NFTs by stable tokens (USDC, USDT, UXD, ...), you will
+              have a chance to join{' '}
               <span style={{ fontWeight: 700, fontSize: 16 }}>
-                1 Lucky Ticket
-              </span>
-              . You can use it to spin{' '}
+                The Lucky Wheel
+              </span>{' '}
+              and win great prizes up to{' '}
+              <span style={{ fontWeight: 700, fontSize: 16 }}>$50,000</span>.
+            </Typography.Text>
+            <Typography.Text>
+              <span style={{ fontWeight: 700, fontSize: 16 }}>
+                How to play?
+              </span>{' '}
+              Everytime you buy an NFT on AnyArts you will receive a ticket to
+              join{' '}
               <a
                 href="https://hub.sentre.io/app/lucky_wheel?autoInstall=true"
                 target="_blank"
                 rel="noreferrer"
               >
-                The Lucky Wheel
-              </a>{' '}
-              and have a chance to win great prizes up to{' '}
-              <span style={{ fontWeight: 700, fontSize: 16 }}>$50,000</span>.
+                The Lucky Wheel here!
+              </a>
             </Typography.Text>
           </Space>
         </Col>
         <Col span={24}>
-          <Button type="primary" onClick={onLuckyWheel} block>
-            Spin Now!
+          <Button type="primary" onClick={onCancel} block>
+            Got It!
           </Button>
         </Col>
       </Row>
@@ -76,4 +78,4 @@ const Congratulation = () => {
   )
 }
 
-export default Congratulation
+export default Announcement

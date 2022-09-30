@@ -8,11 +8,12 @@ import Collection from './collection'
 import MainnetOnly from 'components/mainnetOnly'
 import HeroBanner from 'components/heroBanner'
 import PopularCollections from './popularCollections'
-import Announcement from './luckyWheel/announcement'
+import TradingContestAnnouncement from './events/tradingContest/announcement'
+import LuckyWheelAnnouncement from './events/luckyWheel/announcement'
+import LuckyWheelCongratulation from './events/luckyWheel/congratulation'
 
 import 'static/styles/light.less'
 import 'static/styles/dark.less'
-import Congratulation from './luckyWheel/congratulation'
 
 const View = () => {
   const { extend } = useAppRoute()
@@ -39,8 +40,9 @@ const View = () => {
                   />
                 </Switch>
               </Col>
-              <Announcement />
-              <Congratulation />
+              <TradingContestAnnouncement />
+              <LuckyWheelAnnouncement />
+              <LuckyWheelCongratulation />
             </Fragment>
           ) : (
             <Col span={24}>

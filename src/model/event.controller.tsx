@@ -1,20 +1,29 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 
+export enum Events {
+  None,
+  LuckyWheel,
+  TradingContest,
+}
+
 /**
  * Interface & Utility
  */
 
 export type LuckyState = {
-  announcement: boolean
-  congratulation: boolean
+  announcement: Events
+  congratulation: Events
 }
 
 /**
  * Store constructor
  */
 
-const NAME = 'lucky'
-const initialState: LuckyState = { announcement: true, congratulation: false }
+const NAME = 'event'
+const initialState: LuckyState = {
+  announcement: Events.TradingContest,
+  congratulation: Events.None,
+}
 
 /**
  * Actions
@@ -22,14 +31,14 @@ const initialState: LuckyState = { announcement: true, congratulation: false }
 
 export const setAnnouncement = createAsyncThunk(
   `${NAME}/setAnnouncement`,
-  async (announcement: boolean) => {
+  async (announcement: Events) => {
     return { announcement }
   },
 )
 
 export const setCongratulation = createAsyncThunk(
   `${NAME}/setCongratulation`,
-  async (congratulation: boolean) => {
+  async (congratulation: Events) => {
     return { congratulation }
   },
 )

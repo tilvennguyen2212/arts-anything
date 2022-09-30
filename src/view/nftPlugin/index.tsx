@@ -13,8 +13,8 @@ import InfoNFT from './infoNFT'
 import { AppDispatch, AppState } from 'model'
 import { magicEdenSDK } from 'model/collections.controller'
 import usePriceExchange from 'hooks/usePriceExchange'
-import { useGetTxCreateTicket } from 'hooks/useGetTxCreateTicket'
-import { setCongratulation } from 'model/lucky.controller'
+import { Events, setCongratulation } from 'model/event.controller'
+// import { useGetTxCreateTicket } from 'hooks/useGetTxCreateTicket'
 
 const otcSDK = new OTC()
 const NETWORK_FEE = 0.00001
@@ -36,17 +36,18 @@ const NFTPlugin = ({
   const [loading, setLoading] = useState(false)
   const [counter, setCounter] = useState<number | string>(0)
   const [tokenSymbol, setTokenSymbol] = useState('sol')
+  const dispatch = useDispatch<AppDispatch>()
   const { seller, sellerReferral, price, tokenMint, auctionHouse } =
     useSelector((state: AppState) => state.listing[symbol][mintAddress])
   const walletAddress = useWalletAddress()
-  const getTxCreateTicket = useGetTxCreateTicket()
-  const dispatch = useDispatch<AppDispatch>()
+  // const getTxCreateTicket = useGetTxCreateTicket()
 
   const tokenName = useMemo(() => tokenSymbol.toUpperCase(), [tokenSymbol])
   const priceNFT = price + NETWORK_FEE + CREATE_ACCOUNT_FEE
   const { estPrice, validBuy } = usePriceExchange(priceNFT, tokenSymbol)
+
   const onCongrats = useCallback(
-    () => dispatch(setCongratulation(true)),
+    () => dispatch(setCongratulation(Events.None)),
     [dispatch],
   )
 
@@ -73,10 +74,10 @@ const NFTPlugin = ({
       })
       txs.push(buyNowTransaction)
       // Add lottery ticket
-      const txCreateTicket = await getTxCreateTicket(
-        buyNowTransaction.serializeMessage(),
-      )
-      txs.push(txCreateTicket)
+      // const txCreateTicket = await getTxCreateTicket(
+      //   buyNowTransaction.serializeMessage(),
+      // )
+      // txs.push(txCreateTicket)
 
       const signedTxs = await wallet.signAllTransactions(txs)
       let txId = ''
@@ -111,7 +112,7 @@ const NFTPlugin = ({
     sellerReferral,
     tokenMint,
     price,
-    getTxCreateTicket,
+    // getTxCreateTicket,
     priceNFT,
     onCongrats,
     onClose,
