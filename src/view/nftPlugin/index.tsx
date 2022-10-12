@@ -54,7 +54,6 @@ const NFTPlugin = ({
   const onBuy = useCallback(async () => {
     try {
       setLoading(true)
-      const { wallet } = window.sentre
       let txs = []
       if (tokenSymbol !== 'sol') {
         const setupTransaction = await otcSDK.exchange({
@@ -79,7 +78,7 @@ const NFTPlugin = ({
       // )
       // txs.push(txCreateTicket)
 
-      const signedTxs = await wallet.signAllTransactions(txs)
+      const signedTxs = await window.sentre.solana.signAllTransactions(txs)
       let txId = ''
       for (let i = 0; i < signedTxs.length; i++) {
         const signedTx = signedTxs[i]

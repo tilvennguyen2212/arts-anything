@@ -8,7 +8,7 @@
     "@sentre/antd-ionicon": "^1.0.46",
     "@sentre/lucky-wheel-core": "^0.4.3",
     "@sentre/otc-sdk": "^1.0.11",
-    "@sentre/senhub": "^3.3.5",
+    "@sentre/senhub": "^4.0.6",
     "antd": "^4.23.2",
     "axios": "^0.27.2",
     "bn.js": "^5.2.0",

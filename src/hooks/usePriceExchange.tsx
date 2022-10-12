@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useWalletAddress } from '@sentre/senhub'
+import { splt, useWalletAddress } from '@sentre/senhub'
 
 import useAccountBalance from 'hooks/useAccountBalance'
 
@@ -35,7 +35,6 @@ const usePriceExchange = (price: number, tokenSymbol: string) => {
       return setEstPrice(price)
     }
 
-    const { splt } = window.sentre
     const { estimatePrice, tokenInfo } = await estimateExchangePrice({
       tokenSymbol: tokenSymbol,
       nftPrice: price,

@@ -20,13 +20,14 @@ const MyNFTs = () => {
     async (mintAddress: string, price: string) => {
       try {
         setHandlingAddress(mintAddress)
-        const { wallet } = window.sentre
         const sellTransaction = await magicEdenSDK.sell({
           sellerAddress: walletAddress,
           mintAddress,
           price: Number(price),
         })
-        const signedTx = await wallet.signTransaction(sellTransaction)
+        const signedTx = await window.sentre.solana.signTransaction(
+          sellTransaction,
+        )
         const txId = await magicEdenSDK.sendAndConfirm(signedTx)
         return window.notify({
           type: 'success',
@@ -49,13 +50,14 @@ const MyNFTs = () => {
     async (mintAddress: string, price: string) => {
       try {
         setHandlingAddress(mintAddress)
-        const { wallet } = window.sentre
         const sellTransaction = await magicEdenSDK.cancel({
           sellerAddress: walletAddress,
           mintAddress,
           price: Number(price),
         })
-        const signedTx = await wallet.signTransaction(sellTransaction)
+        const signedTx = await window.sentre.solana.signTransaction(
+          sellTransaction,
+        )
         const txId = await magicEdenSDK.sendAndConfirm(signedTx)
         return window.notify({
           type: 'success',

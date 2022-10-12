@@ -28,8 +28,8 @@ export const useGetTxCreateTicket = () => {
       const connection = new Connection(rpc, 'confirmed')
       const wrappedWallet = {
         publicKey: new PublicKey(walletAddress),
-        signAllTransactions: window.sentre.wallet.signAllTransactions,
-        signTransaction: window.sentre.wallet.signTransaction,
+        signAllTransactions: window.sentre.solana.signAllTransactions,
+        signTransaction: window.sentre.solana.signTransaction,
       }
       const provider = new AnchorProvider(connection, wrappedWallet, {
         commitment: 'confirmed',
