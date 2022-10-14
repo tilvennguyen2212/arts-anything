@@ -21,7 +21,7 @@ export type LuckyState = {
 
 const NAME = 'event'
 const initialState: LuckyState = {
-  announcement: Events.TradingContest,
+  announcement: Events.None,
   congratulation: Events.None,
 }
 
