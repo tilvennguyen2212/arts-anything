@@ -1,7 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useWalletAddress, util } from '@sentre/senhub'
-import { OTC } from '@sentre/otc-sdk'
 
 import { Alert, Button, Col, Modal, Row } from 'antd'
 import IonIcon from '@sentre/antd-ionicon'
@@ -14,9 +13,8 @@ import { AppDispatch, AppState } from 'model'
 import { magicEdenSDK } from 'model/collections.controller'
 import usePriceExchange from 'hooks/usePriceExchange'
 import { Events, setCongratulation } from 'model/event.controller'
-// import { useGetTxCreateTicket } from 'hooks/useGetTxCreateTicket'
+import { useGetTxCreateTicket } from 'hooks/useGetTxCreateTicket'
 
-const otcSDK = new OTC()
 const NETWORK_FEE = 0.00001
 const CREATE_ACCOUNT_FEE = 0.00203928 + 0.00201144
 
@@ -37,10 +35,11 @@ const NFTPlugin = ({
   const [counter, setCounter] = useState<number | string>(0)
   const [tokenSymbol, setTokenSymbol] = useState('sol')
   const dispatch = useDispatch<AppDispatch>()
-  const { seller, sellerReferral, price, tokenMint, auctionHouse } =
-    useSelector((state: AppState) => state.listing[symbol][mintAddress])
+  const { sellerReferral, price, tokenMint, auctionHouse } = useSelector(
+    (state: AppState) => state.listing[symbol][mintAddress],
+  )
   const walletAddress = useWalletAddress()
-  // const getTxCreateTicket = useGetTxCreateTicket()
+  const getTxCreateTicket = useGetTxCreateTicket()
 
   const tokenName = useMemo(() => tokenSymbol.toUpperCase(), [tokenSymbol])
   const priceNFT = price + NETWORK_FEE + CREATE_ACCOUNT_FEE
@@ -55,35 +54,35 @@ const NFTPlugin = ({
     try {
       setLoading(true)
       let txs = []
-      if (tokenSymbol !== 'sol') {
-        const setupTransaction = await otcSDK.exchange({
-          walletAddress,
-          tokenSymbol,
-          solAmount: priceNFT,
-        })
-        txs.push(setupTransaction)
-      }
+      // if (tokenSymbol !== 'sol') {
+      //   const setupTransaction = await otcSDK.exchange({
+      //     walletAddress,
+      //     tokenSymbol,
+      //     solAmount: priceNFT,
+      //   })
+      //   txs.push(setupTransaction)
+      // }
       const buyNowTransaction = await magicEdenSDK.buyNow({
         buyerAddress: walletAddress,
-        sellerAddress: seller,
+        sellerAddress: walletAddress,
         auctionHouseAddress: auctionHouse,
         sellerReferralAddress: sellerReferral,
         mintAddress: tokenMint,
-        price,
+        price: 0,
       })
       txs.push(buyNowTransaction)
       // Add lottery ticket
-      // const txCreateTicket = await getTxCreateTicket(
-      //   buyNowTransaction.serializeMessage(),
-      // )
-      // txs.push(txCreateTicket)
+      const txCreateTicket = await getTxCreateTicket(
+        buyNowTransaction.serializeMessage(),
+      )
+      txs.push(txCreateTicket)
 
       const signedTxs = await window.sentre.solana.signAllTransactions(txs)
       let txId = ''
       for (let i = 0; i < signedTxs.length; i++) {
         const signedTx = signedTxs[i]
         const commitment =
-          i === signedTxs.length - 1 ? 'finalized' : 'confirmed'
+          i === signedTxs.length - 1 ? 'confirmed' : 'confirmed'
         txId = await magicEdenSDK.sendAndConfirm(signedTx, commitment)
         setCounter(i + 1)
       }
@@ -104,15 +103,11 @@ const NFTPlugin = ({
       return setLoading(false)
     }
   }, [
-    tokenSymbol,
     walletAddress,
-    seller,
     auctionHouse,
     sellerReferral,
     tokenMint,
-    price,
-    // getTxCreateTicket,
-    priceNFT,
+    getTxCreateTicket,
     onCongrats,
     onClose,
   ])
@@ -164,7 +159,7 @@ const NFTPlugin = ({
             onClick={onBuy}
             loading={loading}
             block
-            disabled={!validBuy}
+            disabled={!validBuy ? false : false}
           >
             Buy Now {loading && `(${counter}/3 confirmations)`}
           </Button>
